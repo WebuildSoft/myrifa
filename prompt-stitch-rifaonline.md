@@ -268,7 +268,7 @@ Cada card: 160x100px, branco, border-radius 16px, sombra suave, borda esquerda c
 - "Ver todos →" link roxo
 
 **Seção 5 — Link da Rifa:**
-- Caixa com URL: "myrifa.com.br/r/[slug]"
+- Caixa com URL: "rifa.com.br/r/[slug]"
 - Botões lado a lado: 📋 Copiar | 💬 WhatsApp | QR Code
 - QR Code expandível ao tocar
 

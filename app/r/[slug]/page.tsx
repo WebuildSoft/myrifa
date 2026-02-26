@@ -270,7 +270,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                         { icon: CheckCircle2, text: "Sorteio baseado no resultado da Loteria Federal.", color: "text-emerald-500" },
                                         { icon: Shield, text: "Pagamento 100% seguro e criptografado.", color: "text-blue-500" },
                                         { icon: Clock, text: "Reserva de 30 minutos após a seleção.", color: "text-amber-500" },
-                                        { icon: Trophy, text: "Entrega garantida pela plataforma MyRifa.", color: "text-violet-500" }
+                                        { icon: Trophy, text: "Entrega garantida pela plataforma rifa.", color: "text-violet-500" }
                                     ].map((rule, i) => (
                                         <li key={i} className="flex items-center gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
                                             <rule.icon className={`w-5 h-5 shrink-0 ${rule.color}`} />

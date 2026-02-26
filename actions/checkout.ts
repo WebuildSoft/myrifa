@@ -96,7 +96,7 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                     description: `Compra Rifa ${rifa.title} - ${validated.numbers.length} números`,
                     payment_method_id: 'pix',
                     payer: {
-                        email: checkoutResult.buyer.email || "contato@myrifa.com.br", // MP requires email sometimes
+                        email: checkoutResult.buyer.email || "contato@rifa.com.br", // MP requires email sometimes
                         first_name: checkoutResult.buyer.name.split(" ")[0],
                         last_name: checkoutResult.buyer.name.split(" ").slice(1).join(" ") || "Silva",
                         identification: { type: 'CPF', number: '19119119100' } // Placeholder for MP sandbox

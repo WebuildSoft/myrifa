@@ -1,4 +1,4 @@
-# PROMPT MESTRE — Desenvolvimento Completo da Plataforma de Rifa Online
+# PROMPT MESTRE — Desenvolvimento Completo da Plataforma de MyRifa
 
 ---
 
@@ -514,7 +514,7 @@ CLOUDINARY_API_SECRET="..."
 
 # Resend
 RESEND_API_KEY="re_..."
-RESEND_FROM_EMAIL="noreply@myrifa.com.br"
+RESEND_FROM_EMAIL="noreply@rifa.com.br"
 
 # WhatsApp (Evolution API)
 EVOLUTION_API_URL="..."

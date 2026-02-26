@@ -22,7 +22,7 @@ export default function SobrePage() {
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
                         <span className="text-xl font-black tracking-tighter uppercase italic">
-                            Rifa<span className="text-primary">Online</span>
+                            My<span className="text-primary">Rifa</span>
                         </span>
                     </Link>
                     <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-full text-[11px] font-black uppercase tracking-widest px-6 shadow-xl shadow-primary/20 transition-all">
@@ -109,7 +109,7 @@ export default function SobrePage() {
                     <section className="text-center bg-primary rounded-[3rem] p-12 md:p-20 text-white space-y-8 shadow-2xl shadow-primary/20 relative overflow-hidden">
                         <div className="relative z-10 space-y-6">
                             <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-none">Faça parte desta jornada.</h2>
-                            <p className="max-w-xl mx-auto text-white/70 font-medium">Junte-se a milhares de pessoas que já mudaram suas vidas e comunidades através da MyRifa.</p>
+                            <p className="max-w-xl mx-auto text-white/70 font-medium">Junte-se a milhares de pessoas que já mudaram suas vidas e comunidades através da rifa.</p>
                             <Button asChild size="lg" className="bg-white text-primary hover:bg-slate-50 h-14 px-10 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all active:scale-95">
                                 <Link href="/register">Criar minha primeira conta</Link>
                             </Button>

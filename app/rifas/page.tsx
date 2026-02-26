@@ -39,7 +39,7 @@ export default async function PublicRifasPage() {
                             <Ticket className="h-6 w-6" />
                         </div>
                         <span className="text-xl font-black tracking-tighter uppercase italic">
-                            Rifa<span className="text-primary">Online</span>
+                            My<span className="text-primary">Rifa</span>
                         </span>
                     </Link>
 

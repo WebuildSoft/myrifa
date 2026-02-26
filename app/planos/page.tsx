@@ -14,7 +14,7 @@ export default function PublicPlanosPage() {
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
                         <span className="text-xl font-black tracking-tighter uppercase italic">
-                            Rifa<span className="text-primary">Online</span>
+                            My<span className="text-primary">Rifa</span>
                         </span>
                     </Link>
                     <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">

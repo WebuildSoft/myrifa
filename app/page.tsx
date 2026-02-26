@@ -27,7 +27,7 @@ export default function Home() {
                             <Star className="text-white h-6 w-6 fill-white" />
                         </div>
                         <span className="text-xl font-black tracking-tighter uppercase italic">
-                            Rifa<span className="text-primary">Online</span>
+                            My<span className="text-primary">Rifa</span>
                         </span>
                     </Link>
 
@@ -166,7 +166,7 @@ export default function Home() {
                                 <Star className="h-5 w-5 fill-white" />
                             </div>
                             <span className="text-lg font-black tracking-tighter uppercase italic dark:text-white">
-                                Rifa<span className="text-primary">Online</span>
+                                My<span className="text-primary">Rifa</span>
                             </span>
                         </Link>
                         <p className="max-w-sm text-slate-500 dark:text-slate-400 text-sm font-medium leading-relaxed">
@@ -204,7 +204,7 @@ export default function Home() {
                 </div>
 
                 <div className="max-w-7xl mx-auto pt-8 border-t border-primary/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    <p>© 2024 MyRifa. Todos os Direitos Reservados.</p>
+                    <p>© 2024 rifa. Todos os Direitos Reservados.</p>
                     <div className="flex gap-6">
                         <span className="flex items-center gap-1.5"><ShieldCheck className="h-3 w-3" /> SSL Seguro</span>
                         <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3" /> Auditoria Certificada</span>

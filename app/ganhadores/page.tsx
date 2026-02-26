@@ -13,7 +13,7 @@ export default function GanhadoresPage() {
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
                         <span className="text-xl font-black tracking-tighter uppercase italic">
-                            Rifa<span className="text-primary">Online</span>
+                            My<span className="text-primary">Rifa</span>
                         </span>
                     </Link>
                     <Link href="/rifas">
@@ -33,7 +33,7 @@ export default function GanhadoresPage() {
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">Nossos Ganhadores</h1>
                         <p className="text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">
-                            A transparência é o nosso maior valor. Confira aqui todos os resultados e a alegria de quem já ganhou com o MyRifa.
+                            A transparência é o nosso maior valor. Confira aqui todos os resultados e a alegria de quem já ganhou com o rifa.
                         </p>
                     </div>
 

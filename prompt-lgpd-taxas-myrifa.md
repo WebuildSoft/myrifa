@@ -16,7 +16,7 @@ Você é um advogado especialista em Direito Digital, LGPD e contratos de plataf
 - Compradores não precisam criar conta — informam apenas nome e WhatsApp
 - Pagamentos processados via Mercado Pago (PIX) e Stripe (cartão)
 - Dados armazenados no Supabase (servidores podendo ser fora do Brasil)
-- Domínio: myrifa.com
+- Domínio: rifa.com
 - CNPJ: a ser registrado (MEI ou ME)
 - Cidade sede: a definir pelo fundador
 
@@ -111,7 +111,7 @@ Redija a Política de Privacidade completa em conformidade com a **Lei nº 13.70
 ### 2.1 Controlador dos Dados
 - Nome da empresa MyRifa (razão social a preencher)
 - CNPJ (a preencher)
-- E-mail do DPO/responsável: privacidade@myrifa.com
+- E-mail do DPO/responsável: privacidade@rifa.com
 - Endereço
 
 ### 2.2 Dados Coletados
@@ -194,7 +194,7 @@ Explicar cada direito com o como exercer via e-mail:
 
 ### 2.11 Encarregado de Dados (DPO)
 - Nome ou cargo
-- E-mail: privacidade@myrifa.com
+- E-mail: privacidade@rifa.com
 - Como acionar
 
 ---
@@ -217,7 +217,7 @@ Redija uma política clara e objetiva cobrindo:
 - Comprador pode solicitar reembolso em até 7 dias após a compra (CDC)
 - Após 7 dias, reembolso apenas se o organizador cancelar a rifa
 - Prazo de devolução: até 10 dias úteis via PIX
-- Como solicitar: e-mail suporte@myrifa.com com número do pedido
+- Como solicitar: e-mail suporte@rifa.com com número do pedido
 - Casos onde reembolso não é aplicável (rifa já sorteada, número já ganhou)
 
 ### Para o Organizador:
@@ -371,7 +371,7 @@ Texto curto (máximo 200 palavras) para exibir na página de criação de rifa, 
 
 **Avisos importantes a incluir em cada documento:**
 - "Este documento foi gerado com auxílio de inteligência artificial e deve ser revisado por um advogado antes de entrar em vigor"
-- "Em caso de dúvidas, entre em contato: juridico@myrifa.com"
+- "Em caso de dúvidas, entre em contato: juridico@rifa.com"
 
 ---
 
