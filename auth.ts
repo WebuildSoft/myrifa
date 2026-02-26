@@ -9,6 +9,7 @@ import bcrypt from "bcrypt"
 export const { handlers, auth, signIn, signOut } = NextAuth({
     ...authConfig,
     basePath: "/api/auth",
+    trustHost: true,
     secret: process.env.AUTH_SECRET || "minhaApiKeyProtetoraTemporariaAteSetares",
     debug: process.env.NODE_ENV === "development",
     adapter: PrismaAdapter(prisma),
