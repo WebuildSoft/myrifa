@@ -17,7 +17,7 @@ export default async function StoryCardPage({ params }: { params: Promise<{ slug
     if (!rifa || rifa.isPrivate) notFound()
 
     const progress = Math.round((rifa._count.numbers / rifa.totalNumbers) * 100)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || ''
     const url = `${appUrl}/r/${rifa.slug}`
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`
 

@@ -491,7 +491,7 @@ Crie `.env.example` com:
 DATABASE_URL="postgresql://..."
 
 # NextAuth
-NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_URL="SUA_NEXTAUTH_URL"
 NEXTAUTH_SECRET="..."
 
 # Google OAuth
