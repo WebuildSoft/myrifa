@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Syne:wght@800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "primary-dark": "#5b21b6",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#171121",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "syne": ["Syne", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .bg-gradient-brand {
+            background: linear-gradient(135deg, #7c3bed 0%, #5b21b6 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-gradient-brand text-white">
+<div class="flex flex-col items-center justify-center pt-16 pb-8 px-6">
+<div class="bg-white/20 backdrop-blur-md p-4 rounded-xl mb-6">
+<span class="material-symbols-outlined text-white !text-5xl">confirmation_number</span>
+</div>
+<h1 class="font-syne text-5xl font-extrabold tracking-tight mb-2">RifaOnline</h1>
+<p class="text-white/80 text-lg font-medium text-center">Transforme seus sonhos em sorte</p>
+</div>
+<div class="flex-1 flex flex-col items-center justify-center px-6">
+<div class="w-full max-w-sm">
+<div class="flex flex-col gap-8">
+<div class="flex flex-col items-center text-center">
+<div class="w-full aspect-video rounded-xl bg-white/10 backdrop-blur-sm mb-6 flex items-center justify-center overflow-hidden border border-white/20">
+<img class="w-full h-full object-cover opacity-90" data-alt="Ilustração moderna de criação de rifa digital" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyxRxNs6urFh0PdB-FhXQ8rgVdoQKl2L_Yu_ZoTl-h9WXNpfwEAomnV7FMCm6OrziwLtdLTN0tXaHYzK26fWwXWQ-6K4dD62g32DfGc5HWpK234xA8TR10cARATPEDRtsxd_wbzZ_gGd_crx_q6KghEbSOq-U_pwlyGPoMwqFEBzGZDau2mLSBIQygjVJLsORp65TuSgRHSxyjRFeuEgF0wJbBtxvaqMvm8cTTcm2l9YSU56zLsn-rN_PUhzEnfxxKwL0vIc3HJiuc"/>
+</div>
+<h3 class="text-2xl font-bold mb-2">Crie em segundos</h3>
+<p class="text-white/70 text-sm leading-relaxed max-w-[280px]">Personalize sua rifa com fotos, prêmios e regras de forma simples e rápida.</p>
+</div>
+<div class="flex justify-center gap-2">
+<div class="h-1.5 w-8 rounded-full bg-white"></div>
+<div class="h-1.5 w-2 rounded-full bg-white/40"></div>
+<div class="h-1.5 w-2 rounded-full bg-white/40"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="px-6 py-12 flex flex-col gap-4">
+<button class="w-full py-4 px-6 bg-white text-primary font-bold text-lg rounded-xl shadow-xl active:scale-95 transition-transform">
+                Criar minha conta
+            </button>
+<button class="w-full py-3 px-6 bg-transparent text-white font-semibold text-base rounded-xl border border-white/30 backdrop-blur-sm">
+                Já tenho conta
+            </button>
+<div class="flex items-center justify-center mt-4 gap-6 opacity-60">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined !text-xl">share</span>
+<span class="text-[10px] uppercase font-bold tracking-widest">Compartilhe</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined !text-xl">payments</span>
+<span class="text-[10px] uppercase font-bold tracking-widest">Receba</span>
+</div>
+</div>
+</div>
+<div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+<div class="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+<div class="absolute top-1/2 -left-32 w-80 h-80 bg-primary-dark/40 rounded-full blur-3xl"></div>
+</div>
+</div>
+</body></html>

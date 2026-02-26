@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#171121",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<!-- Screen Container -->
+<div class="relative flex h-auto min-h-screen w-full flex-col max-w-md mx-auto bg-white dark:bg-background-dark overflow-x-hidden">
+<!-- TopAppBar -->
+<div class="flex items-center p-4 pb-2 justify-between sticky top-0 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md z-10">
+<div class="text-primary flex size-12 shrink-0 items-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Criar Rifa</h2>
+</div>
+<!-- Wizard Progress Bar -->
+<div class="flex flex-col gap-3 p-4">
+<div class="flex gap-6 justify-between items-center">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold leading-normal">Informações Básicas</p>
+<p class="text-primary text-sm font-bold leading-normal bg-primary/10 px-3 py-1 rounded-full">Etapa 1 de 3</p>
+</div>
+<div class="rounded-full bg-slate-200 dark:bg-slate-800 h-2 overflow-hidden">
+<div class="h-full rounded-full bg-primary transition-all duration-500" style="width: 33.33%;"></div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto px-4 pb-24">
+<!-- Step 1 Content: Information -->
+<div class="space-y-6" id="step-1">
+<!-- Upload Photo Section -->
+<div class="space-y-2">
+<h3 class="text-slate-900 dark:text-slate-100 text-base font-bold leading-tight">Foto da Rifa</h3>
+<div class="flex flex-col items-center gap-4 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 px-6 py-10 transition-colors hover:bg-primary/10">
+<div class="bg-primary/20 p-4 rounded-full">
+<span class="material-symbols-outlined text-primary text-4xl">add_a_photo</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold text-center">Upload de Imagem</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs text-center">Toque para selecionar a foto principal</p>
+</div>
+<button class="flex min-w-[140px] cursor-pointer items-center justify-center rounded-full h-10 px-6 bg-primary text-white text-sm font-bold leading-normal shadow-lg shadow-primary/30">
+<span>Escolher Foto</span>
+</button>
+</div>
+</div>
+<!-- Form Fields -->
+<div class="space-y-4">
+<label class="flex flex-col gap-2">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-semibold ml-1">Título da Rifa</span>
+<input class="w-full rounded-xl border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary h-14 px-4 text-base" placeholder="Ex: iPhone 15 Pro Max" type="text"/>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-semibold ml-1">Descrição Detalhada</span>
+<textarea class="w-full rounded-xl border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary p-4 text-base" placeholder="Conte mais sobre o prêmio e as regras..." rows="4"></textarea>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-semibold ml-1">Categoria</span>
+<div class="relative">
+<select class="w-full appearance-none rounded-xl border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary h-14 px-4 text-base">
+<option value="">Selecione uma categoria</option>
+<option value="eletronicos">Eletrônicos</option>
+<option value="veiculos">Veículos</option>
+<option value="dinheiro">Dinheiro</option>
+<option value="servicos">Serviços</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</label>
+</div>
+</div>
+<!-- Previews for Step 2 and 3 (Hidden in a static UI unless logic is added, but designed here) -->
+<!-- Step 2: Numbers and Prices -->
+<div class="hidden mt-8 space-y-6" id="step-2">
+<div class="grid grid-cols-2 gap-4">
+<label class="flex flex-col gap-2">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-semibold ml-1">Qtd de Números</span>
+<input class="w-full rounded-xl border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary h-14 px-4 text-base" placeholder="1000" type="number"/>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-semibold ml-1">Valor por Número</span>
+<input class="w-full rounded-xl border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary h-14 px-4 text-base" placeholder="R$ 10,00" type="text"/>
+</label>
+</div>
+<label class="flex flex-col gap-2">
+<span class="text-slate-700 dark:text-slate-300 text-sm font-semibold ml-1">Data do Sorteio</span>
+<input class="w-full rounded-xl border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary h-14 px-4 text-base" type="date"/>
+</label>
+</div>
+</div>
+<!-- Fixed Footer Actions -->
+<div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 flex gap-4">
+<button class="flex-1 h-14 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-base transition-colors hover:bg-slate-50 dark:hover:bg-slate-800">
+                Cancelar
+            </button>
+<button class="flex-[2] h-14 rounded-xl bg-primary text-white font-bold text-base shadow-lg shadow-primary/40 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+                Próxima Etapa
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- Floating UI Decoration Elements (Subtle) -->
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 -left-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+</body></html>

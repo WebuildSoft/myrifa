@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RifaOnline Admin - Raffle Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .filled-icon { font-variation-settings: 'FILL' 1; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed h-full">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined filled-icon">confirmation_number</span>
+</div>
+<div>
+<h1 class="text-lg font-bold leading-tight">RifaOnline</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Admin Panel</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-primary/10 text-primary rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined filled-icon">transit_ticket</span>
+<span class="text-sm font-semibold">My Raffles</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-sm font-medium">Create Raffle</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-medium">Financial</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+<img alt="Admin Profile" class="size-8 rounded-full bg-slate-200" data-alt="Portrait of a professional administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnAU1NADaUMYxQdA8C9lhonPsqseSNYevIXP-o5OPv2-i7LVmNvnk2IsxkXUpfN_IYvSG97fLfTNgOK37EaRwLxCSzqvviGPMZa-B_7xJfCW9qgsBqnt4QkoVLi6U2-cXO6Tixz0q5JIXP-Cw0clLOVYWkeD41HHZ8tsHhjuRDM9p0JlOOxWu_7qYC9-tsXBtdFtawgfHeebe16bYNRN4c1D91PPjlj_DZV229NVhQ1617YMvXcidcVnZFPWxyVHl6ACSwP3wG0JJ0"/>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold truncate">Alex Silva</p>
+<p class="text-xs text-slate-500 truncate">Pro Account</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64 p-8">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+<div>
+<nav class="flex items-center gap-2 text-sm text-slate-500 mb-2">
+<span>My Raffles</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-primary font-medium">Details</span>
+</nav>
+<div class="flex items-center gap-3">
+<h2 class="text-3xl font-black tracking-tight">iPhone 15 Pro Max + Apple Watch</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">Active</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+                        Preview Page
+                    </button>
+<button class="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:opacity-90 transition-opacity shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                        Edit Raffle
+                    </button>
+</div>
+</header>
+<!-- Stats & Progress Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+<div class="lg:col-span-2 bg-gradient-to-br from-indigo-600 via-purple-600 to-primary p-8 rounded-2xl text-white shadow-xl relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-indigo-100 text-sm font-medium mb-1">Total Collected</p>
+<h3 class="text-4xl font-black">R$ 15.240,00</h3>
+</div>
+<div class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-lg">
+<span class="text-sm font-bold">Goal: R$ 20.000,00</span>
+</div>
+</div>
+<div class="mb-4">
+<div class="flex justify-between text-sm font-bold mb-2">
+<span>Progress</span>
+<span>75%</span>
+</div>
+<div class="w-full bg-white/20 rounded-full h-3">
+<div class="bg-white h-3 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.5)]" style="width: 75%"></div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-indigo-200">confirmation_number</span>
+<span class="text-sm font-medium">1,500 / 2,000 Numbers Sold</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-indigo-200">trending_up</span>
+<span class="text-sm font-medium">+12% from yesterday</span>
+</div>
+</div>
+</div>
+<!-- Abstract decoration -->
+<div class="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+</div>
+<!-- Raffle Link Box -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-sm">
+<div>
+<h4 class="font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">link</span>
+                            Raffle Link
+                        </h4>
+<div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 mb-4 truncate text-sm font-mono text-slate-600 dark:text-slate-400">
+                            rifaonline.com/r/iphone-15
+                        </div>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<button class="flex flex-col items-center gap-1 p-2 bg-slate-100 dark:bg-slate-800 hover:bg-primary/10 hover:text-primary rounded-lg transition-all">
+<span class="material-symbols-outlined text-xl">content_copy</span>
+<span class="text-[10px] font-bold uppercase">Copy</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500/10 hover:text-emerald-500 rounded-lg transition-all">
+<span class="material-symbols-outlined text-xl">chat</span>
+<span class="text-[10px] font-bold uppercase">WhatsApp</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-all">
+<span class="material-symbols-outlined text-xl">qr_code_2</span>
+<span class="text-[10px] font-bold uppercase">QR Code</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Actions Grid -->
+<section class="mb-8">
+<h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Quick Actions</h4>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<button class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-primary/50 hover:shadow-lg transition-all group">
+<div class="size-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">share</span>
+</div>
+<span class="font-bold text-sm">Share Raffle</span>
+</button>
+<button class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-primary/50 hover:shadow-lg transition-all group">
+<div class="size-12 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center text-amber-600 mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">group</span>
+</div>
+<span class="font-bold text-sm">Buyers List</span>
+</button>
+<button class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-primary/50 hover:shadow-lg transition-all group">
+<div class="size-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center text-purple-600 mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">edit_square</span>
+</div>
+<span class="font-bold text-sm">Edit Content</span>
+</button>
+<button class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border border-primary/20 dark:border-primary/20 rounded-2xl hover:bg-primary hover:text-white transition-all group shadow-sm">
+<div class="size-12 bg-primary/10 group-hover:bg-white/20 rounded-full flex items-center justify-center text-primary group-hover:text-white mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined filled-icon">trophy</span>
+</div>
+<span class="font-bold text-sm">Run Draw</span>
+</button>
+</div>
+</section>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Sales Chart (Mockup) -->
+<div class="xl:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h4 class="font-bold text-lg">Sales Performance</h4>
+<p class="text-sm text-slate-500">Revenue over the last 7 days</p>
+</div>
+<select class="text-sm border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-800">
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+</select>
+</div>
+<!-- Chart Placeholder -->
+<div class="h-64 flex items-end gap-4 px-2">
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg h-[40%] relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">R$ 1.2k</div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">MON</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg h-[55%] relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">R$ 1.8k</div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">TUE</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg h-[45%] relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">R$ 1.4k</div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">WED</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary/40 rounded-t-lg h-[80%] relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">R$ 2.5k</div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">THU</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary/40 rounded-t-lg h-[70%] relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">R$ 2.1k</div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">FRI</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary/60 rounded-t-lg h-[95%] relative group border-t-4 border-primary">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">R$ 3.2k</div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">SAT</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-primary/30 rounded-t-lg h-[60%] relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">R$ 1.9k</div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">SUN</span>
+</div>
+</div>
+</div>
+<!-- Recent Sales Side Table -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="flex items-center justify-between mb-6">
+<h4 class="font-bold">Recent Sales</h4>
+<a class="text-xs font-bold text-primary hover:underline" href="#">View All</a>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-primary/10 rounded-full flex items-center justify-center text-primary text-xs font-bold">RM</div>
+<div>
+<p class="text-xs font-bold">Ricardo M.</p>
+<p class="text-[10px] text-slate-500">11 9****-4421</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-black text-primary">R$ 50,00</p>
+<p class="text-[10px] text-slate-400 italic">2 mins ago</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold">AS</div>
+<div>
+<p class="text-xs font-bold">Ana Silva</p>
+<p class="text-[10px] text-slate-500">21 9****-1092</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-black text-primary">R$ 120,00</p>
+<p class="text-[10px] text-slate-400 italic">15 mins ago</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center text-purple-600 text-xs font-bold">JB</div>
+<div>
+<p class="text-xs font-bold">Joao B.</p>
+<p class="text-[10px] text-slate-500">31 9****-8821</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-black text-primary">R$ 20,00</p>
+<p class="text-[10px] text-slate-400 italic">1 hour ago</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 text-xs font-bold">CL</div>
+<div>
+<p class="text-xs font-bold">Carla L.</p>
+<p class="text-[10px] text-slate-500">11 9****-3310</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-black text-primary">R$ 200,00</p>
+<p class="text-[10px] text-slate-400 italic">3 hours ago</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Sales Table -->
+<section class="mt-8 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h4 class="font-bold">Transaction History</h4>
+<div class="flex items-center gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/50 w-64" placeholder="Search buyers..." type="text"/>
+</div>
+<button class="p-2 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold tracking-wider">
+<th class="px-6 py-4">Buyer Name</th>
+<th class="px-6 py-4">WhatsApp</th>
+<th class="px-6 py-4">Numbers</th>
+<th class="px-6 py-4">Total Value</th>
+<th class="px-6 py-4">Time</th>
+<th class="px-6 py-4">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="text-sm hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-bold">Marcos Oliveira</td>
+<td class="px-6 py-4 text-slate-500">11 9****-9922</td>
+<td class="px-6 py-4 font-mono">001, 002, 003, 004, 005</td>
+<td class="px-6 py-4 font-black">R$ 50,00</td>
+<td class="px-6 py-4 text-slate-500">2 mins ago</td>
+<td class="px-6 py-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-[10px] font-bold">PAID</span></td>
+</tr>
+<tr class="text-sm hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-bold">Fernanda Costa</td>
+<td class="px-6 py-4 text-slate-500">21 9****-1123</td>
+<td class="px-6 py-4 font-mono">045, 046</td>
+<td class="px-6 py-4 font-black">R$ 20,00</td>
+<td class="px-6 py-4 text-slate-500">12 mins ago</td>
+<td class="px-6 py-4"><span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] font-bold">PENDING</span></td>
+</tr>
+<tr class="text-sm hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-bold">Bruno Gomes</td>
+<td class="px-6 py-4 text-slate-500">31 9****-5544</td>
+<td class="px-6 py-4 font-mono">102, 103, 104</td>
+<td class="px-6 py-4 font-black">R$ 30,00</td>
+<td class="px-6 py-4 text-slate-500">45 mins ago</td>
+<td class="px-6 py-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-[10px] font-bold">PAID</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
+<p class="text-xs text-slate-500 font-medium">Showing 3 of 1500 entries</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold disabled:opacity-50" disabled="">Prev</button>
+<button class="px-3 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold">Next</button>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

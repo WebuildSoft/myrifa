@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard do Organizador</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f5f3ff",
+                        "background-dark": "#171121",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark pb-24">
+<!-- Header Section -->
+<header class="flex items-center bg-white dark:bg-slate-900 p-6 pb-4 justify-between sticky top-0 z-10 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="flex size-10 shrink-0 items-center overflow-hidden rounded-full border-2 border-primary/20">
+<div class="bg-center bg-no-repeat aspect-square bg-cover w-full h-full" data-alt="Avatar de perfil do organizador sorrindo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCCIYALc6Fx8bF5x5u63EAMP016sr9lOxwfT-8lJ8LaA4iz1BsGBI77fDemBVGZYXRIu8Z8B6rBVLRu12IndR-h4zP9fK4E8WQ54BmQo9bVuT9Ewr2oQKqW01_wi1fWEEVWYn6PjTc8nRJjDzP0HV3TZeugNigd09N732IMTd_HBjG-kMl1H2T6rhKPy7-PYD8rA5RlmPJcOeL-zKnnhx5aFOVdPlwmyyffbUNi-9q00TTPj5U2xa5uA91OnOydaoBSp1u_mXq_vm6a");'></div>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs">Bem-vindo de volta</p>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Olá, João 👋</h2>
+</div>
+</div>
+<button class="relative flex size-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-2xl">notifications</span>
+<span class="absolute top-2 right-2.5 size-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+</header>
+<!-- Metrics Section -->
+<div class="mt-4">
+<div class="flex items-center justify-between px-6 mb-4">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold tracking-tight">Métricas</h3>
+<span class="text-primary text-xs font-semibold bg-primary/10 px-2 py-1 rounded-full">Este mês</span>
+</div>
+<div class="flex overflow-x-auto gap-4 px-6 pb-4 scrollbar-hide snap-x">
+<!-- Metric Card 1 -->
+<div class="flex flex-col justify-between min-w-[160px] h-[100px] bg-white dark:bg-slate-900 p-4 rounded-lg border-l-4 border-primary shadow-sm snap-start">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Receita Total</p>
+<p class="text-slate-900 dark:text-white text-lg font-bold">R$ 12.450</p>
+</div>
+<!-- Metric Card 2 -->
+<div class="flex flex-col justify-between min-w-[160px] h-[100px] bg-white dark:bg-slate-900 p-4 rounded-lg border-l-4 border-emerald-500 shadow-sm snap-start">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Rifas Ativas</p>
+<p class="text-slate-900 dark:text-white text-lg font-bold">08</p>
+</div>
+<!-- Metric Card 3 -->
+<div class="flex flex-col justify-between min-w-[160px] h-[100px] bg-white dark:bg-slate-900 p-4 rounded-lg border-l-4 border-amber-500 shadow-sm snap-start">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Números Vendidos</p>
+<p class="text-slate-900 dark:text-white text-lg font-bold">1.240</p>
+</div>
+<!-- Metric Card 4 -->
+<div class="flex flex-col justify-between min-w-[160px] h-[100px] bg-white dark:bg-slate-900 p-4 rounded-lg border-l-4 border-blue-500 shadow-sm snap-start">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Taxa de Conv.</p>
+<p class="text-slate-900 dark:text-white text-lg font-bold">15.4%</p>
+</div>
+</div>
+</div>
+<!-- Action Banner -->
+<div class="px-6 py-4">
+<button class="w-full flex items-center justify-between p-6 bg-gradient-to-r from-primary to-purple-600 rounded-xl shadow-lg shadow-primary/20 hover:opacity-95 transition-opacity overflow-hidden relative group">
+<div class="relative z-10 flex flex-col items-start text-left">
+<span class="text-white text-lg font-bold">Criar nova rifa</span>
+<span class="text-white/80 text-sm">Configure seu próximo sorteio agora</span>
+</div>
+<div class="relative z-10 size-12 bg-white/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-3xl">confirmation_number</span>
+</div>
+<!-- Abstract Pattern Decoration -->
+<div class="absolute -right-4 -bottom-4 size-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all"></div>
+</button>
+</div>
+<!-- Raffle List Section -->
+<div class="mt-4 px-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold">Minhas Rifas</h3>
+<a class="text-primary text-sm font-semibold hover:underline" href="#">Ver todas</a>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Raffle Card 1: Active -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex gap-4 items-center">
+<div class="size-16 rounded-lg bg-center bg-cover bg-no-repeat shrink-0" data-alt="Imagem de um iPhone 15 Pro Max" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAJyHLmzlVIg9mbzvTwUD8IM-E7CxrpQIq7JUZ8V3FbJoqi4E6o6AYvuMMK8zcqWIJPc59UyOJwb3idfBnOONxV3zjVQ1UqmVSKS53aI0UowVbm0VaMgWmanOx0zOgaTi98a5JFEMA1km3gs2_nCdD9R760PUNoGyDwP2wvvMNJdNRe_mvRUM1REICVlrXe6jdp7B_dFBEK93ryHmNJHbivqBUkMv3jhnEBjAmquz4Mg2qOyo3O2Y-Au0YENnXmEKfwLQqtrlnqXgV5");'></div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">iPhone 15 Pro Max</h4>
+<span class="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Ativa</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Sorteio em 15 dias</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[75%] rounded-full"></div>
+</div>
+<span class="text-[10px] font-bold text-slate-700 dark:text-slate-300">75%</span>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-50 dark:border-slate-800">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-500 dark:text-slate-400">Arrecadação</span>
+<span class="text-sm font-bold text-primary">R$ 8.420,00</span>
+</div>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Raffle Card 2: Draft -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex gap-4 items-center">
+<div class="size-16 rounded-lg bg-center bg-cover bg-no-repeat shrink-0 opacity-60" data-alt="Capa de um livro de luxo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD4zCfh5-v3CqHle1_ClqSOFOVWHGMNrNAEMcdJhBjXsDME35mJwElh_I4oV_53Z3_5cA6MowhSgQsqjZsx5qKBbOH8M1XVhTmRusIjDUYsM1xE8EfjSvxSXPQPZ_LQXXt9EL8Dth30A_9DiKX_eT50YEa-ezYtOfSV6dKSYuZlT3nNnSOi5n4-rs0kTntD8EtWn0eqLqdKEk0lQVrI1np1fhuodZiVH6d5-3Rk6tcZVoYwiMd4ExzFcW0D5N5Kdh0Te4MU8qvTm6Pf");'></div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">Kit Kindle + 5 Livros</h4>
+<span class="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Rascunho</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Criada hoje às 14:30</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="bg-slate-300 dark:bg-slate-700 h-full w-[0%] rounded-full"></div>
+</div>
+<span class="text-[10px] font-bold text-slate-700 dark:text-slate-300">0%</span>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-50 dark:border-slate-800">
+<div class="flex flex-col text-slate-400">
+<span class="text-[10px]">Arrecadação</span>
+<span class="text-sm font-bold">R$ 0,00</span>
+</div>
+<button class="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-full hover:bg-primary hover:text-white transition-all">
+                            Continuar
+                        </button>
+</div>
+</div>
+<!-- Raffle Card 3: Finished -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 opacity-80">
+<div class="flex gap-4 items-center">
+<div class="size-16 rounded-lg bg-center bg-cover bg-no-repeat shrink-0" data-alt="Mochila de viagem premium" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAvN2Yr6Yf9HnjlbhwsRP_HRf6PPQdqIsrIZcQ4WedUGvavOzo7T_vd-DXS8x0W12jRlEiirehQ1xuzEODI_hGrIpQHCkYAGUQxiISBycFmkICISM2dmZSEwe-rb-6bj9PrEZVDBlHuf_XWvD_-D-ZFquN9y1Y3Q7tJ3RSvKgZEJR6SjFQeRCM40w20zqh7v0pT8DE6Fnv_IST2qifk5JmvGNIj2DwVFN8GXVOSYnUg4m5m1xK6zvLofn_MFJrzFCKs4EjyalT5DVaH");'></div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">Mochila Peak Design</h4>
+<span class="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Finalizada</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Ganhador: Pedro S. (@psilva)</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-full rounded-full"></div>
+</div>
+<span class="text-[10px] font-bold text-slate-700 dark:text-slate-300">100%</span>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-50 dark:border-slate-800">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-500 dark:text-slate-400">Arrecadação Final</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">R$ 4.030,00</span>
+</div>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl">share</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-6 py-3 flex justify-between items-center z-20">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined fill-1">home</span>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="text-[10px] font-medium">Rifas</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="text-[10px] font-medium">Relatórios</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Perfil</span>
+</a>
+</nav>
+</div>
+</body></html>

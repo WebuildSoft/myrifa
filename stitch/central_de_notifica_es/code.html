@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#171121",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"],
+                        "syne": ["Syne"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Notificações - RifaOnline</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<!-- Main Container (Mobile Viewport 390x844 approx) -->
+<div class="relative mx-auto min-h-screen max-w-[390px] bg-white dark:bg-background-dark flex flex-col shadow-2xl">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 pt-10 pb-4 border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between mb-2">
+<h1 class="text-2xl font-syne font-bold text-slate-900 dark:text-white">Notificações</h1>
+<button class="text-xs font-bold text-primary hover:opacity-80 transition-opacity">
+                    Marcar todas como lidas
+                </button>
+</div>
+</header>
+<!-- Scrollable Notification List -->
+<main class="flex-1 overflow-y-auto pb-24">
+<!-- Group: Hoje -->
+<section class="mt-4">
+<h3 class="px-6 py-2 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Hoje</h3>
+<!-- Unread Notification -->
+<div class="px-6 py-4 bg-primary/5 dark:bg-primary/10 flex gap-4 relative transition-colors">
+<div class="absolute right-4 top-1/2 -translate-y-1/2">
+<div class="size-2 rounded-full bg-primary"></div>
+</div>
+<div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="flex flex-col pr-6">
+<div class="flex items-center gap-2">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Nova compra confirmada</p>
+<span class="text-[10px] text-slate-400 font-medium">10m</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">João Silva comprou 3 números na rifa iPhone 15 Pro • <span class="font-bold text-emerald-600">R$ 45,00</span></p>
+</div>
+</div>
+<!-- Read Notification -->
+<div class="px-6 py-4 bg-white dark:bg-background-dark flex gap-4 border-b border-slate-50 dark:border-slate-800/50">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Reserva expirou</p>
+<span class="text-[10px] text-slate-400 font-medium">2h</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">2 números foram liberados na rifa Festival de Inverno.</p>
+</div>
+</div>
+</section>
+<!-- Group: Ontem -->
+<section class="mt-6">
+<h3 class="px-6 py-2 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Ontem</h3>
+<!-- Unread Notification -->
+<div class="px-6 py-4 bg-primary/5 dark:bg-primary/10 flex gap-4 relative">
+<div class="absolute right-4 top-1/2 -translate-y-1/2">
+<div class="size-2 rounded-full bg-primary"></div>
+</div>
+<div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/20 text-primary">
+<span class="material-symbols-outlined">target</span>
+</div>
+<div class="flex flex-col pr-6">
+<div class="flex items-center gap-2">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Meta atingida!</p>
+<span class="text-[10px] text-slate-400 font-medium">Ontem</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Sua rifa PlayStation 5 atingiu 100% das vendas!</p>
+</div>
+</div>
+</section>
+<!-- Group: Esta semana -->
+<section class="mt-6">
+<h3 class="px-6 py-2 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Esta semana</h3>
+<div class="px-6 py-4 bg-white dark:bg-background-dark flex gap-4 border-b border-slate-50 dark:border-slate-800/50">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/20 text-primary">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Sorteio amanhã</p>
+<span class="text-[10px] text-slate-400 font-medium">3d</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Lembre de realizar o sorteio da rifa Cesta de Café.</p>
+</div>
+</div>
+<div class="px-6 py-4 bg-white dark:bg-background-dark flex gap-4 border-b border-slate-50 dark:border-slate-800/50">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Nova compra confirmada</p>
+<span class="text-[10px] text-slate-400 font-medium">4d</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Maria Souza comprou 5 números na rifa Pix R$ 500 • <span class="font-bold text-emerald-600">R$ 25,00</span></p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="absolute bottom-0 left-0 right-0 bg-white/90 dark:bg-background-dark/90 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800 px-6 pb-6 pt-3">
+<div class="flex items-center justify-between">
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<span class="text-[10px] font-medium">Início</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined text-[24px]">confirmation_number</span>
+<span class="text-[10px] font-medium">Rifas</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-[24px] fill-current">notifications</span>
+<div class="absolute -top-1 -right-1 size-2 rounded-full bg-red-500 border-2 border-white dark:border-background-dark"></div>
+</div>
+<span class="text-[10px] font-bold">Alertas</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined text-[24px]">trophy</span>
+<span class="text-[10px] font-medium">Sorteios</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-[10px] font-medium">Perfil</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

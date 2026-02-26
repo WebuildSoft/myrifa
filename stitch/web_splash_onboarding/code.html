@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RifaOnline - Transforme seus sonhos em realidade</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Syne:wght@800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "primary-dark": "#5b21b6",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#171121",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "syne": ["Syne", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .bg-diagonal-gradient {
+            background: linear-gradient(135deg, #7c3bed 0%, #5b21b6 100%);
+        }
+        .confetti-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark overflow-hidden">
+<!-- Full Screen Background with Gradient and Particles -->
+<div class="relative min-h-screen w-full bg-diagonal-gradient flex flex-col items-center justify-center overflow-hidden px-6">
+<!-- Decorative Floating Elements (Confetti) -->
+<div class="absolute inset-0 pointer-events-none">
+<div class="confetti-particle top-[10%] left-[15%] rotate-45"></div>
+<div class="confetti-particle top-[20%] right-[10%] -rotate-12"></div>
+<div class="confetti-particle bottom-[15%] left-[20%] rotate-90"></div>
+<div class="confetti-particle bottom-[30%] right-[25%] rotate-12"></div>
+<div class="confetti-particle top-[50%] left-[5%] rotate-45 opacity-50"></div>
+<div class="confetti-particle top-[70%] right-[5%] -rotate-45 opacity-30"></div>
+<div class="confetti-particle top-[5%] right-[40%] rotate-12"></div>
+</div>
+<!-- Main Content Container -->
+<div class="relative z-10 w-full max-w-5xl flex flex-col items-center text-center">
+<!-- Branding Area -->
+<div class="flex flex-col items-center mb-12">
+<div class="bg-white/20 p-4 rounded-xl backdrop-blur-sm mb-6 border border-white/30">
+<span class="material-symbols-outlined text-white text-6xl leading-none" style="font-variation-settings: 'FILL' 1">confirmation_number</span>
+</div>
+<h1 class="font-syne text-6xl md:text-7xl text-white tracking-tight mb-4">RifaOnline</h1>
+<p class="text-white/80 text-lg md:text-xl max-w-2xl font-medium leading-relaxed">
+                    A plataforma líder para criar, gerenciar e escalar suas rifas digitais com segurança total e transparência.
+                </p>
+</div>
+<!-- Carousel of Benefits -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-16">
+<!-- Benefit 1 -->
+<div class="bg-white/10 backdrop-blur-md border border-white/10 p-8 rounded-xl flex flex-col items-center text-white transition-transform hover:scale-105">
+<div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl">shield</span>
+</div>
+<h3 class="text-xl font-bold mb-3">Segurança Total</h3>
+<p class="text-sm text-white/70">Criptografia de ponta a ponta para proteger seus sorteios e dados.</p>
+</div>
+<!-- Benefit 2 -->
+<div class="bg-white/10 backdrop-blur-md border border-white/10 p-8 rounded-xl flex flex-col items-center text-white transition-transform hover:scale-105">
+<div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl">payments</span>
+</div>
+<h3 class="text-xl font-bold mb-3">Pix Instantâneo</h3>
+<p class="text-sm text-white/70">Receba seus lucros na hora, direto na sua conta bancária sem intermediários.</p>
+</div>
+<!-- Benefit 3 -->
+<div class="bg-white/10 backdrop-blur-md border border-white/10 p-8 rounded-xl flex flex-col items-center text-white transition-transform hover:scale-105">
+<div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl">auto_awesome</span>
+</div>
+<h3 class="text-xl font-bold mb-3">Sorteio Federal</h3>
+<p class="text-sm text-white/70">Integração automática com os resultados da Loteria Federal.</p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row items-center gap-6">
+<button class="px-10 py-5 bg-white text-primary font-bold text-lg rounded-full shadow-2xl shadow-primary-dark/50 hover:bg-opacity-90 transition-all active:scale-95 min-w-[260px]">
+                    Criar minha conta
+                </button>
+<a class="text-white font-semibold text-lg hover:underline underline-offset-8 flex items-center gap-2" href="#">
+                    Já tenho uma conta
+                    <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</a>
+</div>
+<!-- Footer Small Info -->
+<div class="mt-20 flex gap-8 items-center text-white/50 text-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>Plataforma Homologada</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">group</span>
+<span>+50k Organizadores</span>
+</div>
+</div>
+</div>
+<!-- Abstract Decorative Background Images -->
+<div class="absolute top-[-10%] left-[-5%] w-[40%] aspect-square rounded-full bg-white/5 blur-3xl"></div>
+<div class="absolute bottom-[-20%] right-[-10%] w-[50%] aspect-square rounded-full bg-primary-dark/30 blur-3xl"></div>
+<img class="absolute bottom-10 left-10 w-24 opacity-20 invert" data-alt="Small abstract ticket pattern for background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLVzdcXDdIjoO8oztD3CRh0OONiagNu0CnjEtkljxHgnRLsA2JRylpboMUBNvJRNDOicO3NthqqKZKah4RoGDzzk3db9kz66sgc6wwNr6UYBKeQDDh0Vobg2re5_RIEtuqUq87CMig5CYq5c1ZLol0jpdIW9F4ua2seJ9YvSOP9SimDQwPWdr_bPeRsHOpmZxNGByoC8gwPe-zdBKBstdvXO1oqHBEUXKS3VPS6_j_7XY0rG9jAnxOLtq9xDGkXhfaJb22ZRMGbzWU"/>
+<img class="absolute top-10 right-10 w-24 opacity-20 invert" data-alt="Abstract golden star icon for background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC73MG0Cmtwoy_MjI3uOzSZUXkX7YZTC6gJe7yepNpN9OvQ6BSuxKAStJ_bTmqD1As2gFN3uXPU7C8JkAZlQ5Zw7L1TnP79po6AIgS84BEIEFMcXY6DZfZUBKAKTuWxeRsD7v8r25mOgTjwKPyeer30mIlqt0utTo4YzOxD03XRZL0k9cWWl7joGARCeNi1Dyy-ynDCYJq3NxYzxBrF_4ifpsPIHZOvQ5tfriMLmXIOwDN4TXlwSCA6rgPTHrMHgrjfHSqho9Km4wxe"/>
+</div>
+</body></html>

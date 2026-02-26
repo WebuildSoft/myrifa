@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Organizer Dashboard - Painel de Controle</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#171121",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+<div class="flex min-h-screen">
+<!-- Sidebar -->
+<aside class="w-64 bg-white dark:bg-slate-900 border-r border-primary/10 flex flex-col fixed h-full">
+<div class="p-6 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined">diamond</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-primary">Organizer</h1>
+</div>
+<nav class="flex-1 px-4 space-y-2 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-semibold" href="#">
+<span class="material-symbols-outlined">home</span>
+<span>Home</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span>Rifas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span>Relatórios</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span>Perfil</span>
+</a>
+</nav>
+<div class="p-4 mt-auto">
+<div class="bg-primary/5 rounded-2xl p-4 border border-primary/10">
+<p class="text-xs font-semibold text-primary uppercase tracking-wider mb-2">Suporte</p>
+<p class="text-sm text-slate-500 mb-3">Precisa de ajuda com suas rifas?</p>
+<button class="w-full py-2 bg-white dark:bg-slate-800 border border-primary/20 text-primary text-sm font-bold rounded-lg hover:bg-primary hover:text-white transition-all">
+                        Falar com Consultor
+                    </button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64">
+<!-- Header -->
+<header class="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 px-8 flex items-center justify-between border-b border-primary/5">
+<div class="flex items-center bg-background-light dark:bg-slate-800 rounded-full px-4 py-2 w-96 border border-primary/5">
+<span class="material-symbols-outlined text-slate-400 text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-slate-400" placeholder="Buscar rifas ou transações..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative p-2 text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<div class="flex items-center gap-3 pl-6 border-l border-slate-200 dark:border-slate-700">
+<div class="text-right">
+<p class="text-sm font-bold">Ricardo Alvares</p>
+<p class="text-xs text-slate-500 font-medium tracking-wide">Organizador Premium</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary/10 overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="Profile picture of a professional male organizer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHonhU9Y3ZUjWZtDqu2OYjyDDxeUTJ4ffb7555gd9nKT1yCm_ruqqdfZQykKmSIkdOhO4ZC8pdylb9tzuZMCjjzR7HpI8e-I1a5Y70K-uyWV_asHzJWc3Gydt6XNVsA2YRUfHMTno9h8VZZkhL2TkICcc75mRmNqXNuMbqqzV2374RlXMlCH2KOpIB94vqomAqQzERuU7QrW7MM-OwzpbBBGdQjUpUMMWPuU99WCiFXE9AZvQZHz5Y76Bt28bEH8JTwvxrOYdfu-VS"/>
+</div>
+</div>
+</div>
+</header>
+<div class="p-8 max-w-7xl mx-auto space-y-8">
+<!-- Metrics Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-primary/5">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-green-100 dark:bg-green-500/10 rounded-lg">
+<span class="material-symbols-outlined text-green-600">payments</span>
+</div>
+<span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">+12%</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Total Arrecadado</p>
+<h3 class="text-2xl font-bold mt-1">R$ 45.000,00</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-primary/5">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-blue-100 dark:bg-blue-500/10 rounded-lg">
+<span class="material-symbols-outlined text-blue-600">confirmation_number</span>
+</div>
+<span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-full">+2%</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Rifas Ativas</p>
+<h3 class="text-2xl font-bold mt-1">12</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-primary/5">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-purple-100 dark:bg-purple-500/10 rounded-lg">
+<span class="material-symbols-outlined text-purple-600">shopping_cart</span>
+</div>
+<span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded-full">+5%</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Números Vendidos</p>
+<h3 class="text-2xl font-bold mt-1">8.420</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-primary/5">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-orange-100 dark:bg-orange-500/10 rounded-lg">
+<span class="material-symbols-outlined text-orange-600">trending_up</span>
+</div>
+<span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full">-1%</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Conversão</p>
+<h3 class="text-2xl font-bold mt-1">14.5%</h3>
+</div>
+</div>
+<!-- CTA Banner -->
+<div class="relative overflow-hidden bg-primary rounded-3xl p-8 md:p-12 text-white shadow-xl shadow-primary/20">
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+<div class="max-w-xl">
+<h2 class="text-3xl font-bold mb-4">Pronto para sua próxima campanha de sucesso?</h2>
+<p class="text-primary-foreground/80 text-lg opacity-90">Crie rifas profissionais em minutos, gerencie pagamentos e automatize o sorteio. Tudo em um só lugar.</p>
+</div>
+<button class="whitespace-nowrap px-8 py-4 bg-white text-primary font-bold rounded-2xl hover:scale-105 transition-transform flex items-center gap-2">
+<span class="material-symbols-outlined">add_circle</span>
+                            Criar Nova Rifa
+                        </button>
+</div>
+<!-- Abstract Background Decorations -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+<div class="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full -ml-10 -mb-10 blur-2xl"></div>
+</div>
+<!-- Active Raffles Section -->
+<div>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-bold tracking-tight">Suas Rifas Ativas</h2>
+<a class="text-primary font-bold text-sm flex items-center gap-1 hover:underline" href="#">
+                            Ver todas as rifas
+                            <span class="material-symbols-outlined text-base">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Raffle Card 1 -->
+<div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-primary/5 group">
+<div class="h-48 overflow-hidden relative">
+<div class="absolute top-4 left-4 z-10">
+<span class="bg-green-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">Ativa</span>
+</div>
+<img alt="iPhone 15 Pro Max" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="High quality smartphone iPhone 15 on a sleek surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXsnJb5720sTBOi9CSdpnKqdMrc8OUoqkfQFhMuFjvknw5ha2kHVZV5TgT3gEB12luNls8lL0V7ykkljLkrDjBJHWeZGi0wXTxyp-c4iYYIeK4N6nzD-u-2vq_BGk8TmAQEmy3_vpTGWTs5X2Wu6IX7uVMOq__3FtMwxDiMFQ9Hxv61a27JD3CtbvuoM6gOEaB0ZHq_5jJdTeuKRe0ZyuVF7HKOLcFrZ9LGBI4AQIX63hMrkqbV3zqnffo2Jv9TJekKIQz32GEijfn"/>
+</div>
+<div class="p-6">
+<h3 class="text-lg font-bold mb-2">iPhone 15 Pro Max + Apple Watch</h3>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-sm mb-1.5">
+<span class="text-slate-500 font-medium">Progresso de Vendas</span>
+<span class="text-primary font-bold">75%</span>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-3/4 rounded-full"></div>
+</div>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-slate-50 dark:border-slate-800">
+<div>
+<p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Arrecadado</p>
+<p class="font-bold text-slate-900 dark:text-slate-100">R$ 15.240</p>
+</div>
+<button class="p-2 bg-primary/10 text-primary rounded-xl hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Raffle Card 2 -->
+<div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-primary/5 group">
+<div class="h-48 overflow-hidden relative">
+<div class="absolute top-4 left-4 z-10">
+<span class="bg-green-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">Ativa</span>
+</div>
+<img alt="Motorcycle" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Powerful black motorcycle in a studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr4UXAZG6Urw7eEt9QDidLe7UwdMZ2Uyk38romaKV5-lBEGZ2t6l0QmQcnnfbYgYv_L4OyBxObMPwxKqQjyub5OE6oVVkzXy4G3I4bO7oZBcnYHLFL-LCJq3-KMXfcXk5ADp31EK_He4v65mEJcYtxY3WAqsY6qXO0K2IjWxy_twmxhCybeqseWG2ZBTorAei3E05ICRvAyykd-ZVbmNkUIyP3YDcBhsndZezAjysYsRZ-cDnAjbc5yqr3DukztKdjnmEUVHREarkT"/>
+</div>
+<div class="p-6">
+<h3 class="text-lg font-bold mb-2">Moto Honda CB 650R 2024</h3>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-sm mb-1.5">
+<span class="text-slate-500 font-medium">Progresso de Vendas</span>
+<span class="text-primary font-bold">32%</span>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/3 rounded-full"></div>
+</div>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-slate-50 dark:border-slate-800">
+<div>
+<p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Arrecadado</p>
+<p class="font-bold text-slate-900 dark:text-slate-100">R$ 28.900</p>
+</div>
+<button class="p-2 bg-primary/10 text-primary rounded-xl hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Raffle Card 3 -->
+<div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-primary/5 group">
+<div class="h-48 overflow-hidden relative">
+<div class="absolute top-4 left-4 z-10">
+<span class="bg-orange-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">Esgotando</span>
+</div>
+<img alt="Tech Bundle" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Assorted modern electronics gadgets on a wooden desk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFKqUNoXF1KT8UsAnc6WDviz8cBh6bWbAd2AD1Hm0XeG7wOq7NTBwNwBWJQfvyozuVLHmBQaOX0grmgXuBwC9U_Rp_m0ENt9RYrUZgUUR7_8cbzAGDl_4eWogAH7vwXBITOkRC2vguTcdDJjngdVZV0IretFBshaVONwmwF5PQBD5wSltSkM6tFbGfCnemRqQr1pTou6M41cQZ_sL1OmzgEYWq4-go1hGdz--ywyBrwYfto9xF_qPhYlOZ6R80cAuQHe3C6y5txQEt"/>
+</div>
+<div class="p-6">
+<h3 class="text-lg font-bold mb-2">Setup Gamer Completo RTX 4090</h3>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-sm mb-1.5">
+<span class="text-slate-500 font-medium">Progresso de Vendas</span>
+<span class="text-primary font-bold">94%</span>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[94%] rounded-full"></div>
+</div>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-slate-50 dark:border-slate-800">
+<div>
+<p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Arrecadado</p>
+<p class="font-bold text-slate-900 dark:text-slate-100">R$ 8.560</p>
+</div>
+<button class="p-2 bg-primary/10 text-primary rounded-xl hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#171121",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+        .custom-checkbox:checked {
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex justify-center">
+<div class="relative flex h-full min-h-screen w-full max-w-md flex-col bg-white dark:bg-slate-900 shadow-xl overflow-x-hidden">
+<div class="flex items-center p-4 pb-2 justify-between">
+<div class="text-slate-900 dark:text-slate-100 flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined cursor-pointer">close</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-12">Onboarding</h2>
+</div>
+<div class="px-6 pt-8 pb-4">
+<div class="bg-primary/5 dark:bg-primary/10 rounded-xl p-6 mb-8 text-center">
+<h1 class="text-slate-900 dark:text-slate-100 tracking-tight text-3xl font-bold leading-tight pb-2">Bem-vindo, João!</h1>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Estamos quase prontos para começar sua jornada no RifaOnline.</p>
+</div>
+<div class="flex flex-col gap-4 mb-10">
+<div class="flex justify-between items-end">
+<div>
+<p class="text-slate-900 dark:text-slate-100 text-lg font-bold">Seu progresso</p>
+<p class="text-primary text-sm font-medium">Falta pouco para começar a vender</p>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">1 de 4</p>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-500" style="width: 25%;"></div>
+</div>
+</div>
+<div class="space-y-2 mb-8">
+<label class="flex items-center gap-4 p-4 rounded-xl border border-primary/20 bg-primary/5 dark:bg-primary/10 transition-colors">
+<div class="relative flex items-center">
+<input checked="" class="custom-checkbox h-6 w-6 rounded-full border-primary bg-primary text-white focus:ring-primary focus:ring-offset-0 disabled:opacity-100" disabled="" type="checkbox"/>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 font-semibold line-through opacity-60">Conta criada</span>
+<span class="text-xs text-primary font-medium">Concluído</span>
+</div>
+</label>
+<label class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-colors">
+<div class="relative flex items-center">
+<input class="h-6 w-6 rounded-full border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-primary focus:ring-offset-0" disabled="" type="checkbox"/>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 font-semibold">Criar primeira rifa</span>
+<span class="text-xs text-slate-500">Defina prêmios e valores</span>
+</div>
+</label>
+<label class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-colors">
+<div class="relative flex items-center">
+<input class="h-6 w-6 rounded-full border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-primary focus:ring-offset-0" disabled="" type="checkbox"/>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 font-semibold">Compartilhar</span>
+<span class="text-xs text-slate-500">Envie para seus contatos</span>
+</div>
+</label>
+<label class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-colors">
+<div class="relative flex items-center">
+<input class="h-6 w-6 rounded-full border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-primary focus:ring-offset-0" disabled="" type="checkbox"/>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-slate-100 font-semibold">Receber compra</span>
+<span class="text-xs text-slate-500">Acompanhe seus lucros</span>
+</div>
+</label>
+</div>
+</div>
+<div class="mt-auto p-6 flex flex-col gap-4">
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-5 bg-primary text-white text-base font-bold leading-normal tracking-wide shadow-lg shadow-primary/20 hover:opacity-90 active:scale-[0.98] transition-all">
+<span class="truncate">Criar minha primeira rifa</span>
+</button>
+<button class="flex w-full cursor-pointer items-center justify-center h-12 text-slate-500 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors">
+                Pular por agora
+            </button>
+</div>
+<div class="h-6 bg-transparent"></div>
+</div>
+</body></html>

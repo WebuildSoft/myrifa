@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-background-light dark:bg-background-dark border-b border-primary/10">
+<div class="flex items-center p-4 gap-4">
+<button class="text-slate-900 dark:text-slate-100 p-1 hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined align-middle">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold leading-tight">Realizar Sorteio</h1>
+</div>
+</header>
+<main class="max-w-md mx-auto p-4 space-y-6">
+<!-- Warning Card -->
+<div class="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 p-4 rounded-xl flex gap-4">
+<div class="text-amber-500 shrink-0">
+<span class="material-symbols-outlined text-3xl">warning</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-amber-800 dark:text-amber-200 text-sm font-bold leading-tight uppercase tracking-wider">Aviso importante</p>
+<p class="text-amber-900 dark:text-amber-100 text-base font-semibold">Atenção: O sorteio não pode ser desfeito.</p>
+<p class="text-amber-800 dark:text-amber-300 text-sm leading-normal">Certifique-se de que todos os pagamentos foram confirmados antes de prosseguir.</p>
+</div>
+</div>
+<!-- Raffle Summary Card -->
+<section>
+<h2 class="text-lg font-bold mb-3 px-1">Resumo da Rifa</h2>
+<div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-primary/10">
+<div class="aspect-video w-full bg-slate-200 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+<img alt="iPhone 15 Pro Max display" class="w-full h-full object-cover" data-alt="Modern smartphone displayed on a sleek surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYkKmvZGMfnBAN1kvnKP9xKiM71pM5nYE7KU1cBH8SrFBG6Q3as89mvJICH2wreFxYNAuVoTaa5ObqddjG9_adMztgP-zb8PPCiD9WV9zOz-ef9uwQYFl2QjNS1JWluZkDNReJ5hZU3YdHmp_-9Rt-BUPLbv5KI4-Z3Q-gWuQndn3AfRNvVpCMP1BUbc1z4qjbetHX53NBzIugyxgcD0_iTB2u2I1H7T6mheHqrMuFMpB720nEcRtbljuPaQUE1rIP_c03dkrH32kx"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="bg-primary text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-tighter">Ativa</span>
+</div>
+</div>
+<div class="p-4">
+<p class="text-xl font-bold text-slate-900 dark:text-white">iPhone 15 Pro Max</p>
+<div class="flex items-center gap-6 mt-3">
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Números vendidos</span>
+<span class="text-base font-bold text-primary">842</span>
+</div>
+<div class="w-px h-8 bg-slate-200 dark:bg-slate-700"></div>
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Compradores</span>
+<span class="text-base font-bold text-primary">350</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Draw Method Selection -->
+<section class="space-y-4">
+<h2 class="text-lg font-bold px-1">Método de Sorteio</h2>
+<div class="space-y-3">
+<!-- Method 1: Recommended -->
+<label class="relative flex items-center p-4 rounded-xl border-2 border-primary bg-primary/5 cursor-pointer transition-all">
+<input checked="" class="hidden" name="draw_method" type="radio"/>
+<div class="flex flex-1 items-center gap-4">
+<div class="p-3 bg-primary text-white rounded-lg">
+<span class="material-symbols-outlined">shield</span>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-slate-900 dark:text-white">Algoritmo Aleatório Seguro</span>
+<span class="text-sm text-primary font-semibold italic">Recomendado</span>
+</div>
+</div>
+<div class="ml-auto text-primary">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+</label>
+<!-- Method 2: Federal Lottery -->
+<label class="relative flex flex-col p-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 cursor-pointer transition-all hover:border-primary/50">
+<input class="hidden" name="draw_method" type="radio"/>
+<div class="flex items-center gap-4 mb-4">
+<div class="p-3 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg">
+<span class="material-symbols-outlined">emoji_events</span>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-slate-900 dark:text-white">Loteria Federal</span>
+<span class="text-sm text-slate-500 dark:text-slate-400">Sorteio baseado em concurso oficial</span>
+</div>
+</div>
+<!-- Input for Federal Lottery number, only visible/enabled when selected (simulated) -->
+<div class="space-y-2 mt-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-wide" for="concurso">Concurso Nº</label>
+<input class="w-full bg-slate-100 dark:bg-slate-700 border-none rounded-lg focus:ring-2 focus:ring-primary text-slate-900 dark:text-white p-3" id="concurso" placeholder="Ex: 5824" type="text"/>
+</div>
+</label>
+</div>
+</section>
+<!-- Final Action -->
+<div class="pt-4 pb-8">
+<button class="w-full bg-[#6b21a8] hover:bg-[#581c87] text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 shadow-lg transition-transform active:scale-95">
+<span class="text-2xl">🎲</span>
+<span class="text-lg">Iniciar Sorteio</span>
+</button>
+<p class="text-center text-slate-500 dark:text-slate-400 text-xs mt-4 px-4 leading-relaxed">
+                Ao clicar em iniciar, o sistema processará todos os números válidos e selecionará o vencedor instantaneamente.
+            </p>
+</div>
+</main>
+<!-- Bottom Navigation Spacer -->
+<div class="h-10"></div>
+</body></html>

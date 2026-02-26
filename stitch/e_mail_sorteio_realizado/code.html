@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#171121",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "syne": ["Syne", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .syne-font {
+            font-family: 'Syne', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4 antialiased">
+<!-- Email Container -->
+<div class="max-w-[600px] w-full bg-white dark:bg-slate-900 rounded-xl shadow-xl overflow-hidden border border-primary/10">
+<!-- Header -->
+<header class="flex items-center justify-between px-8 py-6 border-b border-primary/5 bg-white dark:bg-slate-900">
+<div class="flex items-center gap-2 text-primary">
+<div class="size-8 bg-primary/10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-2xl">confirmation_number</span>
+</div>
+<h1 class="text-slate-900 dark:text-slate-100 text-xl font-extrabold tracking-tight">Rifa<span class="text-primary">Online</span></h1>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400">notifications_active</span>
+</div>
+</header>
+<!-- Main Content -->
+<main class="px-8 py-10">
+<!-- Subject Title -->
+<div class="text-center mb-8">
+<h2 class="text-slate-900 dark:text-slate-100 text-3xl font-extrabold leading-tight mb-2">
+                    O sorteio foi realizado! 🏆
+                </h2>
+<div class="h-1.5 w-16 bg-primary rounded-full mx-auto"></div>
+</div>
+<!-- Personalized Greeting -->
+<div class="space-y-4 mb-8">
+<p class="text-slate-900 dark:text-slate-100 text-lg font-semibold">Olá, [Nome]!</p>
+<p class="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
+                    O sorteio da rifa <span class="font-bold text-slate-800 dark:text-slate-200">[Título da Rifa]</span> já aconteceu. Confira quem foi o grande vencedor e se a sorte bateu na sua porta!
+                </p>
+</div>
+<!-- Result Card -->
+<div class="relative group mb-10">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary/50 to-primary/20 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+<div class="relative bg-white dark:bg-slate-800 border-2 border-primary/20 rounded-xl p-8 flex flex-col items-center text-center shadow-sm">
+<div class="w-full h-48 rounded-lg mb-6 bg-slate-100 dark:bg-slate-700 overflow-hidden relative">
+<div class="absolute inset-0 bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-6xl text-primary/30">celebration</span>
+</div>
+<img alt="Draw Celebration Background" class="w-full h-full object-cover mix-blend-overlay" data-alt="Abstract colorful confetti and celebratory background pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrMOhtrcBdec2qiTPDLHmSdjFvUBW0eDuCGlf88DKPoinLLuoT8gh3ZaN3urmG_M2YST5v2UQQONPZpVoccjVLPHNszEEJ6xkiP-nHsKZ-Rbppk1GMU5-rVi388Z05ocEDruGviUbB6TcvIyd6OOM7FW2yxJW9sbx8F0pl9xCcVqUked5wVyY_5L5UCmAx-6yzj-VhzbbSUoGE5Je6eSo9qYa9XFzctxc1bG6hIrWMtTEmhnni9SpkcDQ413uQjhg5BQM8eS93lbbj"/>
+</div>
+<span class="text-primary font-bold text-xs tracking-widest uppercase mb-2">Resultado Oficial</span>
+<h3 class="syne-font text-slate-900 dark:text-slate-100 text-3xl md:text-4xl font-extrabold mb-4 uppercase tracking-tighter">
+                        NÚMERO SORTEADO: <span class="text-primary">802</span>
+</h3>
+<div class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 px-6 py-3 rounded-full border border-primary/10">
+<div class="size-10 rounded-full bg-primary flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-xl">emoji_events</span>
+</div>
+<div class="text-left">
+<p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">Ganhador(a)</p>
+<p class="text-slate-900 dark:text-slate-100 font-bold text-lg leading-none">João Silva</p>
+</div>
+</div>
+</div>
+</div>
+<!-- CTA Button -->
+<div class="flex justify-center">
+<a class="bg-primary hover:bg-primary/90 text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-primary/30 flex items-center gap-2 transition-all transform hover:scale-[1.02]" href="#">
+                    Ver resultado completo
+                    <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</a>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-background-light dark:bg-slate-950 px-8 py-10 border-t border-primary/5">
+<div class="flex flex-col items-center gap-6">
+<!-- Social Media Links -->
+<div class="flex gap-4">
+<a class="size-10 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-primary shadow-sm hover:shadow-md transition-shadow border border-primary/5" href="#">
+<span class="material-symbols-outlined text-xl">chat</span> <!-- Representing WhatsApp -->
+</a>
+<a class="size-10 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-primary shadow-sm hover:shadow-md transition-shadow border border-primary/5" href="#">
+<span class="material-symbols-outlined text-xl">camera_alt</span> <!-- Representing Instagram -->
+</a>
+</div>
+<!-- Legal/Bot Message -->
+<div class="text-center space-y-3 max-w-sm">
+<p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                        Este é um e-mail automático enviado pelo sistema <span class="font-semibold">RifaOnline</span>. Por favor, não responda a esta mensagem.
+                    </p>
+<p class="text-slate-400 dark:text-slate-500 text-[10px] font-medium uppercase tracking-widest">
+                        © 2024 RifaOnline Ltda. Todos os direitos reservados.
+                    </p>
+</div>
+<!-- Unsubscribe/Privacy -->
+<div class="flex gap-4 text-xs font-semibold text-primary/60">
+<a class="hover:text-primary underline decoration-primary/20" href="#">Configurações de e-mail</a>
+<a class="hover:text-primary underline decoration-primary/20" href="#">Política de Privacidade</a>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

@@ -1,0 +1,197 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+        
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?
+  image         String?
+  whatsapp      String?
+  pixKey        String?
+  plan          Plan      @default(FREE)
+  planExpiresAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  rifas         Rifa[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Rifa {
+  id                 String        @id @default(cuid())
+  slug               String        @unique
+  title              String
+  description        String?
+  rules              String?
+  category           Category      @default(SORTEIO)
+  status             RifaStatus    @default(DRAFT)
+  totalNumbers       Int
+  numberPrice        Decimal       @db.Decimal(10, 2)
+  minPercentToRaffle Int           @default(100)
+  maxPerBuyer        Int?
+  drawDate           DateTime?
+  drawMethod         DrawMethod    @default(MANUAL)
+  isPrivate          Boolean       @default(false)
+  coverImage         String?
+  images             String[]
+  balloonShape       BalloonShape  @default(CIRCLE)
+  primaryColor       String?
+  winnerId           String?
+  winnerNumber       Int?
+  drawnAt            DateTime?
+  totalRaised        Decimal       @default(0) @db.Decimal(10, 2)
+  userId             String
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  buyers             Buyer[]
+  user               User          @relation(fields: [userId], references: [id])
+  numbers            RifaNumber[]
+  transactions       Transaction[]
+}
+
+model RifaNumber {
+  id         String       @id @default(cuid())
+  number     Int
+  status     NumberStatus @default(AVAILABLE)
+  rifaId     String
+  buyerId    String?
+  reservedAt DateTime?
+  paidAt     DateTime?
+  buyer      Buyer?       @relation(fields: [buyerId], references: [id])
+  rifa       Rifa         @relation(fields: [rifaId], references: [id])
+
+  @@unique([rifaId, number])
+}
+
+model Buyer {
+  id           String        @id @default(cuid())
+  name         String
+  whatsapp     String
+  email        String?
+  rifaId       String
+  createdAt    DateTime      @default(now())
+  rifa         Rifa          @relation(fields: [rifaId], references: [id])
+  numbers      RifaNumber[]
+  transactions Transaction[]
+}
+
+model Transaction {
+  id            String            @id @default(cuid())
+  amount        Decimal           @db.Decimal(10, 2)
+  status        TransactionStatus @default(PENDING)
+  method        PaymentMethod
+  externalId    String?
+  pixQrCode     String?
+  pixQrCodeText String?
+  boletoUrl     String?
+  rifaId        String
+  buyerId       String
+  numbers       Int[]
+  paidAt        DateTime?
+  expiresAt     DateTime?
+  createdAt     DateTime          @default(now())
+  buyer         Buyer             @relation(fields: [buyerId], references: [id])
+  rifa          Rifa              @relation(fields: [rifaId], references: [id])
+}
+
+enum Plan {
+  FREE
+  PRO
+  INSTITUTIONAL
+}
+
+enum Category {
+  SORTEIO
+  ARRECADACAO
+  VIAGEM
+  MISSAO
+  SAUDE
+  ESPORTE
+  OUTRO
+}
+
+enum RifaStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  CLOSED
+  DRAWN
+  CANCELLED
+  DELETED
+}
+
+enum NumberStatus {
+  AVAILABLE
+  RESERVED
+  PAID
+}
+
+enum DrawMethod {
+  MANUAL
+  AUTOMATIC
+  DATE
+  PERCENTAGE
+  LOTERIA_FEDERAL
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT_CARD
+  DEBIT_CARD
+  BOLETO
+}
+
+enum TransactionStatus {
+  PENDING
+  PAID
+  EXPIRED
+  REFUNDED
+  CANCELLED
+}
+
+enum BalloonShape {
+  CIRCLE
+  HEART
+  STAR
+  HEXAGON
+  DIAMOND
+  SHIELD
+  FLOWER
+}

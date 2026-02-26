@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RifaOnline - Sorteio em Tempo Real</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#171121",
+                        "gold": "#fbbf24",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "syne": ["Syne", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .slot-gradient {
+            background: linear-gradient(180deg, rgba(124, 59, 237, 0.2) 0%, rgba(124, 59, 237, 0) 50%, rgba(124, 59, 237, 0.2) 100%);
+        }
+        .gold-glow {
+            box-shadow: 0 0 50px rgba(251, 191, 36, 0.3);
+        }
+        .main-draw-container {
+            background: radial-gradient(circle at center, #7c3bed 0%, #1e1b4b 100%);
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-hidden">
+<div class="relative flex h-screen w-full flex-col main-draw-container overflow-hidden">
+<!-- Header Overlay -->
+<header class="absolute top-0 w-full flex items-center justify-between px-10 py-6 z-50 bg-transparent">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-gold">
+<span class="material-symbols-outlined text-4xl">stars</span>
+</div>
+<h2 class="text-white text-2xl font-extrabold tracking-tight">RifaOnline</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end">
+<span class="text-white/60 text-xs uppercase tracking-widest font-bold">Status do Sorteio</span>
+<span class="text-gold font-bold flex items-center gap-2">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-gold"></span>
+</span>
+                    AO VIVO
+                </span>
+</div>
+<div class="bg-white/10 backdrop-blur-md p-1 rounded-full flex items-center pr-4 border border-white/20">
+<div class="size-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">M</div>
+<span class="ml-3 text-white text-sm font-semibold">Moderador</span>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col items-center justify-center relative z-10 px-4">
+<!-- Animated Particles / Rays Effect (Simulated with Gradients) -->
+<div class="absolute inset-0 pointer-events-none">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/20 blur-[120px] rounded-full"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gold/10 blur-[80px] rounded-full"></div>
+</div>
+<!-- Title Section -->
+<div class="text-center mb-12">
+<h1 class="text-white text-6xl md:text-8xl font-black mb-4 tracking-tighter drop-shadow-2xl">
+                Sorteando<span class="text-gold">...</span>
+</h1>
+<p class="text-primary/30 text-xl font-bold uppercase tracking-[0.5em] animate-pulse">Aguarde o resultado final</p>
+</div>
+<!-- Slot Machine Centerpiece -->
+<div class="relative flex items-center gap-4 p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl gold-glow">
+<!-- Individual Slots -->
+<div class="flex gap-4">
+<!-- Slot 1 -->
+<div class="w-32 h-48 md:w-48 md:h-72 bg-slate-900 rounded-lg overflow-hidden relative border-2 border-white/10">
+<div class="slot-gradient absolute inset-0 z-10"></div>
+<div class="flex flex-col items-center justify-center h-full">
+<span class="font-syne text-8xl md:text-[10rem] text-gold leading-none drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">7</span>
+</div>
+</div>
+<!-- Slot 2 -->
+<div class="w-32 h-48 md:w-48 md:h-72 bg-slate-900 rounded-lg overflow-hidden relative border-2 border-white/10">
+<div class="slot-gradient absolute inset-0 z-10"></div>
+<div class="flex flex-col items-center justify-center h-full">
+<span class="font-syne text-8xl md:text-[10rem] text-gold leading-none drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">4</span>
+</div>
+</div>
+<!-- Slot 3 -->
+<div class="w-32 h-48 md:w-48 md:h-72 bg-slate-900 rounded-lg overflow-hidden relative border-2 border-white/10">
+<div class="slot-gradient absolute inset-0 z-10"></div>
+<div class="flex flex-col items-center justify-center h-full">
+<span class="font-syne text-8xl md:text-[10rem] text-gold leading-none drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">2</span>
+</div>
+</div>
+</div>
+<!-- Gold Sparkles Icons (Confetti Mockup) -->
+<span class="material-symbols-outlined absolute -top-10 -left-10 text-gold text-6xl opacity-50">auto_awesome</span>
+<span class="material-symbols-outlined absolute -bottom-10 -right-10 text-gold text-6xl opacity-50 rotate-180">auto_awesome</span>
+</div>
+<!-- Progress and Stats -->
+<div class="mt-16 w-full max-w-2xl px-6">
+<div class="flex justify-between items-end mb-4">
+<div class="flex flex-col">
+<p class="text-white/60 text-sm font-medium uppercase tracking-widest">Processando bilhetes</p>
+<p class="text-white text-lg font-bold">Gerando resultado premiado</p>
+</div>
+<p class="text-gold text-2xl font-black font-syne">85%</p>
+</div>
+<div class="h-4 w-full bg-white/10 rounded-full overflow-hidden border border-white/5">
+<div class="h-full bg-primary w-[85%] relative">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-8 mt-12 justify-center">
+<div class="flex flex-col items-center">
+<div class="flex items-center gap-2 text-gold mb-1">
+<span class="material-symbols-outlined text-sm">groups</span>
+<p class="text-white/60 text-xs font-bold uppercase">Participantes</p>
+</div>
+<p class="text-white text-3xl font-black">12,405</p>
+</div>
+<div class="w-px h-10 bg-white/10 self-center"></div>
+<div class="flex flex-col items-center">
+<div class="flex items-center gap-2 text-gold mb-1">
+<span class="material-symbols-outlined text-sm">payments</span>
+<p class="text-white/60 text-xs font-bold uppercase">Prêmio Total</p>
+</div>
+<p class="text-white text-3xl font-black">R$ 50.000,00</p>
+</div>
+<div class="w-px h-10 bg-white/10 self-center"></div>
+<div class="flex flex-col items-center">
+<div class="flex items-center gap-2 text-gold mb-1">
+<span class="material-symbols-outlined text-sm">security</span>
+<p class="text-white/60 text-xs font-bold uppercase">Certificado</p>
+</div>
+<p class="text-white text-3xl font-black italic">PRO</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Sidebar Activity (Desktop Only) -->
+<aside class="absolute right-10 top-1/2 -translate-y-1/2 w-80 hidden xl:flex flex-col gap-4 z-20">
+<div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
+<h3 class="text-white text-sm font-bold uppercase mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-gold">chat</span>
+                Atividade Recente
+            </h3>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-slate-400 overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="User avatar profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0DVDoJevA221A3_BPMGJxt6osKTUl6d8RKuNYQRIDYDmt88KQkSno9be7T1_GG4wDNiqt-9y4MJcZQnA9fNngjnbSL5GDFDI_idIw3Vbu29r2mhT1ajEaj99Gq6TxQ4idvyTIAJObLfCZCTV6VY03X8okgO1gXteaRb1mDjZl-dGjHNJAIUQE7S6MsN20-XnmUnWUBur0dmqL90v7KmLEbVp0hrZjPep2NJ0tTjRzOAEO4vxyHUXKkOz-14qlaAlCv_3cO8FsNIX3"/>
+</div>
+<div class="flex flex-col">
+<span class="text-white text-xs font-bold">Lucas Rocha</span>
+<span class="text-white/60 text-xs italic">"Tô sentindo que é hoje!"</span>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-slate-500 overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="User avatar profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-8NDFa4CwuOet2-u4jAkURu_ofIFljecnm7mxuM60ebjRuyLGAYVCrQ1-iLZ52hBpLby6e2K6Z7ghwBjznFO1hZSgPtqVHSTB3BehGiIARk1zIEW036AUG9r1l-c-oHLa0_Pkyn7m5GNvEpJPfhdlCNjE5eVtVKciXcLPwnERgIuMsGPgby49tKN2VbsNlvsj2-PdyOASt3ccYkWnDn_zKBn9ANKj9q8cIrXIZ47N1AARY06TOx5xOqFbRQfKZjl-QePVcHxO4nzp"/>
+</div>
+<div class="flex flex-col">
+<span class="text-white text-xs font-bold">Ana Júlia</span>
+<span class="text-white/60 text-xs italic">"Boraaaaa RifaOnline!"</span>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-slate-600 overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="User avatar profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXpWhXuEli6nZa5-KhnRsveZ-XPLxfqPtGPARkx_O0PX1Ada8eFk4bGAsEKOeyo11C91u2JZ7l-tZndmPNMJrV9x_CWqunvMdHOo-CX1k8TcfzFTEnZFh9wkweeu9LE0FIO9x33Qd8vSGTYcCnJgCTI--KtiTj4gkVtyAjnx3Ol76pzA9J-9vidSKlEvIbajQITKcDLdDe9tLMRDVZ1lUokzDKOYVP5wcKSIvOgUgtWlLSWxm0Yc1NT8t3Z9Lp_aaJ_wJcOKzBP1Qd"/>
+</div>
+<div class="flex flex-col">
+<span class="text-white text-xs font-bold">Carlos M.</span>
+<span class="text-white/60 text-xs italic">"Acompanhando de SP"</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Footer Decorative -->
+<footer class="absolute bottom-0 w-full p-6 text-center z-10">
+<p class="text-white/30 text-xs uppercase tracking-widest font-medium">© 2024 RifaOnline - Sorteios Auditados e Seguros</p>
+</footer>
+<!-- Background Decoration -->
+<div class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
+<div class="absolute top-10 left-10 text-gold/30">
+<span class="material-symbols-outlined text-[200px]">filter_vintage</span>
+</div>
+<div class="absolute bottom-10 right-10 text-gold/30 rotate-45">
+<span class="material-symbols-outlined text-[150px]">workspace_premium</span>
+</div>
+</div>
+</div>
+</body></html>

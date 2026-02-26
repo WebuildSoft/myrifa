@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f5f3ff",
+                        "background-dark": "#171121",
+                        "whatsapp": "#25D366",
+                        "facebook": "#1877F2",
+                        "instagram": "#E4405F"
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "syne": ["Syne", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .syne-bold {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex justify-center items-center">
+<!-- Mobile Screen Wrapper (390x844px style) -->
+<div class="relative w-full max-w-[390px] min-h-[844px] bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden">
+<!-- Confetti Background Layer (Simulated with gradients/shapes) -->
+<div class="absolute inset-0 pointer-events-none opacity-40">
+<div class="absolute top-10 left-10 w-4 h-4 rounded-sm bg-primary rotate-45"></div>
+<div class="absolute top-20 right-20 w-3 h-3 rounded-full bg-whatsapp"></div>
+<div class="absolute top-40 left-1/4 w-2 h-5 bg-primary/60 -rotate-12"></div>
+<div class="absolute top-60 right-10 w-4 h-2 bg-whatsapp/70 rotate-12"></div>
+<div class="absolute bottom-40 left-10 w-3 h-3 rounded-full bg-primary"></div>
+<div class="absolute bottom-20 right-1/4 w-5 h-2 bg-whatsapp rotate-45"></div>
+</div>
+<!-- Header / Close -->
+<div class="flex items-center p-4 justify-end z-10">
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Success Animation/Icon Section -->
+<div class="flex flex-col items-center px-6 pt-4 text-center z-10">
+<div class="relative mb-6">
+<div class="w-24 h-24 bg-whatsapp/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-whatsapp !text-6xl">check_circle</span>
+</div>
+<!-- Sparkle accents -->
+<span class="material-symbols-outlined absolute -top-2 -right-2 text-primary text-xl">auto_awesome</span>
+</div>
+<h1 class="syne-bold text-slate-900 dark:text-white text-3xl leading-tight mb-3">
+                Rifa publicada com sucesso! 🚀
+            </h1>
+<p class="text-slate-600 dark:text-slate-400 text-base font-normal leading-relaxed px-4">
+                Sua rifa já está no ar e pronta para receber compradores.
+            </p>
+</div>
+<!-- Raffle Link Card -->
+<div class="px-6 mt-10 z-10">
+<div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl p-4">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">Link da sua rifa</p>
+<div class="flex items-center justify-between gap-3">
+<div class="flex items-center gap-3 overflow-hidden">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+<span class="material-symbols-outlined">link</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 font-medium truncate">
+                            rifaonline.com/r/iphone-15-pro
+                        </p>
+</div>
+<button class="bg-primary text-white text-sm font-bold px-4 py-2 rounded-full shrink-0 active:scale-95 transition-transform">
+                        Copiar
+                    </button>
+</div>
+</div>
+</div>
+<!-- Sharing Section -->
+<div class="px-6 mt-8 z-10">
+<p class="text-slate-900 dark:text-white font-bold text-center mb-4">Compartilhe agora:</p>
+<div class="flex justify-center gap-4">
+<!-- WhatsApp -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-full bg-whatsapp flex items-center justify-center text-white shadow-lg shadow-whatsapp/20 group-active:scale-90 transition-transform">
+<svg class="w-7 h-7 fill-current" viewbox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-400">WhatsApp</span>
+</button>
+<!-- Instagram -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-full bg-instagram flex items-center justify-center text-white shadow-lg shadow-instagram/20 group-active:scale-90 transition-transform">
+<svg class="w-7 h-7 fill-current" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.607.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.063 1.366-.333 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.063-2.633-.333-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.607-1.308 1.266-.058 1.646-.07 4.85-.07M12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.981 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"></path></svg>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-400">Stories</span>
+</button>
+<!-- Facebook -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-full bg-facebook flex items-center justify-center text-white shadow-lg shadow-facebook/20 group-active:scale-90 transition-transform">
+<svg class="w-7 h-7 fill-current" viewbox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-400">Facebook</span>
+</button>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="mt-auto px-6 pb-10 z-10 space-y-3">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                Ver detalhes da rifa
+                <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+<button class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold py-4 rounded-2xl active:scale-95 transition-transform">
+                Ir para o início
+            </button>
+</div>
+<!-- Decorative Illustration at Bottom -->
+<div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none"></div>
+</div>
+</body></html>

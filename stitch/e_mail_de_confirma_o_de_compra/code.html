@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Confirmação de Compra - RifaOnline</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f9fafb",
+                        "background-dark": "#171121",
+                        "card-bg": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "heading": ["Syne", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .heading-font {
+            font-family: 'Syne', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4 sm:p-8">
+<div class="max-w-[600px] w-full mx-auto">
+<!-- Main Card Container -->
+<div class="bg-card-bg dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200/60 dark:border-slate-800 overflow-hidden">
+<!-- Header -->
+<header class="flex flex-col items-center pt-10 pb-6 px-6">
+<div class="flex items-center gap-2 text-primary mb-4">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1">confirmation_number</span>
+<h1 class="heading-font text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">RifaOnline</h1>
+</div>
+</header>
+<!-- Hero Message -->
+<div class="px-8 pb-8 text-center">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 leading-tight mb-2">
+                    Olá, João Silva! 🎉
+                </h2>
+<p class="text-slate-600 dark:text-slate-400 text-base">
+                    Sua compra foi confirmada com sucesso. Você já está participando!
+                </p>
+</div>
+<!-- Prize Featured Image -->
+<div class="px-8">
+<div class="relative group rounded-xl overflow-hidden aspect-video bg-slate-100 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 shadow-inner">
+<img alt="iPhone 15 Pro Max em destaque" class="w-full h-full object-cover" data-alt="Premium smartphone iPhone 15 Pro Max visualization" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0fdAg5dUi6ZY4DjGJjTXEkFh8BEX7IGqoKhgNeOXOEKojMHf1WxM50isJ62wAP6t3_udqqPBfqCufURd39Mdl5F1I32M3t6oeDG1Ha3YYwRBK9Nk4u9iMqes3f2pAZqBU9FCuBNOD-c9KHkUn2TmS3hC5bE5DIAe25WM2Np47dW2o8zHYI-9vJPZaXIL_vh4vsxL6Al5giBVv_PTM7JWApjNT0TUUpHQy-KRmBdm_i0Kib4P9YMc2PiU8b99GYnefbQ_2rruJ54G7"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<span class="bg-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 inline-block">Sorteio Oficial</span>
+<h3 class="text-xl font-bold">Rifa Especial: iPhone 15 Pro Max</h3>
+</div>
+</div>
+</div>
+<!-- Lucky Numbers Section -->
+<div class="p-8">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<h4 class="text-lg font-bold text-slate-900 dark:text-slate-100">Seus Números</h4>
+</div>
+<div class="flex flex-wrap gap-2">
+<div class="bg-primary px-4 py-2 rounded-lg text-white font-mono font-bold text-lg shadow-sm shadow-primary/20">042</div>
+<div class="bg-primary px-4 py-2 rounded-lg text-white font-mono font-bold text-lg shadow-sm shadow-primary/20">158</div>
+<div class="bg-primary px-4 py-2 rounded-lg text-white font-mono font-bold text-lg shadow-sm shadow-primary/20">294</div>
+<div class="bg-primary px-4 py-2 rounded-lg text-white font-mono font-bold text-lg shadow-sm shadow-primary/20">771</div>
+<div class="bg-primary px-4 py-2 rounded-lg text-white font-mono font-bold text-lg shadow-sm shadow-primary/20">802</div>
+</div>
+</div>
+<!-- Payment Details -->
+<div class="px-8 pb-8">
+<div class="bg-background-light dark:bg-slate-800/50 rounded-xl p-5 border border-slate-100 dark:border-slate-800">
+<div class="grid grid-cols-2 gap-y-4">
+<div>
+<p class="text-xs font-medium uppercase text-slate-500 dark:text-slate-400 mb-1">Valor Total</p>
+<p class="text-base font-bold text-slate-900 dark:text-slate-100">R$ 10,00</p>
+</div>
+<div>
+<p class="text-xs font-medium uppercase text-slate-500 dark:text-slate-400 mb-1">Método</p>
+<p class="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">payments</span> PIX
+                            </p>
+</div>
+<div class="col-span-2 border-t border-slate-200 dark:border-slate-700 pt-4">
+<p class="text-xs font-medium uppercase text-slate-500 dark:text-slate-400 mb-1">Data e Hora</p>
+<p class="text-base font-medium text-slate-700 dark:text-slate-300">24 de Maio, 2024 às 14:35</p>
+</div>
+</div>
+</div>
+</div>
+<!-- CTA Button -->
+<div class="px-8 pb-10 text-center">
+<a class="inline-flex items-center justify-center w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 px-8 rounded-xl transition-colors shadow-lg shadow-primary/30 text-lg" href="#">
+                    Ver rifa completa
+                    <span class="material-symbols-outlined ml-2">arrow_forward</span>
+</a>
+</div>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-800/80 px-8 py-8 border-t border-slate-100 dark:border-slate-800">
+<div class="flex flex-col items-center gap-6">
+<div class="flex gap-4">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">support_agent</span>
+</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">article</span>
+</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">share</span>
+</a>
+</div>
+<div class="text-center">
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-2">
+                            Este é um e-mail automático, por favor não responda.
+                        </p>
+<p class="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest font-bold">
+                            © 2024 RifaOnline Brasil
+                        </p>
+</div>
+<div class="flex gap-6 text-xs font-semibold text-slate-400 dark:text-slate-500">
+<a class="hover:underline" href="#">Suporte</a>
+<a class="hover:underline" href="#">Termos de Uso</a>
+<a class="hover:underline" href="#">Políticas</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

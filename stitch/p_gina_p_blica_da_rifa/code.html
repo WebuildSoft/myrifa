@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f5f3ff",
+                        "background-dark": "#171121",
+                        "surface": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "syne": ["Syne", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .syne-bold { font-family: 'Syne', sans-serif; font-weight: 700; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen pb-32">
+<!-- Header Section -->
+<header class="relative w-full h-[400px] bg-cover bg-center" data-alt="Luxury gray sports car parked in modern studio" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.8) 100%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6sJzE_4ij93ftwjQ6V_mnn831bXffYJS4JH--46E22jntf_gYryIV7iwfhT4aIyeQblAPK3Owyve1WSp1bezkQrf7-sFSEaamvsUtTJxeZm7kZCYN9KwZOnfmoKo-YN31Gm24-kjnpM0mnIhlZBVFedGrM279GOtw5rhIDheXW8BjPEor43_FcIoAzJgQdHxpy5CVywt748zPD8uCX5bWgtLu8vqrGWO-0-DWnHqsqLAjkP2vqph1hYqoDQxxoQ-b2ObG6eWN9Z7A');">
+<div class="absolute bottom-12 left-0 right-0 px-6 flex items-center gap-4">
+<div class="w-14 h-14 rounded-full border-2 border-white overflow-hidden bg-white">
+<img alt="Organizer" class="w-full h-full object-cover" data-alt="Profile portrait of a smiling male organizer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi8P--1HUomi0Tfcd73ehdcqHG_ucyoGRRz_kYyzFzVpZK7DZl3YyFpbNAev_DGAPFDiREMzol2YgmA__VydTNiYSqdGhfm3gS_eYbwU5SRa9BSWw2ONer154xdlxfd3xiM1Tm9KR0aIe_GcMARBXmSwOiPAv5qr6NY-qtkS-W6yWy3JOJT0zFpEDk67sI7a3FTCYdMUstmsio4y8ncDz_E-OtGNlgmFcW8Nl6fHi9Z0-VzjEVHMMFkquYEehCJaEGVLQN2NjEob5w"/>
+</div>
+<div>
+<p class="text-white text-sm font-medium opacity-80">Organizado por</p>
+<p class="text-white text-xl font-bold">Premium Raffles Brasil</p>
+</div>
+</div>
+</header>
+<!-- Info Floating Card -->
+<main class="max-w-2xl mx-auto px-4 -mt-10 relative z-10">
+<div class="bg-surface dark:bg-slate-800 rounded-xl shadow-xl p-6 mb-6">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Automóveis</span>
+<div class="text-right">
+<p class="text-primary text-2xl font-extrabold syne-bold">R$ 0,50</p>
+<p class="text-slate-500 text-xs">por número</p>
+</div>
+</div>
+<h1 class="syne-bold text-2xl mb-2 leading-tight">Porsche 911 Carrera S + R$ 50.000,00 no PIX</h1>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-6 leading-relaxed">
+                Participe da maior rifa do ano! Um Porsche 0km na sua garagem ou o valor integral em dinheiro. Sorteio pela Loteria Federal.
+            </p>
+<!-- Countdown Timer -->
+<div class="grid grid-cols-4 gap-3 py-4 border-y border-slate-100 dark:border-slate-700 mb-6">
+<div class="text-center">
+<p class="text-lg font-bold text-primary">02</p>
+<p class="text-[10px] uppercase font-semibold text-slate-400">Dias</p>
+</div>
+<div class="text-center">
+<p class="text-lg font-bold text-primary">14</p>
+<p class="text-[10px] uppercase font-semibold text-slate-400">Horas</p>
+</div>
+<div class="text-center">
+<p class="text-lg font-bold text-primary">35</p>
+<p class="text-[10px] uppercase font-semibold text-slate-400">Min</p>
+</div>
+<div class="text-center">
+<p class="text-lg font-bold text-primary">12</p>
+<p class="text-[10px] uppercase font-semibold text-slate-400">Seg</p>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="space-y-2">
+<div class="flex justify-between items-end">
+<p class="text-sm font-bold text-slate-700 dark:text-slate-200">Progresso de Vendas</p>
+<p class="text-sm font-bold text-primary">65% vendidos</p>
+</div>
+<div class="w-full h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 65%;"></div>
+</div>
+</div>
+</div>
+<!-- Number Selection Section -->
+<section class="mb-8">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold syne-bold">Escolha seus números</h2>
+<span class="material-symbols-outlined text-slate-400">info</span>
+</div>
+<!-- Legend -->
+<div class="flex gap-4 mb-6 overflow-x-auto pb-2 no-scrollbar">
+<div class="flex items-center gap-2 whitespace-nowrap">
+<div class="w-4 h-4 rounded bg-white border border-slate-200"></div>
+<span class="text-xs font-medium text-slate-600">Disponível</span>
+</div>
+<div class="flex items-center gap-2 whitespace-nowrap">
+<div class="w-4 h-4 rounded bg-primary"></div>
+<span class="text-xs font-medium text-slate-600">Selecionado</span>
+</div>
+<div class="flex items-center gap-2 whitespace-nowrap">
+<div class="w-4 h-4 rounded bg-amber-400"></div>
+<span class="text-xs font-medium text-slate-600">Reservado</span>
+</div>
+<div class="flex items-center gap-2 whitespace-nowrap">
+<div class="w-4 h-4 rounded bg-slate-200"></div>
+<span class="text-xs font-medium text-slate-400">Vendido</span>
+</div>
+</div>
+<!-- Interactive Grid -->
+<div class="grid grid-cols-5 gap-3">
+<!-- Sold -->
+<div class="aspect-square w-full flex items-center justify-center rounded-lg bg-slate-100 text-slate-400 text-sm font-bold cursor-not-allowed">01</div>
+<!-- Available -->
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">02</button>
+<!-- Selected -->
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30">03</button>
+<!-- Reserved -->
+<div class="aspect-square w-full flex items-center justify-center rounded-lg bg-amber-400 text-white text-sm font-bold">04</div>
+<!-- Available -->
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">05</button>
+<!-- Repeat pattern for visuals -->
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">06</button>
+<div class="aspect-square w-full flex items-center justify-center rounded-lg bg-slate-100 text-slate-400 text-sm font-bold cursor-not-allowed">07</div>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">08</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">09</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30">10</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">11</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">12</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">13</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">14</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">15</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">16</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">17</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">18</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">19</button>
+<button class="aspect-square w-full flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:border-primary transition-colors">20</button>
+</div>
+<!-- More indicator -->
+<div class="mt-6 flex justify-center">
+<button class="flex items-center gap-2 text-primary font-bold text-sm">
+                    Ver mais números
+                    <span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Sticky Footer -->
+<footer class="fixed bottom-0 left-0 right-0 bg-surface dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 p-4 pb-8 z-50">
+<div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
+<div class="flex flex-col">
+<p class="text-xs text-slate-500 font-medium"><span class="text-primary font-bold">2</span> números selecionados</p>
+<p class="text-xl font-extrabold syne-bold text-slate-900 dark:text-white leading-tight">Total: R$ 1,00</p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl font-bold text-base flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-primary/25">
+                Comprar Agora
+                <span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+</button>
+</div>
+</footer>
+</body></html>

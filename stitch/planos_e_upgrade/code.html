@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;900&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"],
+                        "syne": ["Syne", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .plan-pro-gradient {
+            background: linear-gradient(135deg, rgba(236, 91, 19, 0.05) 0%, rgba(168, 85, 247, 0.1) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="max-w-[390px] mx-auto min-h-screen flex flex-col pb-20">
+<!-- Header -->
+<header class="flex items-center p-4 sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md z-50">
+<button class="p-2 -ml-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined block">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center text-xl font-syne font-bold pr-8">Escolha seu plano</h1>
+</header>
+<!-- Billing Toggle -->
+<div class="px-4 py-6">
+<div class="flex h-12 items-center justify-center rounded-xl bg-slate-200 dark:bg-slate-800 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:shadow-sm transition-all text-slate-600 dark:text-slate-400 has-[:checked]:text-primary text-sm font-semibold">
+<span class="truncate">Mensal</span>
+<input checked="" class="hidden" name="billing_cycle" type="radio" value="monthly"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:shadow-sm transition-all text-slate-600 dark:text-slate-400 has-[:checked]:text-primary text-sm font-semibold relative">
+<span class="truncate">Anual</span>
+<input class="hidden" name="billing_cycle" type="radio" value="annual"/>
+<span class="absolute -top-3 -right-1 bg-green-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm">2 meses grátis</span>
+</label>
+</div>
+</div>
+<!-- Plan Cards Container -->
+<div class="flex flex-col gap-6 px-4 pb-8">
+<!-- Free Plan -->
+<div class="flex flex-col gap-5 rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-6 shadow-sm">
+<div class="flex flex-col gap-1">
+<h2 class="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider">Básico</h2>
+<h3 class="text-2xl font-syne font-bold">Plano Grátis</h3>
+<p class="flex items-baseline gap-1 mt-2">
+<span class="text-3xl font-syne font-black tracking-tight">R$ 0</span>
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium">/mês</span>
+</p>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-green-500 text-[20px]">check_circle</span>
+<span>Até 100 cotas por rifa</span>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-green-500 text-[20px]">check_circle</span>
+<span>Sorteio pela Loteria Federal</span>
+</div>
+<div class="flex items-center gap-3 text-sm opacity-50">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">cancel</span>
+<span>Domínio próprio</span>
+</div>
+<div class="flex items-center gap-3 text-sm opacity-50">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">cancel</span>
+<span>Suporte prioritário</span>
+</div>
+</div>
+<button class="w-full py-3 px-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                    Começar Agora
+                </button>
+</div>
+<!-- Pro Plan (HIGHLIGHTED) -->
+<div class="flex flex-col gap-5 rounded-xl border-2 border-primary plan-pro-gradient dark:bg-primary/10 p-6 shadow-xl relative overflow-hidden">
+<div class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Mais Popular</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-primary text-sm font-bold uppercase tracking-wider">Profissional</h2>
+<h3 class="text-2xl font-syne font-bold">Plano Pro</h3>
+<p class="flex items-baseline gap-1 mt-2">
+<span class="text-4xl font-syne font-black tracking-tight text-primary">R$ 29</span>
+<span class="text-slate-600 dark:text-slate-300 text-sm font-medium">/mês</span>
+</p>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-green-500 text-[20px] font-bold">check_circle</span>
+<span class="font-semibold">Cotas ilimitadas</span>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-green-500 text-[20px] font-bold">check_circle</span>
+<span class="font-semibold">Sorteio automático</span>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-green-500 text-[20px] font-bold">check_circle</span>
+<span class="font-semibold">Domínio personalizado</span>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-green-500 text-[20px] font-bold">check_circle</span>
+<span class="font-semibold">Suporte via WhatsApp 24h</span>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-green-500 text-[20px] font-bold">check_circle</span>
+<span class="font-semibold">Integração Pixel/API</span>
+</div>
+</div>
+<button class="w-full py-4 px-4 rounded-xl bg-primary text-white font-bold text-base shadow-lg shadow-primary/30 active:scale-95 transition-transform">
+                    Assinar Agora
+                </button>
+</div>
+<!-- Institutional Plan -->
+<div class="flex flex-col gap-5 rounded-xl border-2 border-slate-800 dark:border-slate-600 bg-slate-900 text-white p-6 shadow-md">
+<div class="flex flex-col gap-1">
+<h2 class="text-slate-400 text-sm font-bold uppercase tracking-wider">Enterprise</h2>
+<h3 class="text-2xl font-syne font-bold">Institucional</h3>
+<p class="flex items-baseline gap-1 mt-2">
+<span class="text-3xl font-syne font-black tracking-tight">R$ 79</span>
+<span class="text-slate-400 text-sm font-medium">/mês</span>
+</p>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+<span>Todos os recursos Pro</span>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+<span>Múltiplos administradores</span>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+<span>Contrato corporativo (SLA)</span>
+</div>
+</div>
+<button class="w-full py-3 px-4 rounded-xl bg-slate-800 border border-slate-700 font-bold text-sm hover:bg-slate-700 transition-colors">
+                    Falar com Consultor
+                </button>
+</div>
+</div>
+<!-- FAQ Section -->
+<section class="px-4 py-8 bg-slate-100 dark:bg-slate-900/30">
+<h3 class="text-xl font-syne font-bold mb-6 text-center">Perguntas Frequentes</h3>
+<div class="flex flex-col gap-3">
+<div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+<div class="flex justify-between items-center cursor-pointer">
+<span class="text-sm font-bold">Posso cancelar quando quiser?</span>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+<div class="flex justify-between items-center cursor-pointer">
+<span class="text-sm font-bold">Quais as formas de pagamento?</span>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+<div class="flex justify-between items-center cursor-pointer">
+<span class="text-sm font-bold">Como funciona o domínio próprio?</span>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-[390px] mx-auto bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-6 py-2 flex justify-between items-center z-50">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Início</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="text-[10px] font-medium">Rifas</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined font-fill text-[28px]">stars</span>
+<span class="text-[10px] font-bold">Planos</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Perfil</span>
+</a>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Checkout - RifaOnline</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Syne:wght@700;800&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c3bed",
+                        "background-light": "#f5f3ff",
+                        "background-dark": "#171121",
+                        "success": "#22c55e",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "DM Sans", "sans-serif"],
+                        "title": ["Syne", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Syne', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-100">
+<!-- Top Navigation -->
+<header class="bg-white/80 backdrop-blur-md border-b border-primary/10 sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-20 items-center">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined text-2xl">confirmation_number</span>
+</div>
+<h2 class="text-xl font-extrabold tracking-tight text-primary font-title">RifaOnline</h2>
+</div>
+<nav class="hidden md:flex space-x-8">
+<a class="text-slate-600 hover:text-primary font-medium transition-colors" href="#">Sorteios</a>
+<a class="text-slate-600 hover:text-primary font-medium transition-colors" href="#">Meus Números</a>
+<a class="text-slate-600 hover:text-primary font-medium transition-colors" href="#">Ganhadores</a>
+<a class="text-slate-600 hover:text-primary font-medium transition-colors" href="#">Ajuda</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-4 py-12 lg:px-8">
+<!-- Breadcrumb & Title -->
+<div class="mb-10">
+<div class="flex items-center gap-2 text-sm text-slate-500 mb-4">
+<a class="hover:text-primary" href="#">Início</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<a class="hover:text-primary" href="#">Sorteio Premium</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-primary font-semibold">Checkout</span>
+</div>
+<h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white">Finalizar Compra</h1>
+<p class="text-slate-500 mt-2 text-lg">Garanta seus números agora com segurança.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Checkout Steps -->
+<div class="lg:col-span-8 space-y-6">
+<!-- Multi-step Indicator -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-primary/5">
+<div class="flex flex-col md:flex-row justify-between gap-4 md:items-center">
+<div class="flex items-center gap-3 text-slate-400">
+<span class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-sm">1</span>
+<span class="font-medium">Seus dados</span>
+</div>
+<div class="hidden md:block h-px flex-1 bg-slate-100 mx-4"></div>
+<div class="flex items-center gap-3 text-slate-400">
+<span class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-sm">2</span>
+<span class="font-medium">Forma de pagamento</span>
+</div>
+<div class="hidden md:block h-px flex-1 bg-slate-100 mx-4"></div>
+<div class="flex items-center gap-3 text-primary">
+<span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-primary/30">3</span>
+<span class="font-bold">Pagamento</span>
+</div>
+</div>
+</div>
+<!-- Step 1: Your Data (Summary mode) -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-8 shadow-sm border border-primary/5">
+<div class="flex justify-between items-center mb-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">contact_mail</span>
+<h3 class="text-xl font-bold">1. Seus dados</h3>
+</div>
+<button class="text-primary font-semibold text-sm hover:underline">Editar</button>
+</div>
+<div class="grid md:grid-cols-3 gap-6">
+<div class="space-y-1">
+<label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nome Completo</label>
+<div class="flex items-center gap-2 text-slate-700 font-medium">
+<span class="material-symbols-outlined text-sm">person</span>
+                                João da Silva Santos
+                            </div>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-bold text-slate-400 uppercase tracking-wider">WhatsApp</label>
+<div class="flex items-center gap-2 text-slate-700 font-medium">
+<span class="material-symbols-outlined text-sm">smartphone</span>
+                                (11) 99999-0000
+                            </div>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-bold text-slate-400 uppercase tracking-wider">E-mail</label>
+<div class="flex items-center gap-2 text-slate-700 font-medium">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                joao.silva@email.com
+                            </div>
+</div>
+</div>
+</div>
+<!-- Step 2: Payment Method (PIX Selected) -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-8 shadow-sm border border-primary/5">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary">payments</span>
+<h3 class="text-xl font-bold">2. Forma de pagamento</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+<div class="relative border-2 border-primary bg-primary/5 p-4 rounded-xl cursor-pointer">
+<div class="absolute -top-3 right-4 bg-success text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Instantâneo</div>
+<div class="flex flex-col items-center text-center gap-2">
+<span class="material-symbols-outlined text-success text-3xl">photos</span>
+<span class="font-bold text-primary">PIX</span>
+</div>
+</div>
+<div class="border-2 border-slate-100 p-4 rounded-xl hover:border-primary/30 transition-all cursor-pointer">
+<div class="flex flex-col items-center text-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-3xl">credit_card</span>
+<span class="font-bold text-slate-600">Cartão até 12x</span>
+</div>
+</div>
+<div class="border-2 border-slate-100 p-4 rounded-xl hover:border-primary/30 transition-all cursor-pointer">
+<div class="flex flex-col items-center text-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-3xl">description</span>
+<span class="font-bold text-slate-600">Boleto</span>
+</div>
+</div>
+</div>
+<!-- Step 3: PIX Detail -->
+<div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-8 flex flex-col items-center text-center">
+<div class="mb-6">
+<h4 class="text-lg font-bold mb-2">Pague com PIX</h4>
+<p class="text-slate-500 text-sm max-w-sm">Escaneie o QR Code abaixo com o aplicativo do seu banco para confirmar a participação.</p>
+</div>
+<div class="bg-white p-4 rounded-2xl shadow-xl mb-6 ring-4 ring-primary/5">
+<img alt="QR Code de pagamento" class="w-[200px] h-[200px] object-contain" data-alt="QR Code for PIX payment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1T4QQS3vN3oTdFRtaDlAMJ3ORn3NS0CZYTqMlMIB8r-G_Cz9hZQH8OywhygZ61KK7NVMc2mKUvKBwiebsrvVlP1E_2G1Xy1k8Sz_Z-6uCLgut3GT_Ogoy7pUsd6d02K4deFzYao0oC59ZWC7eDqhLCHyHqizyeD1qtj3YbFrb0P49wUbBR5Udxy6rGrw7JReSJgrat4sHfBX_z8EJ3mMVYoPRdNtoN0OVgBWRF1VWIk2pvpRQ6mmz35cUlqy6hdtVD4HhAfwxnnDQ"/>
+</div>
+<div class="flex flex-col gap-4 w-full max-w-sm">
+<div class="flex items-center gap-2 justify-center text-slate-600 bg-white border border-slate-200 py-3 px-4 rounded-xl font-mono text-sm">
+                                00020126580014br.gov.bcb.pix0136...
+                                <button class="ml-2 text-primary hover:text-primary/80">
+<span class="material-symbols-outlined text-xl">content_copy</span>
+</button>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">check_circle</span>
+                                Pagar Agora
+                            </button>
+<div class="flex items-center justify-center gap-2 text-slate-500 text-sm font-medium">
+<span class="material-symbols-outlined text-primary text-base">timer</span>
+                                Expira em <span class="text-primary font-bold">28:43</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center px-4">
+<a class="flex items-center gap-2 text-slate-500 hover:text-primary font-bold transition-all" href="#">
+<span class="material-symbols-outlined">arrow_back</span>
+                        Voltar para o sorteio
+                    </a>
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-success">lock</span>
+<span class="text-xs font-bold uppercase tracking-widest">Pagamento 100% Seguro</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Order Summary -->
+<div class="lg:col-span-4 sticky top-24">
+<div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<div class="h-48 bg-center bg-cover" data-alt="Imagem de destaque do sorteio" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBl1RO8_YgNljvFR8PmkB0pk1ZLbX1un8V25UTB3ms_13ED4xa-EXh4MzPW_070ooIjsRKVgRWvHEysd9cwl9sEr484iVFf6N1agl7BWBiXaD5VNB9MmZSLgMaOmimouuTJ2-S6ngaqv0EDvwcbZmS-Jeo19veINkwOTdSRl6EnHXWOajuKPe_hEPtkUyK5RsIwtwQe9pFUqP0hTEVq-G85MvUM3IlVhnZbs4iq6TCilOtCYShND2rMH3hd3Bo_3Z-TceY9kvrOZ-i5');"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Você está concorrendo a</p>
+<h3 class="text-xl font-extrabold text-slate-900 dark:text-white">Porsche 911 Carrera + R$ 50k</h3>
+</div>
+</div>
+<div class="space-y-4 border-t border-slate-100 pt-6">
+<div class="flex justify-between items-center">
+<span class="text-slate-500 font-medium">Quantidade</span>
+<span class="font-bold">3 números selecionados</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl">
+<p class="text-xs text-slate-400 font-bold uppercase tracking-tighter mb-2">Seus números</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full font-bold text-sm">042</span>
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full font-bold text-sm">158</span>
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full font-bold text-sm">294</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-slate-100">
+<span class="text-lg font-bold text-slate-900 dark:text-white">Total</span>
+<span class="text-2xl font-black text-success">R$ 30,00</span>
+</div>
+</div>
+<div class="mt-8 p-4 bg-primary/5 rounded-xl flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">verified_user</span>
+<div class="text-xs text-slate-600 leading-relaxed">
+                                Ao finalizar a compra, você concorda com os <strong>Termos de Uso</strong> e as regras deste sorteio. Seus dados estão protegidos.
+                            </div>
+</div>
+</div>
+</div>
+<!-- Trust Badges -->
+<div class="mt-6 grid grid-cols-2 gap-4">
+<div class="flex flex-col items-center p-4 bg-white rounded-xl border border-slate-100">
+<span class="material-symbols-outlined text-primary mb-1">shield</span>
+<span class="text-[10px] font-bold text-slate-400 uppercase">Site Seguro</span>
+</div>
+<div class="flex flex-col items-center p-4 bg-white rounded-xl border border-slate-100">
+<span class="material-symbols-outlined text-primary mb-1">support_agent</span>
+<span class="text-[10px] font-bold text-slate-400 uppercase">Suporte 24/7</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-white dark:bg-slate-950 py-12 border-t border-slate-100 dark:border-slate-800 mt-20">
+<div class="max-w-7xl mx-auto px-4 text-center">
+<div class="flex justify-center items-center gap-2 text-primary font-title font-bold mb-4">
+<span class="material-symbols-outlined">confirmation_number</span>
+                RifaOnline
+            </div>
+<p class="text-slate-400 text-sm max-w-md mx-auto leading-relaxed">
+                RifaOnline Intermediações LTDA. CNPJ: 00.000.000/0000-00<br/>
+                A sorte está a um clique de distância. Jogue com responsabilidade.
+            </p>
+<div class="mt-8 flex justify-center gap-6">
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+</div>
+</div>
+</footer>
+</body></html>

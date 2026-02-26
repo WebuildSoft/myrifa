@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RifaOnline - Winner Announced</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                        "raffle-purple": "#4b2038",
+                        "raffle-gold": "#ffd700",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"],
+                        "syne": ["Syne", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glow-gold {
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4);
+        }
+        .confetti-bg {
+            background-image: radial-gradient(circle at 20% 30%, rgba(236, 91, 19, 0.15) 0%, transparent 20%),
+                              radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 20%),
+                              radial-gradient(circle at 50% 50%, rgba(75, 32, 56, 0.05) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-72 bg-raffle-purple hidden lg:flex flex-col justify-between p-6 border-r border-primary/20">
+<div class="flex flex-col gap-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined">confirmation_number</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold leading-none">RifaOnline</h1>
+<p class="text-white/60 text-xs">Admin Dashboard</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:bg-white/10 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:bg-white/10 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">local_activity</span>
+<span class="text-sm font-medium">My Raffles</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-xl shadow-lg shadow-primary/20" href="#">
+<span class="material-symbols-outlined">emoji_events</span>
+<span class="text-sm font-medium">Winners</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:bg-white/10 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-medium">Finances</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:bg-white/10 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+</div>
+<button class="flex items-center justify-center gap-2 w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-sm font-bold">New Raffle</span>
+</button>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col relative overflow-hidden bg-background-light dark:bg-background-dark confetti-bg">
+<!-- Top Navigation -->
+<header class="h-16 flex items-center justify-between px-8 border-b border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-background-dark/50 backdrop-blur-md z-10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">campaign</span>
+<span class="font-semibold">Winner Announcement System</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+</div>
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZRhmhBBJ4ULuu7fPXgLsA7mCnhmNpRm0lk0OO__Bu3vbq6caLfLTKUIzffAoPVPsrKsrZrtv-fsg8sciIAyXxasYjaEDoRxkBgzgcaFtGGk5_89VnjfTdop2e2mj2bi1FNC5jX_04Qkgq3ZZO4rlh77_M6-R3HyspkrEwHdX3mfxcbJy7_mb7C1RhdIiWIE_jyvZsCCC_-x95J1VXLf6ixGjyiwFDiKBKul3uH12NIFGh_NPTbIrPsNKIkXuyhm53lMpeNeFeHFNk"/>
+</div>
+</div>
+</header>
+<!-- Celebratory Hero -->
+<div class="flex-1 flex flex-col items-center justify-center p-8 relative">
+<!-- Background Decorative Elements -->
+<div class="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+<div class="w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px]"></div>
+<div class="w-[400px] h-[400px] bg-raffle-gold/10 rounded-full blur-[100px] -ml-40"></div>
+</div>
+<!-- Title -->
+<h2 class="font-syne text-5xl lg:text-7xl font-extrabold text-raffle-purple dark:text-white text-center mb-12 tracking-tight">
+                Winner Announced!
+            </h2>
+<!-- Winning Number Display -->
+<div class="relative mb-16 group">
+<div class="absolute -inset-4 bg-gradient-to-r from-raffle-gold/40 to-primary/40 rounded-[2rem] blur-2xl opacity-75"></div>
+<div class="relative bg-white dark:bg-slate-900 border-4 border-raffle-gold p-12 lg:p-16 rounded-[2rem] shadow-2xl flex flex-col items-center">
+<span class="text-xs font-bold uppercase tracking-[0.4em] text-primary mb-4">The Winning Number is</span>
+<div class="flex gap-4">
+<span class="text-7xl lg:text-9xl font-black text-slate-900 dark:text-white glow-gold">7</span>
+<span class="text-7xl lg:text-9xl font-black text-slate-900 dark:text-white glow-gold">4</span>
+<span class="text-7xl lg:text-9xl font-black text-slate-900 dark:text-white glow-gold">2</span>
+<span class="text-7xl lg:text-9xl font-black text-slate-900 dark:text-white glow-gold">9</span>
+<span class="text-7xl lg:text-9xl font-black text-slate-900 dark:text-white glow-gold">1</span>
+<span class="text-7xl lg:text-9xl font-black text-slate-900 dark:text-white glow-gold">0</span>
+</div>
+<div class="mt-8 px-6 py-2 bg-raffle-purple text-white rounded-full text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-raffle-gold">auto_awesome</span>
+                        Grand Prize: iPhone 15 Pro Max
+                        <span class="material-symbols-outlined text-raffle-gold">auto_awesome</span>
+</div>
+</div>
+</div>
+<!-- Winner Details Card -->
+<div class="w-full max-w-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 dark:border-slate-800 rounded-3xl p-8 shadow-xl flex flex-col items-center">
+<div class="flex items-center gap-6 w-full">
+<div class="relative">
+<div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-raffle-purple flex items-center justify-center text-white text-3xl font-bold border-4 border-white dark:border-slate-800 shadow-lg">
+                            CS
+                        </div>
+<div class="absolute -bottom-1 -right-1 bg-raffle-gold w-8 h-8 rounded-full flex items-center justify-center text-raffle-purple border-2 border-white dark:border-slate-800 shadow-sm">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+</div>
+</div>
+<div class="flex-1">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">Carlos Eduardo S.</h3>
+<p class="text-slate-500 dark:text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">call</span>
+                            (11) *****-4421
+                        </p>
+<div class="mt-2 flex items-center gap-4">
+<span class="text-xs font-semibold px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg">Ticket ID: #992831</span>
+<span class="text-xs font-semibold px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg">Luck Level: 100%</span>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="grid grid-cols-2 gap-4 w-full mt-10">
+<button class="flex items-center justify-center gap-2 py-4 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold transition-transform active:scale-95 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">share</span>
+                        Share Result
+                    </button>
+<button class="flex items-center justify-center gap-2 py-4 border-2 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-900 dark:text-white rounded-2xl font-bold transition-all">
+<span class="material-symbols-outlined">visibility</span>
+                        View Public Page
+                    </button>
+</div>
+</div>
+<!-- Floating confetti-like icons -->
+<div class="absolute top-1/4 left-10 text-primary opacity-20 transform rotate-12 scale-150">
+<span class="material-symbols-outlined">celebration</span>
+</div>
+<div class="absolute top-1/3 right-20 text-raffle-gold opacity-20 transform -rotate-12 scale-125">
+<span class="material-symbols-outlined">stars</span>
+</div>
+<div class="absolute bottom-1/4 left-20 text-raffle-purple opacity-20 transform rotate-45">
+<span class="material-symbols-outlined">confirmation_number</span>
+</div>
+<div class="absolute bottom-1/3 right-10 text-primary opacity-20 transform -rotate-45 scale-110">
+<span class="material-symbols-outlined">redeem</span>
+</div>
+</div>
+</main>
+</div>
+</body></html>
