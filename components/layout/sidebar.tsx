@@ -33,7 +33,7 @@ export function Sidebar() {
                     <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
                         <Diamond className="h-5 w-5" />
                     </div>
-                    <span className="font-bold text-lg text-primary tracking-tight">Organizer</span>
+                    <span className="font-bold text-lg text-primary tracking-tight">MyRifa</span>
                 </Link>
                 <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                     <Menu className="h-6 w-6" />
@@ -52,7 +52,7 @@ export function Sidebar() {
                         <Diamond className="h-6 w-6" />
                     </div>
                     <Link href="/dashboard" className="font-bold text-xl text-primary tracking-tight">
-                        Organizer
+                        MyRifa
                     </Link>
                 </div>
 
