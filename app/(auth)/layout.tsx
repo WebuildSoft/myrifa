@@ -51,7 +51,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
                             <div className="bg-primary p-2 rounded-xl group-hover:scale-110 transition-transform">
                                 <Wallet className="h-5 w-5 text-white" />
                             </div>
-                            <span className="font-bold text-2xl text-slate-900 dark:text-slate-100 tracking-tight">RifaOnline</span>
+                            <span className="font-bold text-2xl text-slate-900 dark:text-slate-100 tracking-tight">MyRifa</span>
                         </Link>
                     </div>
 

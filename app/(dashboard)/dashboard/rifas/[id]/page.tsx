@@ -194,7 +194,7 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                             <div className="space-y-3">
                                 <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Link da sua Rifa</p>
                                 <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-primary/10 group overflow-hidden">
-                                    <span className="text-xs text-slate-500 flex-1 truncate font-mono">rifaonline.com/r/{rifa.slug}</span>
+                                    <span className="text-xs text-slate-500 flex-1 truncate font-mono">myrifa.com.br/r/{rifa.slug}</span>
                                     <button className="p-2 text-primary hover:bg-primary/10 rounded-2xl transition-colors active:scale-90">
                                         <Copy className="h-5 w-5" />
                                     </button>

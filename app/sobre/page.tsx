@@ -43,7 +43,7 @@ export default function SobrePage() {
                             <span className="text-primary italic">impacto real.</span>
                         </h1>
                         <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-2xl mx-auto">
-                            A RifaOnline nasceu para democratizar o acesso a ferramentas profissionais de arrecadação, unindo tecnologia de ponta com transparência total.
+                            A MyRifa nasceu para democratizar o acesso a ferramentas profissionais de arrecadação, unindo tecnologia de ponta com transparência total.
                         </p>
                     </section>
 
@@ -72,7 +72,7 @@ export default function SobrePage() {
                     {/* Content Section */}
                     <section className="space-y-12">
                         <div className="text-center">
-                            <h2 className="text-3xl font-black tracking-tight dark:text-white">Por que RifaOnline?</h2>
+                            <h2 className="text-3xl font-black tracking-tight dark:text-white">Por que MyRifa?</h2>
                         </div>
                         <div className="space-y-8">
                             <div className="flex gap-6 items-start">
@@ -109,7 +109,7 @@ export default function SobrePage() {
                     <section className="text-center bg-primary rounded-[3rem] p-12 md:p-20 text-white space-y-8 shadow-2xl shadow-primary/20 relative overflow-hidden">
                         <div className="relative z-10 space-y-6">
                             <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-none">Faça parte desta jornada.</h2>
-                            <p className="max-w-xl mx-auto text-white/70 font-medium">Junte-se a milhares de pessoas que já mudaram suas vidas e comunidades através da RifaOnline.</p>
+                            <p className="max-w-xl mx-auto text-white/70 font-medium">Junte-se a milhares de pessoas que já mudaram suas vidas e comunidades através da MyRifa.</p>
                             <Button asChild size="lg" className="bg-white text-primary hover:bg-slate-50 h-14 px-10 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all active:scale-95">
                                 <Link href="/register">Criar minha primeira conta</Link>
                             </Button>
@@ -122,7 +122,7 @@ export default function SobrePage() {
             {/* Simple Footer */}
             <footer className="py-12 border-t border-primary/5 text-center px-6">
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    © 2024 RifaOnline • Democratizando Sorteios no Brasil
+                    © 2024 MyRifa • Democratizando Sorteios no Brasil
                 </p>
             </footer>
         </div>

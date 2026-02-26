@@ -58,7 +58,7 @@ export default function PrivacidadePage() {
             </main>
 
             <footer className="py-12 border-t border-primary/5 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">
-                © 2024 RifaOnline • Seus dados estão seguros conosco
+                © 2024 MyRifa • Seus dados estão seguros conosco
             </footer>
         </div>
     )

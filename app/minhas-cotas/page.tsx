@@ -111,7 +111,7 @@ export default function MinhasCotasPage() {
 
             <footer className="py-12 border-t border-primary/5 text-center px-6 mt-12">
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    © 2024 RifaOnline • Consulta Segura e Criptografada
+                    © 2024 MyRifa • Consulta Segura e Criptografada
                 </p>
             </footer>
         </div>

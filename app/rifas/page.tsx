@@ -181,7 +181,7 @@ export default async function PublicRifasPage() {
 
             <footer className="py-12 border-t border-primary/5 text-center px-6">
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    © 2024 RifaOnline • Jogue com responsabilidade.
+                    © 2024 MyRifa • Jogue com responsabilidade.
                 </p>
             </footer>
         </div>

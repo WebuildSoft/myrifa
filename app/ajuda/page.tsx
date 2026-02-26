@@ -84,7 +84,7 @@ export default function AjudaPage() {
                                 answer="O sorteio é realizado através de um algoritmo criptográfico (CSPRNG) que garante aleatoriedade total. O processo é auditável e o resultado fica gravado permanentemente na plataforma para consulta pública."
                             />
                             <FAQItem
-                                question="É seguro comprar números na RifaOnline?"
+                                question="É seguro comprar números na MyRifa?"
                                 answer="Sim, utilizamos protocolos de segurança de ponta e todos os pagamentos são processados via PIX oficial. Além disso, o organizador da rifa passa por uma verificação de conta para operar na plataforma."
                             />
                         </div>
@@ -108,7 +108,7 @@ export default function AjudaPage() {
 
             <footer className="py-12 border-t border-primary/5 text-center">
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    © 2024 RifaOnline • Central de Suporte e Ajuda
+                    © 2024 MyRifa • Central de Suporte e Ajuda
                 </p>
             </footer>
         </div>

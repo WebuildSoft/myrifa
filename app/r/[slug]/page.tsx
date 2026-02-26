@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     ]
 
     return {
-        title: `${rifa.title} | RifaOnline`,
+        title: `${rifa.title} | MyRifa`,
         description: rifa.description || `Participe da rifa ${rifa.title} e concorra a prêmios incríveis!`,
         openGraph: {
             title: rifa.title,
@@ -101,7 +101,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                         <div className="text-primary transition-transform group-hover:scale-110">
                             <Ticket className="w-8 h-8 rotate-12" />
                         </div>
-                        <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-white">RifaOnline</h2>
+                        <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-white">MyRifa</h2>
                     </Link>
                     <nav className="hidden md:flex items-center gap-8">
                         <Link href="/rifas" className="text-sm font-bold hover:text-primary transition-colors">Sorteios</Link>
@@ -270,7 +270,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                         { icon: CheckCircle2, text: "Sorteio baseado no resultado da Loteria Federal.", color: "text-emerald-500" },
                                         { icon: Shield, text: "Pagamento 100% seguro e criptografado.", color: "text-blue-500" },
                                         { icon: Clock, text: "Reserva de 30 minutos após a seleção.", color: "text-amber-500" },
-                                        { icon: Trophy, text: "Entrega garantida pela plataforma RifaOnline.", color: "text-violet-500" }
+                                        { icon: Trophy, text: "Entrega garantida pela plataforma MyRifa.", color: "text-violet-500" }
                                     ].map((rule, i) => (
                                         <li key={i} className="flex items-center gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
                                             <rule.icon className={`w-5 h-5 shrink-0 ${rule.color}`} />
@@ -290,7 +290,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                 <div className="mx-auto max-w-[1400px] px-6 text-center">
                     <div className="flex items-center justify-center gap-3 mb-6 opacity-40">
                         <Ticket className="w-6 h-6 text-primary" />
-                        <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">RifaOnline</h2>
+                        <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">MyRifa</h2>
                     </div>
                     <p className="text-sm text-slate-400 max-w-[600px] mx-auto mb-6 font-medium leading-relaxed">
                         Participar de sorteios é uma atividade de entretenimento. Jogue com responsabilidade. Sorteios realizados em conformidade com as leis vigentes.
@@ -301,7 +301,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                         <Link href="/ajuda" className="hover:text-primary transition-colors text-xs font-black uppercase tracking-widest">FAQ</Link>
                         <Link href="/ajuda" className="hover:text-primary transition-colors text-xs font-black uppercase tracking-widest">Suporte</Link>
                     </div>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">© 2024 RifaOnline Intermediações. Todos os direitos reservados.</p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">© 2024 MyRifa Intermediações. Todos os direitos reservados.</p>
                 </div>
             </footer>
         </div>

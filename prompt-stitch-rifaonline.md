@@ -1,11 +1,11 @@
-# PROMPT COMPLETO PARA STITCH — RifaOnline
+# PROMPT COMPLETO PARA STITCH — MyRifa
 # Plataforma de Rifas Online — Todas as Telas
 
 ---
 
 ## IDENTIDADE VISUAL GLOBAL (aplique em TODAS as telas)
 
-**Nome do app:** RifaOnline
+**Nome do app:** MyRifa
 **Tagline:** "Crie sua rifa em minutos"
 
 **Paleta de cores:**
@@ -46,7 +46,7 @@
 - Fundo com gradiente diagonal: #7C3AED → #5B21B6 → #1E1B4B
 - Partículas/confetes flutuando sutilmente no fundo (animação loop)
 - Centro: ícone do app (ticket de rifa estilizado em branco) 80x80px com sombra brilhante
-- Abaixo do ícone: "RifaOnline" em Syne ExtraBold 32px branco
+- Abaixo do ícone: "MyRifa" em Syne ExtraBold 32px branco
 - Tagline: "Crie, compartilhe e sorteie com facilidade" em DM Sans 16px branco 80% opacidade
 - Espaço: 3 ilustrações em carrossel com dots indicadores:
   1. "Crie sua rifa em minutos" — ilustração de pessoa configurando rifa
@@ -90,7 +90,7 @@
 
 **Layout:**
 - Fundo: #F5F3FF
-- Topo: logo RifaOnline pequeno (ícone + nome) centralizado, margem topo 48px
+- Topo: logo MyRifa pequeno (ícone + nome) centralizado, margem topo 48px
 - Título "Bem-vindo de volta 👋" Syne Bold 26px cor #1E1B4B
 - Subtítulo "Entre na sua conta" DM Sans 14px cinza
 - Card branco com formulário:
@@ -268,7 +268,7 @@ Cada card: 160x100px, branco, border-radius 16px, sombra suave, borda esquerda c
 - "Ver todos →" link roxo
 
 **Seção 5 — Link da Rifa:**
-- Caixa com URL: "rifaonline.com/r/[slug]"
+- Caixa com URL: "myrifa.com.br/r/[slug]"
 - Botões lado a lado: 📋 Copiar | 💬 WhatsApp | QR Code
 - QR Code expandível ao tocar
 

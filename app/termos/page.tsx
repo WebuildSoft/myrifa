@@ -58,7 +58,7 @@ export default function TermosPage() {
             </main>
 
             <footer className="py-12 border-t border-primary/5 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">
-                © 2024 RifaOnline • Transparência em Primeiro Lugar
+                © 2024 MyRifa • Transparência em Primeiro Lugar
             </footer>
         </div>
     )

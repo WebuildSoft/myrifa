@@ -47,7 +47,7 @@ export default function PublicPlanosPage() {
             {/* Simple Footer */}
             <footer className="py-12 border-t border-primary/5 text-center px-6">
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    © 2024 RifaOnline • Transparência e Honestidade nos Preços
+                    © 2024 MyRifa • Transparência e Honestidade nos Preços
                 </p>
             </footer>
         </div>

@@ -90,7 +90,7 @@ export default async function PublicResultPage({ params }: { params: Promise<{ s
             </div>
 
             <div className="mt-8 text-center text-xs text-gray-400 font-medium">
-                Desenvolvido por RifaOnline &copy; {new Date().getFullYear()}
+                Desenvolvido por MyRifa &copy; {new Date().getFullYear()}
             </div>
         </div>
     )

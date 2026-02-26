@@ -9,7 +9,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-    title: "RifaOnline - Sua plataforma de rifas e sorteios",
+    title: "MyRifa - Sua plataforma de rifas e sorteios",
     description: "Crie, gerencie e participe de rifas online de forma segura e rápida.",
 }
 

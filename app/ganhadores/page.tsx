@@ -33,7 +33,7 @@ export default function GanhadoresPage() {
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">Nossos Ganhadores</h1>
                         <p className="text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">
-                            A transparência é o nosso maior valor. Confira aqui todos os resultados e a alegria de quem já ganhou com o RifaOnline.
+                            A transparência é o nosso maior valor. Confira aqui todos os resultados e a alegria de quem já ganhou com o MyRifa.
                         </p>
                     </div>
 
@@ -72,7 +72,7 @@ export default function GanhadoresPage() {
 
             <footer className="py-12 border-t border-primary/5 text-center px-6">
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    © 2024 RifaOnline • Auditoria Certificada e Transparência Total
+                    © 2024 MyRifa • Auditoria Certificada e Transparência Total
                 </p>
             </footer>
         </div>

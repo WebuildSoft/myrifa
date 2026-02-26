@@ -140,7 +140,7 @@ export default function Home() {
                     <div className="max-w-7xl mx-auto bg-gradient-to-br from-primary to-purple-800 rounded-[3rem] p-12 md:p-24 text-center text-white relative overflow-hidden shadow-2xl shadow-primary/20">
                         <div className="relative z-10 space-y-8">
                             <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-none">Pronto para lançar sua primeira rifa?</h2>
-                            <p className="max-w-xl mx-auto text-white/70 font-medium text-lg md:text-xl leading-relaxed">Junte-se a milhares de organizadores que já utilizam a RifaOnline para realizar sonhos e arrecadar fundos.</p>
+                            <p className="max-w-xl mx-auto text-white/70 font-medium text-lg md:text-xl leading-relaxed">Junte-se a milhares de organizadores que já utilizam a MyRifa para realizar sonhos e arrecadar fundos.</p>
                             <Button asChild size="lg" className="bg-white text-primary hover:bg-slate-100 h-16 px-12 rounded-2xl text-sm font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
                                 <Link href="/register">Criar minha rifa agora</Link>
                             </Button>
@@ -204,7 +204,7 @@ export default function Home() {
                 </div>
 
                 <div className="max-w-7xl mx-auto pt-8 border-t border-primary/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    <p>© 2024 RifaOnline. Todos os Direitos Reservados.</p>
+                    <p>© 2024 MyRifa. Todos os Direitos Reservados.</p>
                     <div className="flex gap-6">
                         <span className="flex items-center gap-1.5"><ShieldCheck className="h-3 w-3" /> SSL Seguro</span>
                         <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3" /> Auditoria Certificada</span>

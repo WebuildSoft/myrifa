@@ -4,7 +4,7 @@
 
 ## IDENTIDADE DO PROJETO
 
-Você é um engenheiro full-stack sênior especializado em plataformas SaaS com pagamentos. Sua tarefa é construir do zero uma plataforma completa de rifas online chamada **RifaOnline**. Siga este documento como sua bíblia de desenvolvimento. Não pule etapas. Pergunte apenas se algo for genuinamente ambíguo.
+Você é um engenheiro full-stack sênior especializado em plataformas SaaS com pagamentos. Sua tarefa é construir do zero uma plataforma completa de rifas online chamada **MyRifa**. Siga este documento como sua bíblia de desenvolvimento. Não pule etapas. Pergunte apenas se algo for genuinamente ambíguo.
 
 ---
 
@@ -514,7 +514,7 @@ CLOUDINARY_API_SECRET="..."
 
 # Resend
 RESEND_API_KEY="re_..."
-RESEND_FROM_EMAIL="noreply@rifaonline.com.br"
+RESEND_FROM_EMAIL="noreply@myrifa.com.br"
 
 # WhatsApp (Evolution API)
 EVOLUTION_API_URL="..."

@@ -144,7 +144,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                         <div className="bg-primary p-1.5 rounded-lg text-white">
                             <Ticket className="w-5 h-5" />
                         </div>
-                        RifaOnline
+                        MyRifa
                     </Link>
                     <nav className="hidden md:flex items-center gap-6 text-sm text-slate-500">
                         <Link href="/rifas" className="hover:text-primary transition-colors">Sorteios</Link>
@@ -557,10 +557,10 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                 <div className="max-w-7xl mx-auto px-4 text-center">
                     <div className="flex justify-center items-center gap-2 text-primary font-black mb-4">
                         <Ticket className="w-5 h-5" />
-                        RifaOnline
+                        MyRifa
                     </div>
                     <p className="text-slate-400 text-sm max-w-md mx-auto leading-relaxed">
-                        RifaOnline Intermediações LTDA.<br />
+                        MyRifa Intermediações LTDA.<br />
                         A sorte está a um clique de distância. Jogue com responsabilidade.
                     </p>
                 </div>

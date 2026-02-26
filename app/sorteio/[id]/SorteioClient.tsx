@@ -134,7 +134,7 @@ export default function SorteioClient({
                         <Star className="h-8 w-8 fill-amber-400" />
                     </div>
                     <div className="flex flex-col">
-                        <h2 className="text-white text-xl md:text-2xl font-black tracking-tighter leading-none">RifaOnline</h2>
+                        <h2 className="text-white text-xl md:text-2xl font-black tracking-tighter leading-none">MyRifa</h2>
                         <span className="text-[10px] text-white/40 uppercase tracking-[0.3em] font-bold">Auditoria Certificada</span>
                     </div>
                 </Link>
@@ -299,7 +299,7 @@ export default function SorteioClient({
             {/* Footer Decorative */}
             <footer className="absolute bottom-10 w-full text-center z-10">
                 <p className="text-white/20 text-[9px] uppercase tracking-[0.3em] font-black">
-                    © 2024 RifaOnline • Auditoria de Sorteio Baseada em Algoritmo Seguro
+                    © 2024 MyRifa • Auditoria de Sorteio Baseada em Algoritmo Seguro
                 </p>
             </footer>
         </div>
