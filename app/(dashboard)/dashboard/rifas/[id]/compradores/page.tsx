@@ -33,7 +33,8 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
             buyers: {
                 include: {
                     numbers: {
-                        where: { rifaId: id }
+                        where: { rifaId: id },
+                        select: { id: true, number: true, status: true }
                     }
                 },
                 orderBy: { createdAt: 'desc' }

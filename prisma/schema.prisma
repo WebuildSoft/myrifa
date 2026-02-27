@@ -84,6 +84,10 @@ model Rifa {
   user               User          @relation(fields: [userId], references: [id])
   numbers            RifaNumber[]
   transactions       Transaction[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model RifaNumber {
@@ -98,6 +102,9 @@ model RifaNumber {
   rifa       Rifa         @relation(fields: [rifaId], references: [id])
 
   @@unique([rifaId, number])
+  @@index([rifaId])
+  @@index([status])
+  @@index([buyerId])
 }
 
 model Buyer {
@@ -110,6 +117,9 @@ model Buyer {
   rifa         Rifa          @relation(fields: [rifaId], references: [id])
   numbers      RifaNumber[]
   transactions Transaction[]
+
+  @@index([rifaId])
+  @@index([whatsapp])
 }
 
 model Transaction {
@@ -129,6 +139,10 @@ model Transaction {
   createdAt     DateTime          @default(now())
   buyer         Buyer             @relation(fields: [buyerId], references: [id])
   rifa          Rifa              @relation(fields: [rifaId], references: [id])
+
+  @@index([rifaId])
+  @@index([buyerId])
+  @@index([status])
 }
 
 enum Plan {

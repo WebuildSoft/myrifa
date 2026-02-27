@@ -16,44 +16,45 @@ export default async function DashboardPage() {
 
     const userId = session.user.id
 
-    // Fetch metrics
-    const activeRifasCount = await prisma.rifa.count({
-        where: { userId, status: "ACTIVE" as any }
-    })
-
-    const totalRaisedResult = await prisma.rifa.aggregate({
-        where: {
-            userId,
-            status: { in: ["DRAFT", "ACTIVE", "PAUSED", "CLOSED", "DRAWN", "CANCELLED"] as any }
-        },
-        _sum: { totalRaised: true }
-    })
-    const totalRaised = Number(totalRaisedResult._sum.totalRaised || 0)
-
-    const ticketsSold = await prisma.rifaNumber.count({
-        where: {
-            rifa: {
+    // Fetch metrics with parallel queries for maximum speed
+    const activeStatuses = ["DRAFT", "ACTIVE", "PAUSED", "CLOSED", "DRAWN", "CANCELLED"] as any[]
+    const [activeRifasCount, totalRaisedResult, ticketsSold, recentTransactions] = await Promise.all([
+        prisma.rifa.count({
+            where: { userId, status: "ACTIVE" as any }
+        }),
+        prisma.rifa.aggregate({
+            where: {
                 userId,
-                status: { in: ["DRAFT", "ACTIVE", "PAUSED", "CLOSED", "DRAWN", "CANCELLED"] as any }
+                status: { in: activeStatuses }
             },
-            status: "PAID"
-        }
-    })
-
-    const recentTransactions = await prisma.transaction.findMany({
-        where: {
-            rifa: {
-                userId,
-                status: { in: ["DRAFT", "ACTIVE", "PAUSED", "CLOSED", "DRAWN", "CANCELLED"] as any }
+            _sum: { totalRaised: true }
+        }),
+        prisma.rifaNumber.count({
+            where: {
+                rifa: {
+                    userId,
+                    status: { in: activeStatuses }
+                },
+                status: "PAID"
             }
-        },
-        include: {
-            buyer: true,
-            rifa: true
-        },
-        orderBy: { createdAt: "desc" },
-        take: 5
-    })
+        }),
+        prisma.transaction.findMany({
+            where: {
+                rifa: {
+                    userId,
+                    status: { in: activeStatuses }
+                }
+            },
+            include: {
+                buyer: { select: { name: true } },
+                rifa: { select: { title: true } }
+            },
+            orderBy: { createdAt: "desc" },
+            take: 5
+        })
+    ])
+
+    const totalRaised = Number(totalRaisedResult._sum.totalRaised || 0)
 
     // Format currency
     const formattedRaised = new Intl.NumberFormat("pt-BR", {

@@ -59,7 +59,10 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
     const rifa = await prisma.rifa.findUnique({
         where: { slug },
         include: {
-            numbers: { orderBy: { number: "asc" } },
+            numbers: {
+                orderBy: { number: "asc" },
+                select: { id: true, number: true, status: true }
+            },
             user: { select: { name: true, image: true } },
             _count: {
                 select: { numbers: { where: { status: "PAID" } } }
