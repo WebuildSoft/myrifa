@@ -84,7 +84,7 @@ export default function SorteioClient({
     const handleDraw = async () => {
         if (!canDraw || alreadyDrawn) return
 
-        if (!window.confirm("Atenção! Esta ação é irreversível e definirá o ganhador da campanha. Deseja continuar?")) {
+        if (!window.confirm("Atenção! Esta ação é irreversível e definirá o vencedor da campanha. Deseja continuar?")) {
             return
         }
 
@@ -116,7 +116,7 @@ export default function SorteioClient({
                 })
             }
         } catch (e) {
-            setError("Ocorreu um erro ao realizar o sorteio.")
+            setError("Ocorreu um erro ao definir o resultado.")
             if (intervalRef.current) clearInterval(intervalRef.current)
         } finally {
             setDrawing(false)
@@ -135,7 +135,7 @@ export default function SorteioClient({
                     </div>
                     <div className="flex flex-col">
                         <h2 className="text-white text-xl md:text-2xl font-black tracking-tighter leading-none">MyRifa</h2>
-                        <span className="text-[10px] text-white/40 uppercase tracking-[0.3em] font-bold">Auditoria Certificada</span>
+                        <span className="text-[10px] text-white/40 uppercase tracking-[0.3em] font-bold">Resultado Certificado</span>
                     </div>
                 </Link>
 
@@ -169,11 +169,11 @@ export default function SorteioClient({
                 {/* Title Section */}
                 <div className="mb-12 space-y-2">
                     <h1 className="text-white text-5xl md:text-8xl font-black tracking-tighter drop-shadow-2xl">
-                        {drawing ? 'Sorteando' : (alreadyDrawn || result ? 'Vencedor!' : 'Realizar Sorteio')}
+                        {drawing ? 'Definindo' : (alreadyDrawn || result ? 'Vencedor!' : 'Finalizar Campanha')}
                         {drawing && <span className="text-amber-400 animate-pulse">...</span>}
                     </h1>
                     <p className="text-primary/40 text-sm md:text-xl font-black uppercase tracking-[0.4em]">
-                        {drawing ? 'Aguarde o resultado final' : (alreadyDrawn || result ? 'Campanha Finalizada com Sucesso' : 'Prepare-se para o resultado')}
+                        {drawing ? 'Gerando resultado oficial' : (alreadyDrawn || result ? 'Campanha Finalizada com Sucesso' : 'Prepare-se para premiar o apoiador')}
                     </p>
                 </div>
 
@@ -211,7 +211,7 @@ export default function SorteioClient({
                             </h3>
                             <div className="flex justify-between items-end border-t border-white/10 pt-4">
                                 <div>
-                                    <p className="text-white/40 text-[9px] font-black uppercase tracking-widest leading-none mb-1">Cota Sorteada</p>
+                                    <p className="text-white/40 text-[9px] font-black uppercase tracking-widest leading-none mb-1">Cota Premiada</p>
                                     <p className="text-2xl font-black text-amber-400">Nº {(result?.number || winnerNumber)?.toString().padStart(3, '0')}</p>
                                 </div>
                                 <Trophy className="h-10 w-10 text-amber-400/20" />
@@ -232,8 +232,8 @@ export default function SorteioClient({
                             <div className="space-y-4">
                                 <div className="flex justify-between items-end">
                                     <div className="text-left">
-                                        <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">Processando Bilhetes</p>
-                                        <p className="text-white text-lg font-bold">Gerando resultado premiado</p>
+                                        <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">Processando Apoios</p>
+                                        <p className="text-white text-lg font-bold">Identificando vencedor oficial</p>
                                     </div>
                                     <p className="text-amber-400 text-2xl font-black tracking-tighter">{currentProgress}%</p>
                                 </div>
@@ -251,7 +251,7 @@ export default function SorteioClient({
                                     <div className="flex items-center gap-2 px-6 py-2 bg-amber-400/10 border border-amber-400/20 rounded-full">
                                         <AlertTriangle className="h-4 w-4 text-amber-400" />
                                         <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest leading-none">
-                                            Meta Mínima: {minPercent}% não atingida ({progress}%)
+                                            Meta de Apoio: {minPercent}% não atingida ({progress}%)
                                         </span>
                                     </div>
                                 )}
@@ -267,7 +267,7 @@ export default function SorteioClient({
                                     onClick={handleDraw}
                                 >
                                     <Zap className="h-6 w-6 fill-white" />
-                                    Iniciar Sorteio
+                                    Finalizar e Premiar
                                 </Button>
 
                                 {/* Footer Stats */}
@@ -275,7 +275,7 @@ export default function SorteioClient({
                                     <div className="flex flex-col items-center">
                                         <div className="flex items-center gap-2 text-amber-400/60 mb-1">
                                             <Users className="h-3 w-3" />
-                                            <p className="text-[9px] font-black uppercase tracking-widest">Participantes</p>
+                                            <p className="text-[9px] font-black uppercase tracking-widest">Apoiadores</p>
                                         </div>
                                         <p className="text-white text-2xl md:text-3xl font-black">{totalPaid.toLocaleString('pt-BR')}</p>
                                     </div>
@@ -299,7 +299,7 @@ export default function SorteioClient({
             {/* Footer Decorative */}
             <footer className="absolute bottom-10 w-full text-center z-10">
                 <p className="text-white/20 text-[9px] uppercase tracking-[0.3em] font-black">
-                    © 2024 MyRifa • Auditoria de Sorteio Baseada em Algoritmo Seguro
+                    © 2024 MyRifa • Sistema de Auditoria de Resultados Baseado em Blockchain
                 </p>
             </footer>
         </div>

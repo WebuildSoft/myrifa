@@ -30,15 +30,15 @@ export default async function RifasPage() {
         <div className="space-y-8 pb-12">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Minhas Rifas</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">Minhas Campanhas</h1>
                     <p className="text-slate-500 font-medium mt-1">
-                        Gerencie e acompanhe o desempenho de todas as suas campanhas.
+                        Gerencie e acompanhe o desempenho de todas as suas campanhas digitais.
                     </p>
                 </div>
                 <Button asChild className="h-12 px-6 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
                     <Link href="/dashboard/rifas/nova" className="flex items-center gap-2">
                         <PlusCircle className="h-5 w-5" />
-                        Criar Nova Rifa
+                        Lançar Campanha
                     </Link>
                 </Button>
             </div>
@@ -50,9 +50,9 @@ export default async function RifasPage() {
                             <Ticket className="h-8 w-8" />
                         </div>
                         <h3 className="text-xl font-bold text-slate-900 mb-2">Sua primeira campanha começa aqui</h3>
-                        <p className="text-slate-500 mb-8 max-w-sm">Você ainda não criou nenhuma rifa. Comece agora e alcance seus objetivos de arrecadação.</p>
+                        <p className="text-slate-500 mb-8 max-w-sm">Você ainda não criou nenhuma campanha. Comece agora e alcance seus objetivos de arrecadação digital.</p>
                         <Button asChild className="rounded-xl px-8 font-bold">
-                            <Link href="/dashboard/rifas/nova">Criar Rifa Agora</Link>
+                            <Link href="/dashboard/rifas/nova">Lançar Campanha Agora</Link>
                         </Button>
                     </CardContent>
                 </Card>
@@ -73,7 +73,7 @@ export default async function RifasPage() {
                             DRAFT: "Rascunho",
                             PAUSED: "Pausada",
                             CLOSED: "Encerrada",
-                            DRAWN: "Sorteada",
+                            DRAWN: "Premiada",
                             CANCELLED: "Cancelada",
                         }
 

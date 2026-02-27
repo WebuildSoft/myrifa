@@ -9,8 +9,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-    title: "MyRifa - Sua plataforma de rifas e sorteios",
-    description: "Crie, gerencie e participe de rifas online de forma segura e rápida.",
+    title: "MyRifa - Gestão de Arrecadação Digital e Campanhas",
+    description: "Plataforma SaaS para criação e gerenciamento de campanhas de apoio, ações entre amigos e captação de recursos online.",
 }
 
 export default function RootLayout({

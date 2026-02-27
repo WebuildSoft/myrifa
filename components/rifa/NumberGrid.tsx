@@ -145,7 +145,7 @@ export function NumberGrid({
                         onClick={() => selectRandom(1)}
                         className="flex-[2] min-w-[120px] h-10 bg-primary text-white rounded-xl text-sm font-black shadow-lg shadow-primary/20 hover:brightness-110 transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
-                        🍀 Quero sorte!
+                        🚀 Apoiar agora!
                     </button>
                 </div>
             </div>
@@ -153,7 +153,7 @@ export function NumberGrid({
             {/* Grid Status Legend */}
             <div className="flex flex-wrap justify-center gap-6 py-2">
                 {[
-                    { color: "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700", label: "Livre" },
+                    { color: "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700", label: "Disponível" },
                     { color: "bg-primary border-primary shadow-lg shadow-primary/20", label: "Selec." },
                     { color: "bg-yellow-400 border-yellow-500", label: "Reserv." },
                     { color: "bg-green-500 border-green-600", label: "Pago" }
@@ -216,7 +216,7 @@ export function NumberGrid({
                             onClick={handleGoToCheckout}
                             className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-2xl font-black text-sm flex items-center gap-2 transition-all active:scale-95 shadow-xl shadow-primary/30"
                         >
-                            Comprar Agora
+                            Apoiar Campanha
                             <ChevronRight className="w-5 h-5" />
                         </button>
                     </div>

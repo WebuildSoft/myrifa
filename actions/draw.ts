@@ -25,19 +25,19 @@ export async function drawRifaAction(rifaId: string) {
         })
 
         if (!rifa) return { error: "Rifa não encontrada" }
-        if (rifa.status === "DRAWN") return { error: "O sorteio já foi realizado!" }
+        if (rifa.status === "DRAWN") return { error: "A premiação desta campanha já foi realizada!" }
 
         // Check if it reached min percentage
         const progress = Math.round((rifa._count.numbers / rifa.totalNumbers) * 100)
         if (progress < rifa.minPercentToRaffle) {
-            return { error: `A rifa não atingiu a meta mínima de ${rifa.minPercentToRaffle}% para ser sorteada.` }
+            return { error: `A campanha não atingiu a meta mínima de ${rifa.minPercentToRaffle}% para ser finalizada.` }
         }
 
         if (rifa.numbers.length === 0) {
-            return { error: "Não há números pagos para realizar o sorteio." }
+            return { error: "Não há apoios registrados para realizar a premiação." }
         }
 
-        // Cryptographic draw algorithm
+        // Algoritmo de premiação criptográfica segura
         const maxIndex = rifa.numbers.length - 1
         const randomBuffer = crypto.randomBytes(4)
         const randomNumber = randomBuffer.readUInt32LE(0)
@@ -77,6 +77,6 @@ export async function drawRifaAction(rifaId: string) {
         }
     } catch (error) {
         console.error("Draw error:", error)
-        return { error: "Erro ao realizar o sorteio." }
+        return { error: "Erro ao finalizar a campanha." }
     }
 }

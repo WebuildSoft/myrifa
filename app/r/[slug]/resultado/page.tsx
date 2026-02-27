@@ -47,7 +47,7 @@ export default async function PublicResultPage({ params }: { params: Promise<{ s
 
                     {rifa.status === "DRAWN" ? (
                         <div className="animate-in slide-in-from-bottom-4 duration-700 fade-in">
-                            <div className="text-sm font-bold tracking-widest text-gray-400 uppercase mb-2">Número Sorteado</div>
+                            <div className="text-sm font-bold tracking-widest text-gray-400 uppercase mb-2">Cota Premiada</div>
                             <div className="text-6xl font-black text-gray-900 tracking-tighter mb-6">
                                 {rifa.winnerNumber?.toString().padStart(2, '0')}
                             </div>
@@ -55,13 +55,13 @@ export default async function PublicResultPage({ params }: { params: Promise<{ s
                             <div className="flex flex-col gap-3">
                                 <div className="flex items-center justify-center gap-2 text-gray-700 bg-gray-50 py-3 px-4 rounded-xl border border-gray-100">
                                     <User className="w-5 h-5 text-gray-400" />
-                                    <span className="font-semibold text-lg">{winnerName || "Ganhador"}</span>
+                                    <span className="font-semibold text-lg">{winnerName || "Vencedor"}</span>
                                 </div>
 
                                 {rifa.drawnAt && (
                                     <div className="flex items-center justify-center gap-2 text-gray-500 text-sm">
                                         <Calendar className="w-4 h-4" />
-                                        <span>Sorteado em {new Date(rifa.drawnAt).toLocaleDateString("pt-BR")} as {new Date(rifa.drawnAt).toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })}</span>
+                                        <span>Premiado em {new Date(rifa.drawnAt).toLocaleDateString("pt-BR")} as {new Date(rifa.drawnAt).toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })}</span>
                                     </div>
                                 )}
                             </div>
@@ -69,8 +69,8 @@ export default async function PublicResultPage({ params }: { params: Promise<{ s
                     ) : (
                         <div className="py-8">
                             <div className="text-6xl mb-4 text-gray-200">⏳</div>
-                            <h3 className="text-xl font-bold text-gray-700 mb-2">Sorteio Pendente</h3>
-                            <p className="text-gray-500">O ganhador ainda não foi definido para esta campanha. Fique ligado!</p>
+                            <h3 className="text-xl font-bold text-gray-700 mb-2">Aguardando Resultado</h3>
+                            <p className="text-gray-500">O vencedor ainda não foi definido para esta campanha. Fique ligado!</p>
                         </div>
                     )}
 

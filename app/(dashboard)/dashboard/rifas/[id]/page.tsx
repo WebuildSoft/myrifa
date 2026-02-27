@@ -178,11 +178,11 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
 
                 <div className="grid md:grid-cols-3 gap-6">
                     {/* Configuration Summary */}
-                    <CardWrapper title="Configurações da Rifa">
+                    <CardWrapper title="Configurações da Campanha">
                         <div className="space-y-5">
                             <ConfigItem icon={<Layers className="h-4 w-4" />} label="Categoria" value={rifa.category} />
                             <ConfigItem icon={<Gift className="h-4 w-4" />} label="Método" value={rifa.drawMethod} />
-                            <ConfigItem icon={<Calendar className="h-4 w-4" />} label="Sorteio" value={rifa.drawDate ? new Date(rifa.drawDate).toLocaleDateString("pt-BR") : "Não definido"} />
+                            <ConfigItem icon={<Calendar className="h-4 w-4" />} label="Premiação" value={rifa.drawDate ? new Date(rifa.drawDate).toLocaleDateString("pt-BR") : "Não definido"} />
                             <ConfigItem icon={<UserCircle className="h-4 w-4" />} label="Limite/User" value={rifa.maxPerBuyer ? `${rifa.maxPerBuyer} cotas` : "Ilimitado"} />
                             <ConfigItem icon={<Smartphone className="h-4 w-4" />} label="Visibilidade" value={rifa.isPrivate ? "Privada" : "Pública"} />
                         </div>
@@ -192,7 +192,7 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                     <CardWrapper title="Link e Compartilhamento" className="md:col-span-2">
                         <div className="h-full flex flex-col justify-between space-y-6">
                             <div className="space-y-3">
-                                <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Link da sua Rifa</p>
+                                <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Link da sua Campanha</p>
                                 <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-primary/10 group overflow-hidden">
                                     <span className="text-xs text-slate-500 flex-1 truncate font-mono">rifa.com.br/r/{rifa.slug}</span>
                                     <button className="p-2 text-primary hover:bg-primary/10 rounded-2xl transition-colors active:scale-90">
@@ -219,8 +219,8 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                     <h3 className="font-sans font-black text-slate-900 dark:text-white mb-6 px-1 uppercase tracking-widest text-[10px]">Gerenciamento de Fluxo</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <QuickActionButton icon={<Share2 />} label="Divulgar" color="text-blue-500" bg="bg-blue-50" darkBg="dark:bg-blue-900/20" href={`/r/${rifa.slug}`} external />
-                        <QuickActionButton icon={<Users />} label="Compradores" color="text-amber-500" bg="bg-amber-50" darkBg="dark:bg-amber-900/20" href={`/dashboard/rifas/${rifa.id}/compradores`} />
-                        <QuickActionButton icon={<Edit />} label="Editar Rifa" color="text-purple-500" bg="bg-purple-50" darkBg="dark:bg-purple-900/20" href={`/dashboard/rifas/${rifa.id}/editar`} />
+                        <QuickActionButton icon={<Users />} label="Apoiadores" color="text-amber-500" bg="bg-amber-50" darkBg="dark:bg-amber-900/20" href={`/dashboard/rifas/${rifa.id}/compradores`} />
+                        <QuickActionButton icon={<Edit />} label="Editar Campanha" color="text-purple-500" bg="bg-purple-50" darkBg="dark:bg-purple-900/20" href={`/dashboard/rifas/${rifa.id}/editar`} />
 
                         {rifa.status === "DRAWN" ? (
                             <div className="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900 opacity-50 rounded-[2rem] border border-transparent">
@@ -231,7 +231,7 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                             <Button className="flex flex-col h-auto p-6 gap-3 bg-primary text-white rounded-[2rem] shadow-xl shadow-primary/20 group hover:scale-[1.02] transition-transform" asChild>
                                 <Link href={`/sorteio/${rifa.id}`}>
                                     <Gift className="h-8 w-8 mb-0 group-hover:rotate-12 transition-transform" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-center">Realizar Sorteio</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-center">Finalizar e Premiar</span>
                                 </Link>
                             </Button>
                         )}

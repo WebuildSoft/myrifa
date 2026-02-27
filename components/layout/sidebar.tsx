@@ -10,7 +10,7 @@ import { useState, useEffect } from "react"
 
 const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Minhas Rifas", href: "/dashboard/rifas", icon: Ticket },
+    { name: "Minhas Campanhas", href: "/dashboard/rifas", icon: Ticket },
     { name: "Relatórios", href: "/relatorios", icon: BarChart3 },
     { name: "Planos", href: "/assinatura", icon: CreditCard },
     { name: "Perfil", href: "/conta", icon: User },
@@ -86,7 +86,7 @@ export function Sidebar() {
                             <HelpCircle className="h-4 w-4 text-primary" />
                             <p className="text-[10px] font-bold text-primary uppercase tracking-wider">Suporte</p>
                         </div>
-                        <p className="text-xs text-slate-500 mb-3 leading-relaxed">Precisa de ajuda com suas rifas?</p>
+                        <p className="text-xs text-slate-500 mb-3 leading-relaxed">Precisa de ajuda com suas campanhas?</p>
                         <Button variant="outline" size="sm" className="w-full bg-white dark:bg-slate-800 border-primary/20 text-primary hover:bg-primary hover:text-white transition-all text-[11px] font-bold h-8">
                             Falar com Consultor
                         </Button>

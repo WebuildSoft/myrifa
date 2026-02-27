@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const { slug } = await params
     const rifa = await prisma.rifa.findUnique({ where: { slug } })
 
-    if (!rifa) return { title: "Rifa não encontrada" }
+    if (!rifa) return { title: "Campanha não encontrada" }
 
     const allImages = [
         ...(rifa.coverImage ? [rifa.coverImage] : []),
@@ -45,10 +45,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     return {
         title: `${rifa.title} | MyRifa`,
-        description: rifa.description || `Participe da rifa ${rifa.title} e concorra a prêmios incríveis!`,
+        description: rifa.description || `Apoie a campanha ${rifa.title} e contribua para o nosso objetivo!`,
         openGraph: {
             title: rifa.title,
-            description: rifa.description || `Garanta seus números para ${rifa.title}`,
+            description: rifa.description || `Garanta suas cotas para ${rifa.title}`,
             images: allImages.length > 0 ? allImages : [],
         },
     }
@@ -86,7 +86,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
     }).format(Number(rifa.numberPrice))
 
     const categoryLabels: Record<string, string> = {
-        SORTEIO: "Sorteio de Produto",
+        SORTEIO: "Campanha de Produto",
         ARRECADACAO: "Arrecadação Solidária",
         VIAGEM: "Viagem & Experiência",
         MISSAO: "Missão entre Amigos",
@@ -107,8 +107,8 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                         <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-white">MyRifa</h2>
                     </Link>
                     <nav className="hidden md:flex items-center gap-8">
-                        <Link href="/rifas" className="text-sm font-bold hover:text-primary transition-colors">Sorteios</Link>
-                        <Link href="/ganhadores" className="text-sm font-bold hover:text-primary transition-colors">Ganhadores</Link>
+                        <Link href="/campanhas" className="text-sm font-bold hover:text-primary transition-colors">Campanhas</Link>
+                        <Link href="/vencedores" className="text-sm font-bold hover:text-primary transition-colors">Vencedores</Link>
                         <Link href="/ajuda" className="text-sm font-bold hover:text-primary transition-colors">Como Funciona</Link>
                         <Link href="/minhas-cotas">
                             <Button className="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-black shadow-lg shadow-primary/20 hover:scale-105 transition-transform h-auto">
@@ -161,7 +161,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                 </h1>
                                 <div className="text-right shrink-0">
                                     <p className="text-primary text-2xl md:text-3xl font-black tracking-tight">{formattedPrice}</p>
-                                    <p className="text-slate-400 text-[10px] font-bold uppercase">por número</p>
+                                    <p className="text-slate-400 text-[10px] font-bold uppercase">por cota</p>
                                 </div>
                             </div>
 
@@ -189,8 +189,8 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                             {/* Sales Progress */}
                             <div className="space-y-2">
                                 <div className="flex justify-between items-end">
-                                    <p className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">Progresso de Vendas</p>
-                                    <p className="text-xs font-black text-primary">{progress}% vendidos</p>
+                                    <p className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">Objetivo da Campanha</p>
+                                    <p className="text-xs font-black text-primary">{progress}% atingido</p>
                                 </div>
                                 <div className="w-full h-3 bg-slate-100 dark:bg-slate-700/50 rounded-full overflow-hidden">
                                     <div
@@ -211,8 +211,8 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                     <Sparkles className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-slate-900 dark:text-white uppercase">Sorteio Oficial</p>
-                                    <p className="text-[10px] text-slate-400 font-medium">100% regulamentado</p>
+                                    <p className="text-xs font-bold text-slate-900 dark:text-white uppercase">Campanha Certificada</p>
+                                    <p className="text-[10px] text-slate-400 font-medium">Transparência garantida</p>
                                 </div>
                             </div>
                             <ShareCampaign slug={rifa.slug} title={rifa.title} />
@@ -228,7 +228,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                             <div className="flex items-center justify-between mb-5">
                                 <h2 className="text-lg md:text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
                                     <Ticket className="w-5 h-5 text-primary" />
-                                    Escolha seus números
+                                    Escolha suas cotas
                                 </h2>
                                 <button className="text-slate-400 hover:text-primary transition-colors">
                                     <HelpCircle className="w-5 h-5" />
@@ -270,10 +270,10 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                             ) : (
                                 <ul className="grid gap-3">
                                     {[
-                                        { icon: CheckCircle2, text: "Sorteio baseado no resultado da Loteria Federal.", color: "text-emerald-500" },
-                                        { icon: Shield, text: "Pagamento 100% seguro e criptografado.", color: "text-blue-500" },
+                                        { icon: CheckCircle2, text: "Resultado baseado no sorteio oficial da Loteria Federal.", color: "text-emerald-500" },
+                                        { icon: Shield, text: "Apoio 100% seguro e criptografado.", color: "text-blue-500" },
                                         { icon: Clock, text: "Reserva de 30 minutos após a seleção.", color: "text-amber-500" },
-                                        { icon: Trophy, text: "Entrega garantida pela plataforma rifa.", color: "text-violet-500" }
+                                        { icon: Trophy, text: "Entrega garantida pela plataforma MyRifa.", color: "text-violet-500" }
                                     ].map((rule, i) => (
                                         <li key={i} className="flex items-center gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
                                             <rule.icon className={`w-5 h-5 shrink-0 ${rule.color}`} />
@@ -296,7 +296,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                         <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">MyRifa</h2>
                     </div>
                     <p className="text-sm text-slate-400 max-w-[600px] mx-auto mb-6 font-medium leading-relaxed">
-                        Participar de sorteios é uma atividade de entretenimento. Jogue com responsabilidade. Sorteios realizados em conformidade com as leis vigentes.
+                        Apoiar causas sociais e campanhas é uma forma de gerar impacto positivo. Contribuímos para a transparência e segurança em todas as etapas.
                     </p>
                     <div className="flex flex-wrap justify-center gap-8 mb-8 text-slate-400">
                         <Link href="/termos" className="hover:text-primary transition-colors text-xs font-black uppercase tracking-widest">Termos de Uso</Link>

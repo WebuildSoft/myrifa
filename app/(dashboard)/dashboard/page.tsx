@@ -94,7 +94,7 @@ export default async function DashboardPage() {
                             </div>
                             <Badge className="bg-blue-50 text-blue-600 border-none font-bold text-[10px] hover:bg-blue-100">+2%</Badge>
                         </div>
-                        <p className="text-slate-500 text-sm font-semibold tracking-tight uppercase">Rifas Ativas</p>
+                        <p className="text-slate-500 text-sm font-semibold tracking-tight uppercase">Campanhas Ativas</p>
                         <h3 className="text-2xl font-bold mt-1 tracking-tight text-foreground">{activeRifasCount}</h3>
                     </CardContent>
                 </Card>
@@ -131,12 +131,12 @@ export default async function DashboardPage() {
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                     <div className="max-w-xl text-center md:text-left">
                         <h2 className="text-3xl font-extrabold mb-4 tracking-tight leading-tight">Pronto para sua próxima campanha de sucesso?</h2>
-                        <p className="text-primary-foreground/90 font-medium text-lg leading-relaxed max-w-lg">Crie rifas profissionais em minutos, gerencie pagamentos e automatize o sorteio. Tudo em um só lugar.</p>
+                        <p className="text-primary-foreground/90 font-medium text-lg leading-relaxed max-w-lg">Crie campanhas profissionais em minutos, gerencie apoios e automatize o reconhecimento. Tudo em um só lugar.</p>
                     </div>
                     <Button asChild className="whitespace-nowrap h-14 px-8 bg-white text-primary hover:bg-slate-50 font-bold rounded-2xl shadow-lg border-none hover:scale-105 transition-all duration-300">
                         <Link href="/dashboard/rifas/nova" className="flex items-center gap-2">
                             <PlusCircle className="h-5 w-5" />
-                            Criar Nova Rifa
+                            Lançar Campanha
                         </Link>
                     </Button>
                 </div>

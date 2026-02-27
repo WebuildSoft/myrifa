@@ -75,7 +75,7 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
         if (res.error) {
             toast.error(res.error)
         } else {
-            toast.success("Rifa cancelada definitivamente.")
+            toast.success("Campanha cancelada definitivamente.")
             router.push("/dashboard/rifas")
         }
     }
@@ -95,9 +95,9 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
                 <CardContent className="space-y-6">
                     <div className="flex items-center justify-between space-x-2">
                         <div className="flex flex-col space-y-1">
-                            <Label htmlFor="isPrivate">Rifa Privada</Label>
+                            <Label htmlFor="isPrivate">Campanha Privada</Label>
                             <p className="text-sm text-muted-foreground">
-                                Apenas pessoas com o link direto poderão acessar. Não aparecerá em buscas ou listagens públicas.
+                                Apenas pessoas com o link direto poderão acessar. Não aparecerá em buscas ou listagens públicas da plataforma.
                             </p>
                         </div>
                         <Switch
@@ -122,16 +122,16 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
                 <CardHeader>
                     <div className="flex items-center gap-2">
                         <Calendar className="h-5 w-5 text-primary" />
-                        <CardTitle>Sorteio e Datas</CardTitle>
+                        <CardTitle>Premiação e Datas</CardTitle>
                     </div>
                     <CardDescription>
-                        Defina quando e como o prêmio será sorteado.
+                        Defina a previsão da entrega ou reconhecimento da sua campanha.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
-                            <Label htmlFor="drawDate">Data do Sorteio (Estimada)</Label>
+                            <Label htmlFor="drawDate">Data da Premiação (Estimada)</Label>
                             <Input
                                 id="drawDate"
                                 type="date"
@@ -140,7 +140,7 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="minPercent">Meta Mínima para Sorteio (%)</Label>
+                            <Label htmlFor="minPercent">Meta Mínima para Realização (%)</Label>
                             <Input
                                 id="minPercent"
                                 type="number"
@@ -167,10 +167,10 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
                 <CardHeader>
                     <div className="flex items-center gap-2">
                         <Palette className="h-5 w-5 text-primary" />
-                        <CardTitle className="text-primary">Personalização Pro</CardTitle>
+                        <CardTitle className="text-primary">Customização Pro</CardTitle>
                     </div>
                     <CardDescription>
-                        Destaque sua rifa com cores e formas exclusivas.
+                        Destaque sua campanha com ferramentas visuais exclusivas.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -196,22 +196,22 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <p className="text-sm text-gray-600">
-                        Ao cancelar uma rifa com números já vendidos, você deverá realizar o estorno manual aos compradores.
-                        Rifas com sorteio realizado não podem ser canceladas.
+                        Ao cancelar uma campanha com cotas já apoiadas, você deverá realizar o estorno manual aos apoiadores.
+                        Campanhas com premiação realizada não podem ser canceladas.
                     </p>
                 </CardContent>
                 <CardFooter className="flex flex-col md:flex-row justify-between border-t border-red-100 px-6 py-4 gap-4">
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
-                                Encerrar Vendas
+                                Encerrar Captação
                             </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                             <AlertDialogHeader>
-                                <AlertDialogTitle>Encerrar vendas?</AlertDialogTitle>
+                                <AlertDialogTitle>Encerrar captação?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    As pessoas não poderão mais comprar números. Você pode reativar as vendas alterando o status para Ativa novamente.
+                                    As pessoas não poderão mais apoiar sua campanha. Você pode reativar a captação alterando o status para Ativa novamente.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -224,22 +224,22 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button variant="destructive">
-                                Cancelar Rifa Definitivamente
+                                Cancelar Campanha Definitivamente
                             </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent className="border-red-500">
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="flex items-center gap-2 text-red-600">
                                     <AlertTriangle className="h-5 w-5" />
-                                    CANCELAR RIFA DEFINITIVAMENTE?
+                                    CANCELAR CAMPANHA DEFINITIVAMENTE?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    Esta ação é irreversível. A rifa será marcada como cancelada e não poderá ser reativada.
-                                    Você será responsável por entrar em contato e estornar o valor dos compradores se houver números pagos.
+                                    Esta ação é irreversível. A campanha será marcada como cancelada e não poderá ser reativada.
+                                    Você será responsável por entrar em contato e estornar o valor dos apoiadores se houver cotas pagas.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel>Manter Rifa</AlertDialogCancel>
+                                <AlertDialogCancel>Manter Campanha</AlertDialogCancel>
                                 <AlertDialogAction
                                     className="bg-red-600 hover:bg-red-700"
                                     onClick={handleCancelarRifa}

@@ -105,7 +105,7 @@ export default function NovaRifaPage() {
             {/* Breadcrumbs & Header */}
             <div className="space-y-4">
                 <nav className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
-                    <span>Criar Rifa</span>
+                    <span>Lançar Campanha</span>
                     <ChevronRight className="h-3 w-3" />
                     <span className="text-primary">{steps[step - 1].name}</span>
                 </nav>
@@ -122,9 +122,9 @@ export default function NovaRifaPage() {
                             </div>
                         </div>
                         <h1 className="text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
-                            {step === 1 && "Primeiro, os detalhes básicos"}
-                            {step === 2 && "Configure os números e preços"}
-                            {step === 3 && "Revise e publique sua rifa"}
+                            {step === 1 && "Primeiro, os detalhes da campanha"}
+                            {step === 2 && "Configure as cotas e valores"}
+                            {step === 3 && "Revise e ative sua campanha"}
                         </h1>
                     </div>
                 </div>
@@ -166,7 +166,7 @@ export default function NovaRifaPage() {
                                 <div className={`${step === 1 ? "block" : "hidden"} space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500`}>
                                     <div className="grid gap-6">
                                         <div className="space-y-2">
-                                            <Label htmlFor="title" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Título da Rifa</Label>
+                                            <Label htmlFor="title" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Nome da Campanha</Label>
                                             <div className="relative group">
                                                 <FileText className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                                                 <Input
@@ -175,7 +175,7 @@ export default function NovaRifaPage() {
                                                     required
                                                     minLength={3}
                                                     maxLength={80}
-                                                    placeholder="Ex: Sorteio iPhone 15 Pro Max"
+                                                    placeholder="Ex: Ação Solidária para Instituição X"
                                                     className="h-14 pl-12 rounded-2xl border-slate-200 dark:border-slate-800 focus:ring-primary/20"
                                                     value={newRifaInfo.title || ""}
                                                     onChange={(e) => setNewRifaInfo(prev => ({ ...prev, title: e.target.value }))}
@@ -189,28 +189,28 @@ export default function NovaRifaPage() {
                                                 id="description"
                                                 name="description"
                                                 className="flex min-h-[120px] w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                                placeholder="Descreva o prêmio, as regras e como será o sorteio..."
+                                                placeholder="Descreva o propósito da campanha, os objetivos e como os fundos serão utilizados..."
                                                 maxLength={500}
                                             />
                                         </div>
 
                                         <div className="space-y-2">
                                             <Label htmlFor="rules" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
-                                                Regras do Sorteio
+                                                Regras e Condições
                                                 <span className="ml-2 text-[10px] text-slate-400 font-normal normal-case">(opcional)</span>
                                             </Label>
                                             <textarea
                                                 id="rules"
                                                 name="rules"
                                                 className="flex min-h-[100px] w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                                placeholder={`Ex:\n- Sorteio via sistema próprio da plataforma\n- Resultado divulgado ao vivo\n- Pagamento confirmado em até 30 minutos\n- Entrega garantida após confirmação`}
+                                                placeholder={`Ex:\n- Entrega garantida pela Instituição\n- Divulgação do resultado via redes sociais\n- Pagamento via PIX com confirmação automática`}
                                                 maxLength={2000}
                                             />
                                             <p className="text-[11px] text-slate-400 ml-1">Escreva as regras que aparecerão para os compradores na página pública.</p>
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="category" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Categoria do Sorteio</Label>
+                                            <Label htmlFor="category" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Categoria da Campanha</Label>
                                             <select
                                                 id="category"
                                                 name="category"
@@ -286,7 +286,7 @@ export default function NovaRifaPage() {
                                 {/* Step 2: Números e Preços */}
                                 <div className={`${step === 2 ? "block" : "hidden"} space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500`}>
                                     <section className="space-y-4">
-                                        <Label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Quantidade de Números</Label>
+                                        <Label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Quantidade de Cotas</Label>
                                         <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                                             {[10, 50, 100, 250, 500, 1000].map((num) => (
                                                 <button
@@ -321,7 +321,7 @@ export default function NovaRifaPage() {
 
                                     <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
-                                            <Label htmlFor="numberPrice" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Valor por Número</Label>
+                                            <Label htmlFor="numberPrice" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Valor por Cota</Label>
                                             <div className="relative group">
                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 group-focus-within:text-primary transition-colors">R$</div>
                                                 <Input
@@ -338,7 +338,7 @@ export default function NovaRifaPage() {
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <Label htmlFor="drawDate" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Data Prevista do Sorteio</Label>
+                                            <Label htmlFor="drawDate" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Data Prevista da Premiação</Label>
                                             <div className="relative group">
                                                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                                                 <Input
@@ -360,8 +360,8 @@ export default function NovaRifaPage() {
                                                     <Bolt className="h-6 w-6" />
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-slate-900 dark:text-white">Sorteio Automático</p>
-                                                    <p className="text-xs text-slate-500">O sistema libera o sorteio assim que a meta for atingida.</p>
+                                                    <p className="font-bold text-slate-900 dark:text-white">Premiação Automática</p>
+                                                    <p className="text-xs text-slate-500">O sistema libera o resultado assim que a meta for atingida.</p>
                                                 </div>
                                             </div>
                                             <div className="relative inline-flex items-center cursor-pointer">
@@ -407,7 +407,7 @@ export default function NovaRifaPage() {
                                                         </div>
                                                         <div>
                                                             <p className="text-sm font-bold">Configuração de Cotas</p>
-                                                            <p className="text-xs text-slate-500">{newRifaInfo.totalNumbers} números a R$ {newRifaInfo.numberPrice?.toFixed(2)}</p>
+                                                            <p className="text-xs text-slate-500">{newRifaInfo.totalNumbers} cotas a R$ {newRifaInfo.numberPrice?.toFixed(2)}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -436,10 +436,10 @@ export default function NovaRifaPage() {
                                                 Manter como Rascunho
                                             </Button>
                                             <Button type="button" size="lg" className="flex-1 h-14 rounded-2xl font-bold shadow-lg shadow-primary/20" onClick={handlePublish} disabled={loading}>
-                                                {loading ? "Publicando..." : "Publicar Rifa Agora 🚀"}
+                                                {loading ? "Ativando..." : "Ativar Campanha Agora 🚀"}
                                             </Button>
                                             {newRifaInfo.id && (
-                                                <ShareRaffleModal raffleUrl={`${window.location.origin}/dashboard/rifas/${newRifaInfo.id}`} raffleTitle={newRifaInfo.title || "Rifa"} />
+                                                <ShareRaffleModal raffleUrl={`${window.location.origin}/dashboard/rifas/${newRifaInfo.id}`} raffleTitle={newRifaInfo.title || "Campanha"} />
                                             )}
                                         </div>
                                     </div>
@@ -473,7 +473,7 @@ export default function NovaRifaPage() {
 
                                 <div className="space-y-3 bg-white/10 backdrop-blur-md p-5 rounded-3xl border border-white/10">
                                     <div className="flex justify-between items-center text-sm font-medium">
-                                        <span className="opacity-70">Números</span>
+                                        <span className="opacity-70">Cotas</span>
                                         <span>{newRifaInfo.totalNumbers || 0}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-sm font-medium">
@@ -498,10 +498,10 @@ export default function NovaRifaPage() {
                         <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 space-y-4">
                             <h4 className="font-bold text-slate-900 dark:text-white">Dica de Especialista</h4>
                             <p className="text-sm text-slate-500 leading-relaxed">
-                                Rifas com valores entre <span className="text-primary font-bold">R$ 5,00 e R$ 20,00</span> tendem a vender 3x mais rápido por serem valores de impulso.
+                                Campanhas com valores entre <span className="text-primary font-bold">R$ 5,00 e R$ 20,00</span> tendem a engajar 3x mais por serem valores de apoio acessíveis.
                             </p>
                             <Button variant="secondary" className="w-full rounded-2xl h-12 font-bold text-xs uppercase tracking-wider">
-                                Ver Dicas de Vendas
+                                Ver Dicas de Engajamento
                             </Button>
                         </div>
                     </div>

@@ -42,14 +42,14 @@ export default function EditRifaForm({ rifa }: EditRifaFormProps) {
         try {
             const res = await updateRifaAction(rifa.id, formData)
             if (res.success) {
-                toast.success("Rifa atualizada com sucesso!")
+                toast.success("Campanha atualizada com sucesso!")
                 router.push(`/dashboard/rifas/${rifa.id}`)
                 router.refresh()
             } else {
                 toast.error(res.error || "Erro ao atualizar rifa")
             }
         } catch (error) {
-            toast.error("Erro inesperado ao atualizar rifa")
+            toast.error("Erro inesperado ao atualizar campanha")
         } finally {
             setLoading(false)
         }
@@ -64,7 +64,7 @@ export default function EditRifaForm({ rifa }: EditRifaFormProps) {
 
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Título da Rifa</Label>
+                        <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Nome da Campanha</Label>
                         <div className="relative group">
                             <Type className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                             <Input
@@ -87,23 +87,23 @@ export default function EditRifaForm({ rifa }: EditRifaFormProps) {
                                 id="description"
                                 name="description"
                                 defaultValue={rifa.description || ""}
-                                placeholder="Conte os detalhes do prêmio, regras e data do sorteio..."
+                                placeholder="Conte os detalhes da campanha, objetivos e data da premiação..."
                                 className="flex min-h-[160px] w-full bg-slate-50 dark:bg-slate-900 border-none rounded-[2rem] pl-12 pr-6 py-5 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 transition-all placeholder:text-slate-300 resize-none h-auto"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="rules" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Regras do Sorteio <span className="text-slate-300 font-normal normal-case">(opcional)</span></Label>
+                        <Label htmlFor="rules" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Regras e Condições <span className="text-slate-300 font-normal normal-case">(opcional)</span></Label>
                         <textarea
                             id="rules"
                             name="rules"
                             defaultValue={rifa.rules || ""}
-                            placeholder={`Ex:\n- Sorteio via sistema próprio da plataforma\n- Resultado divulgado ao vivo\n- Entrega garantida após confirmação do pagamento`}
+                            placeholder={`Ex:\n- Entrega garantida pela Instituição\n- Resultado divulgado via redes sociais\n- Pagamento confirmado automaticamente via PIX`}
                             className="flex min-h-[120px] w-full bg-slate-50 dark:bg-slate-900 border-none rounded-[2rem] px-6 py-5 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 transition-all placeholder:text-slate-300 resize-none"
                             maxLength={2000}
                         />
-                        <p className="text-[11px] text-slate-400 ml-1">Aparecerão na página pública do seu sorteio.</p>
+                        <p className="text-[11px] text-slate-400 ml-1">Aparecerão na página pública da sua campanha.</p>
                     </div>
 
                     <div className="grid gap-8 md:grid-cols-2 pt-4">
@@ -111,7 +111,7 @@ export default function EditRifaForm({ rifa }: EditRifaFormProps) {
                             label="Imagem de Capa"
                             value={coverImage}
                             onChange={setCoverImage}
-                            helperText="Esta é a imagem principal que aparece no topo da rifa."
+                            helperText="Esta é a imagem principal que aparece no topo da campanha."
                         />
 
                         <div className="space-y-3">

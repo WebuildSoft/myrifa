@@ -15,11 +15,11 @@ const plans = [
     {
         name: "FREE",
         price: "R$ 0",
-        description: "Ideal para iniciantes que querem testar o potencial das rifas.",
+        description: "Ideal para iniciantes que querem testar o potencial das campanhas digitais.",
         features: [
-            "Até 3 rifas ativas",
-            "Taxa de 5% por venda",
-            "Até 500 números",
+            "Até 3 campanhas ativas",
+            "Taxa de 5% por apoio",
+            "Até 500 cotas de apoio",
             "Suporte via e-mail",
         ],
         buttonText: "Começar Grátis",
@@ -34,10 +34,10 @@ const plans = [
         period: "/mês",
         description: "Para organizadores profissionais que buscam escala e taxas reduzidas.",
         features: [
-            "Rifas ativas ilimitadas",
+            "Campanhas ativas ilimitadas",
             "Taxa reduzida de 2%",
             "Imagens personalizadas premium",
-            "Visual de balões exclusivos",
+            "Visual de cotas exclusivos",
             "Suporte VIP via WhatsApp",
         ],
         buttonText: "Assinar PRO",
@@ -51,13 +51,13 @@ const plans = [
         name: "INSTITUTIONAL",
         price: "R$ 149,90",
         period: "/mês",
-        description: "Estrutura completa para ONGs e grandes organizações de sorteio.",
+        description: "Estrutura completa para ONGs, Igrejas e grandes organizações sociais.",
         features: [
             "Tudo do plano PRO",
             "Menor taxa: apenas 1%",
             "Dashboard multi-org",
-            "Auditória detalhada",
-            "Gerente exclusivo",
+            "Auditoria de campanhas",
+            "Gerente de conta exclusivo",
         ],
         buttonText: "Falar com Consultor",
         href: "/ajuda",
@@ -74,8 +74,8 @@ interface PricingSectionProps {
 }
 
 export function PricingSection({
-    title = "Planos Simples e Transparentes",
-    subtitle = "Escolha o plano que melhor se adapta ao seu momento e scale suas vendas.",
+    title = "Soluções de Arrecadação Transparentes",
+    subtitle = "Escolha o modelo que melhor se adapta ao momento da sua instituição e impulsione seu impacto.",
     showTitle = true
 }: PricingSectionProps) {
     return (
@@ -85,7 +85,7 @@ export function PricingSection({
                     <div className="text-center mb-16 space-y-4">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-widest mb-2">
                             <Star className="h-3 w-3 fill-primary" />
-                            Investimento de Alto Retorno
+                            Tecnologia de Alto Impacto
                         </div>
                         <h2 className="text-3xl md:text-5xl font-black tracking-tight dark:text-white leading-tight">
                             {title}
