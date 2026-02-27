@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache"
 import crypto from "crypto"
 import { sendWhatsAppMessage, templates } from "@/lib/evolution"
 
-export async function drawRifaAction(rifaId: string) {
+export async function drawRifaAction(rifaId: string, prizeId: string) {
     const session = await auth()
     if (!session?.user?.id) return { error: "Não autorizado" }
 
@@ -20,41 +20,71 @@ export async function drawRifaAction(rifaId: string) {
                 },
                 _count: {
                     select: { numbers: { where: { status: "PAID" } } }
-                }
+                },
+                prizes: true
             }
         })
 
-        if (!rifa) return { error: "Rifa não encontrada" }
-        if (rifa.status === "DRAWN") return { error: "A premiação desta campanha já foi realizada!" }
+        if (!rifa) return { error: "Campanha não encontrada" }
 
-        // Check if it reached min percentage
-        const progress = Math.round((rifa._count.numbers / rifa.totalNumbers) * 100)
-        if (progress < rifa.minPercentToRaffle) {
-            return { error: `A campanha não atingiu a meta mínima de ${rifa.minPercentToRaffle}% para ser finalizada.` }
-        }
+        const prize = await prisma.prize.findUnique({
+            where: { id: prizeId, rifaId: rifa.id }
+        })
+
+        if (!prize) return { error: "Prêmio não encontrado" }
+        if (prize.winnerId) return { error: "A premiação deste prêmio já foi realizada!" }
+
+        // Check if it reached min percentage (Make it optional for manual draw)
+        // const progress = Math.round((rifa._count.numbers / rifa.totalNumbers) * 100)
+        // if (progress < rifa.minPercentToRaffle) {
+        //     return { error: `A campanha não atingiu a meta mínima de ${rifa.minPercentToRaffle}% para ser finalizada.` }
+        // }
 
         if (rifa.numbers.length === 0) {
             return { error: "Não há apoios registrados para realizar a premiação." }
         }
 
+        // Evitar que o mesmo número ganhe mais de um prêmio na mesma campanha (opcional)
+        // Por enquanto vamos permitir, mas podemos filtrar futuramente se o usuário pedir.
+        // Se quisermos evitar ganhadores repetidos:
+        // const alreadyWinningNumbers = rifa.prizes.map(p => p.winnerNumber).filter(n => n !== null) as number[]
+        // const availableTickets = rifa.numbers.filter(t => !alreadyWinningNumbers.includes(t.number))
+
+        const availableTickets = rifa.numbers
+
+        if (availableTickets.length === 0) {
+            return { error: "Não há mais bilhetes disponíveis para premiação." }
+        }
+
         // Algoritmo de premiação criptográfica segura
-        const maxIndex = rifa.numbers.length - 1
+        const maxIndex = availableTickets.length - 1
         const randomBuffer = crypto.randomBytes(4)
         const randomNumber = randomBuffer.readUInt32LE(0)
         const winningIndex = randomNumber % (maxIndex + 1)
 
-        const winningTicket = rifa.numbers[winningIndex]
+        const winningTicket = availableTickets[winningIndex]
 
-        // Update Rifa with winner
-        await prisma.rifa.update({
-            where: { id: rifaId },
+        // Update Prize with winner
+        await prisma.prize.update({
+            where: { id: prizeId },
             data: {
-                status: "DRAWN",
                 winnerId: winningTicket.buyerId,
                 winnerNumber: winningTicket.number,
                 drawnAt: new Date()
             }
         })
+
+        // Se todos os prêmios foram sorteados, podemos marcar a rifa como DRAWN
+        const remainingPrizes = await prisma.prize.count({
+            where: { rifaId, winnerId: null }
+        })
+
+        if (remainingPrizes === 0) {
+            await prisma.rifa.update({
+                where: { id: rifaId },
+                data: { status: "DRAWN" }
+            })
+        }
 
         // Send WhatsApp notification to winner
         if (winningTicket.buyer?.whatsapp) {
@@ -68,6 +98,7 @@ export async function drawRifaAction(rifaId: string) {
 
         revalidatePath(`/dashboard/rifas/${rifaId}`)
         revalidatePath(`/r/${rifa.slug}`)
+        revalidatePath(`/sorteio/${rifaId}`)
         revalidatePath("/dashboard")
 
         return {

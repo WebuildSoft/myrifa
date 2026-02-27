@@ -17,6 +17,7 @@ import {
     Filter
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { TransactionActions } from "../TransactionActions"
 
 export default async function CompradoresPage({ params }: { params: Promise<{ id: string }> }) {
     const session = await auth()
@@ -35,6 +36,10 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
                     numbers: {
                         where: { rifaId: id },
                         select: { id: true, number: true, status: true }
+                    },
+                    transactions: {
+                        where: { rifaId: id, status: "PENDING" },
+                        select: { id: true, status: true }
                     }
                 },
                 orderBy: { createdAt: 'desc' }
@@ -145,6 +150,14 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
                                                 <Badge className={`${statusColor} border-none font-black text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-full shadow-none`}>
                                                     {status}
                                                 </Badge>
+                                                {buyer.transactions.length > 0 && (
+                                                    <div className="ml-2 scale-75 origin-right">
+                                                        <TransactionActions
+                                                            transactionId={buyer.transactions[0].id}
+                                                            status={buyer.transactions[0].status}
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
                                             <Link
                                                 href={`https://wa.me/${buyer.whatsapp.replace(/\D/g, '')}`}

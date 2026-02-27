@@ -9,6 +9,7 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { RifaStatus } from "@prisma/client"
+import { TransactionActions } from "./rifas/[id]/TransactionActions"
 
 export default async function DashboardPage() {
     const session = await auth()
@@ -169,12 +170,12 @@ export default async function DashboardPage() {
                                         <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider">Campanha</TableHead>
                                         <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider">Valor</TableHead>
                                         <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider">Status</TableHead>
-                                        <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider text-right pr-8">Data</TableHead>
+                                        <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider text-right">Ações</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {recentTransactions.map((tx) => (
-                                        <TableRow key={tx.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 border-primary/5 transition-colors">
+                                        <TableRow key={tx.id} className="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                                             <TableCell className="font-bold text-slate-900 dark:text-slate-100 py-4 pl-8">{tx.buyer.name}</TableCell>
                                             <TableCell className="text-slate-600 dark:text-slate-400 font-medium">{tx.rifa.title}</TableCell>
                                             <TableCell className="font-extrabold text-slate-900 dark:text-slate-100">
@@ -190,8 +191,8 @@ export default async function DashboardPage() {
                                                         tx.status === "PENDING" ? "Pendente" : "Cancelado"}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell className="text-right text-slate-500 dark:text-slate-400 font-medium pr-8">
-                                                {new Date(tx.createdAt).toLocaleDateString("pt-BR")}
+                                            <TableCell className="text-right pr-8">
+                                                <TransactionActions transactionId={tx.id} status={tx.status} />
                                             </TableCell>
                                         </TableRow>
                                     ))}

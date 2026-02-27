@@ -17,17 +17,15 @@ export default async function SorteioServerPage({ params }: { params: Promise<{ 
         include: {
             _count: {
                 select: { numbers: { where: { status: "PAID" } } }
+            },
+            prizes: {
+                orderBy: { position: "asc" },
+                include: { winner: true }
             }
         }
     })
 
     if (!rifa) notFound()
-
-    let winnerName = null
-    if (rifa.winnerId) {
-        const winner = await prisma.buyer.findUnique({ where: { id: rifa.winnerId } })
-        winnerName = winner?.name
-    }
 
     return (
         <SorteioClient
@@ -37,9 +35,16 @@ export default async function SorteioServerPage({ params }: { params: Promise<{ 
             totalNumbers={rifa.totalNumbers}
             numberPrice={Number(rifa.numberPrice)}
             minPercent={rifa.minPercentToRaffle}
-            alreadyDrawn={rifa.status === "DRAWN"}
-            winnerNumber={rifa.winnerNumber}
-            winnerName={winnerName}
+            initialPrizes={rifa.prizes.map(p => ({
+                id: p.id,
+                title: p.title,
+                position: p.position,
+                winnerId: p.winnerId,
+                winnerNumber: p.winnerNumber,
+                winnerName: p.winner?.name,
+                drawnAt: p.drawnAt
+            }))}
+            isDrawn={rifa.status === "DRAWN"}
         />
     )
 }

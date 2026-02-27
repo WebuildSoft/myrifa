@@ -20,6 +20,10 @@ const createRifaSchema = z.object({
     isPrivate: z.boolean().default(false),
     coverImage: z.string().url().optional(),
     images: z.array(z.string().url()).optional(),
+    prizes: z.array(z.object({
+        title: z.string().min(3).max(100),
+        position: z.number().min(1)
+    })).optional(),
 })
 
 // Centralized image validation logic (Anti-Bypass)
@@ -54,10 +58,12 @@ export async function createRifaAction(formData: FormData) {
     const maxPerBuyerStr = formData.get("maxPerBuyer")
     const drawDateStr = formData.get("drawDate") as string
 
-    // Process images from formData
+    // Process images and prizes from formData
     const coverImage = formData.get("coverImage") as string
     const imagesStr = formData.get("images") as string
     const images = imagesStr ? imagesStr.split(',').filter(Boolean) : []
+    const prizesStr = formData.get("prizes") as string
+    const prizes = prizesStr ? JSON.parse(prizesStr) : []
 
     const data = {
         title: formData.get("title") as string,
@@ -72,6 +78,7 @@ export async function createRifaAction(formData: FormData) {
         isPrivate: formData.get("isPrivate") === "true",
         coverImage: coverImage || undefined,
         images: images.length > 0 ? images : undefined,
+        prizes: prizes.length > 0 ? prizes : undefined,
     }
 
     const result = createRifaSchema.safeParse(data)
@@ -107,12 +114,20 @@ export async function createRifaAction(formData: FormData) {
         // Create Rifa and Generate all available numbers
         // Note: for large amounts of numbers (like 10000), createMany is necessary
         const rifa = await prisma.$transaction(async (tx) => {
+            const { prizes, ...rifaData } = result.data
+
             const newRifa = await tx.rifa.create({
                 data: {
-                    ...result.data,
+                    ...rifaData,
                     slug,
                     userId: session.user?.id as string,
-                    status: RifaStatus.DRAFT // start as draft per F2 requirements
+                    status: RifaStatus.DRAFT,
+                    prizes: prizes ? {
+                        create: prizes.map((p: any) => ({
+                            title: p.title,
+                            position: p.position
+                        }))
+                    } : undefined
                 }
             })
 
@@ -207,6 +222,8 @@ export async function updateRifaAction(rifaId: string, formData: FormData) {
     const coverImage = formData.get("coverImage") as string
     const imagesStr = formData.get("images") as string
     const images = imagesStr ? imagesStr.split(',').filter(Boolean) : []
+    const prizesStr = formData.get("prizes") as string
+    const prizes = prizesStr ? JSON.parse(prizesStr) : []
 
     try {
         const user = await prisma.user.findUnique({
@@ -220,17 +237,61 @@ export async function updateRifaAction(rifaId: string, formData: FormData) {
         const imageValidation = validateRifaImages(user.plan, coverImage, images)
         if (imageValidation.error) return { error: imageValidation.error }
 
-        await prisma.rifa.update({
-            where: {
-                id: rifaId,
-                userId: session.user.id
-            },
-            data: {
-                title,
-                description,
-                rules,
-                coverImage: coverImage || undefined,
-                images: images.length > 0 ? images : undefined,
+        await prisma.$transaction(async (tx) => {
+            await tx.rifa.update({
+                where: {
+                    id: rifaId,
+                    userId: session.user?.id as string
+                },
+                data: {
+                    title,
+                    description,
+                    rules,
+                    coverImage: coverImage || undefined,
+                    images: images.length > 0 ? images : undefined,
+                }
+            })
+
+            // Sync prizes: delete old ones and create new ones (simplest approach for now)
+            // or we could do a more complex upsert. Let's do a simple sync.
+            // Only sync if prizes were provided
+            if (prizes.length > 0) {
+                // We keep prizes that already have winners! 
+                // Don't delete prizes that are already drawn.
+                const existingPrizes = await tx.prize.findMany({
+                    where: { rifaId }
+                })
+
+                // For simplicity in this UI, we'll assume the user is sending the full current list
+                // If a prize has a winnerId, we should NOT delete it or update its core info in a way that breaks things.
+
+                // Let's implement a basic sync: delete ones not in the list, update existing, create new.
+                for (const p of prizes) {
+                    if (p.id) {
+                        await tx.prize.update({
+                            where: { id: p.id },
+                            data: { title: p.title, position: p.position }
+                        })
+                    } else {
+                        await tx.prize.create({
+                            data: {
+                                title: p.title,
+                                position: p.position,
+                                rifaId: rifaId
+                            }
+                        })
+                    }
+                }
+
+                // Delete prizes that were removed in UI AND don't have winners
+                const prizeIdsToKeep = prizes.map((p: any) => p.id).filter(Boolean)
+                await tx.prize.deleteMany({
+                    where: {
+                        rifaId,
+                        id: { notIn: prizeIdsToKeep },
+                        winnerId: null // Safety: don't delete winners history
+                    }
+                })
             }
         })
 

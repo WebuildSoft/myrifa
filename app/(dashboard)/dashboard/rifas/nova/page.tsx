@@ -49,6 +49,7 @@ export default function NovaRifaPage() {
     })
     const [coverImage, setCoverImage] = useState("")
     const [galleryImages, setGalleryImages] = useState<string[]>([])
+    const [prizes, setPrizes] = useState([{ title: "", position: 1 }])
     const router = useRouter()
 
     const steps = [
@@ -63,6 +64,7 @@ export default function NovaRifaPage() {
 
         formData.set("coverImage", coverImage)
         formData.set("images", galleryImages.join(","))
+        formData.set("prizes", JSON.stringify(prizes.filter(p => p.title.trim() !== "")))
 
         const res = await createRifaAction(formData)
 
@@ -209,6 +211,58 @@ export default function NovaRifaPage() {
                                             <p className="text-[11px] text-slate-400 ml-1">Escreva as regras que aparecerão para os compradores na página pública.</p>
                                         </div>
 
+                                        {/* Premiação Section */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center justify-between">
+                                                <Label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Premiação da Campanha</Label>
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="rounded-xl border-primary/20 text-primary hover:bg-primary/5 h-9"
+                                                    onClick={() => setPrizes(prev => [...prev, { title: "", position: prev.length + 1 }])}
+                                                >
+                                                    + Adicionar Prêmio
+                                                </Button>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                {prizes.map((prize, index) => (
+                                                    <div key={index} className="flex gap-3 group animate-in slide-in-from-left-2 duration-300">
+                                                        <div className="flex-1 relative">
+                                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{index + 1}º</span>
+                                                                <div className="h-4 w-px bg-slate-200"></div>
+                                                            </div>
+                                                            <Input
+                                                                placeholder="Ex: iPhone 15 Pro Max"
+                                                                className="h-12 pl-16 rounded-xl border-slate-200 dark:border-slate-800"
+                                                                value={prize.title}
+                                                                onChange={(e) => {
+                                                                    const newPrizes = [...prizes]
+                                                                    newPrizes[index].title = e.target.value
+                                                                    setPrizes(newPrizes)
+                                                                }}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        {prizes.length > 1 && (
+                                                            <Button
+                                                                type="button"
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="h-12 w-12 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50"
+                                                                onClick={() => setPrizes(prev => prev.filter((_, i) => i !== index).map((p, i) => ({ ...p, position: i + 1 })))}
+                                                            >
+                                                                <X className="h-4 w-4" />
+                                                            </Button>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <p className="text-[11px] text-slate-400 ml-1">Defina um ou mais prêmios para esta campanha.</p>
+                                        </div>
+
                                         <div className="space-y-2">
                                             <Label htmlFor="category" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Categoria da Campanha</Label>
                                             <select
@@ -273,8 +327,15 @@ export default function NovaRifaPage() {
                                             size="lg"
                                             className="h-14 px-10 rounded-2xl font-bold gap-2 shadow-lg shadow-primary/20"
                                             onClick={() => {
-                                                if ((newRifaInfo.title?.length || 0) >= 3) setStep(2)
-                                                else setError("O título deve ter no mínimo 3 caracteres.")
+                                                if (!newRifaInfo.title || newRifaInfo.title.length < 3) {
+                                                    setError("O título deve ter no mínimo 3 caracteres.")
+                                                    return
+                                                }
+                                                if (prizes.some(p => p.title.trim().length < 3)) {
+                                                    setError("Todos os prêmios devem ter nomes válidos (mín. 3 caracteres).")
+                                                    return
+                                                }
+                                                setStep(2)
                                             }}
                                         >
                                             Próxima Etapa

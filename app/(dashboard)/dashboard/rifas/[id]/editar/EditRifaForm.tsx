@@ -26,18 +26,25 @@ interface EditRifaFormProps {
         coverImage: string | null
         images: string[]
     }
+    initialPrizes: {
+        id?: string
+        title: string
+        position: number
+    }[]
 }
 
-export default function EditRifaForm({ rifa }: EditRifaFormProps) {
+export default function EditRifaForm({ rifa, initialPrizes }: EditRifaFormProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [coverImage, setCoverImage] = useState(rifa.coverImage || "") // Added state for coverImage
     const [galleryImages, setGalleryImages] = useState<string[]>(rifa.images || []) // Added state for galleryImages
+    const [prizes, setPrizes] = useState(initialPrizes || [{ title: "", position: 1 }])
 
     async function handleSubmit(formData: FormData) {
         setLoading(true)
         formData.set("coverImage", coverImage) // Added coverImage to formData
         formData.set("images", galleryImages.join(",")) // Added images to formData
+        formData.set("prizes", JSON.stringify(prizes.filter(p => p.title.trim() !== "")))
 
         try {
             const res = await updateRifaAction(rifa.id, formData)
@@ -104,6 +111,58 @@ export default function EditRifaForm({ rifa }: EditRifaFormProps) {
                             maxLength={2000}
                         />
                         <p className="text-[11px] text-slate-400 ml-1">Aparecerão na página pública da sua campanha.</p>
+                    </div>
+
+                    {/* Premiação Section */}
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Premiação da Campanha</Label>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="rounded-xl border-primary/20 text-primary hover:bg-primary/5 h-9"
+                                onClick={() => setPrizes(prev => [...prev, { title: "", position: prev.length + 1 }])}
+                            >
+                                + Adicionar Prêmio
+                            </Button>
+                        </div>
+
+                        <div className="space-y-3">
+                            {prizes.map((prize, index) => (
+                                <div key={index} className="flex gap-3 group animate-in slide-in-from-left-2 duration-300">
+                                    <div className="flex-1 relative">
+                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{index + 1}º</span>
+                                            <div className="h-4 w-px bg-slate-200"></div>
+                                        </div>
+                                        <Input
+                                            placeholder="Ex: iPhone 15 Pro Max"
+                                            className="h-12 bg-slate-50 dark:bg-slate-900 border-none rounded-xl pl-16 pr-4 font-bold focus-visible:ring-2 focus-visible:ring-primary/30 transition-all"
+                                            value={prize.title}
+                                            onChange={(e) => {
+                                                const newPrizes = [...prizes]
+                                                newPrizes[index].title = e.target.value
+                                                setPrizes(newPrizes)
+                                            }}
+                                            required
+                                        />
+                                    </div>
+                                    {prizes.length > 1 && (
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-12 w-12 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50"
+                                            onClick={() => setPrizes(prev => prev.filter((_, i) => i !== index).map((p, i) => ({ ...p, position: i + 1 })))}
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                        <p className="text-[11px] text-slate-400 ml-1">Defina um ou mais prêmios para esta campanha.</p>
                     </div>
 
                     <div className="grid gap-8 md:grid-cols-2 pt-4">

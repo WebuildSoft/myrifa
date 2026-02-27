@@ -6,7 +6,13 @@ import { Trophy, ArrowLeft, Calendar, User } from "lucide-react"
 export default async function PublicResultPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
     const rifa = await prisma.rifa.findUnique({
-        where: { slug }
+        where: { slug },
+        include: {
+            prizes: {
+                orderBy: { position: "asc" },
+                include: { winner: true }
+            }
+        }
     })
 
     // Exclude private or non-active ones
@@ -14,14 +20,10 @@ export default async function PublicResultPage({ params }: { params: Promise<{ s
         notFound()
     }
 
-    let winnerName = null
-    if (rifa.winnerId) {
-        const winner = await prisma.buyer.findUnique({ where: { id: rifa.winnerId } })
-        // partially anonymize for privacy on public page
-        if (winner?.name) {
-            const parts = winner.name.split(" ")
-            winnerName = parts[0] + (parts.length > 1 ? ` ${parts[parts.length - 1].charAt(0)}.` : "")
-        }
+    const anonymizeName = (name: string | null) => {
+        if (!name) return "Vencedor"
+        const parts = name.split(" ")
+        return parts[0] + (parts.length > 1 ? ` ${parts[parts.length - 1].charAt(0)}.` : "")
     }
 
     return (

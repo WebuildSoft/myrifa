@@ -8,8 +8,10 @@ const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY
 const EVOLUTION_INSTANCE = process.env.EVOLUTION_INSTANCE
 
 export async function sendWhatsAppMessage(to: string, message: string) {
-    if (!EVOLUTION_API_URL || !EVOLUTION_API_KEY || !EVOLUTION_INSTANCE) {
-        console.warn("WhatsApp Notification skipped: Evolution API credentials missing.")
+    const isPlaceholder = (val?: string) => !val || val.includes("[YOUR_") || val.includes("YOUR_")
+
+    if (isPlaceholder(EVOLUTION_API_URL) || isPlaceholder(EVOLUTION_API_KEY) || isPlaceholder(EVOLUTION_INSTANCE)) {
+        console.warn("WhatsApp Notification skipped: Evolution API credentials are unset or placeholders.")
         return null
     }
 
@@ -24,7 +26,7 @@ export async function sendWhatsAppMessage(to: string, message: string) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'apikey': EVOLUTION_API_KEY
+                'apikey': EVOLUTION_API_KEY as string
             },
             body: JSON.stringify({
                 number: cleanTo,

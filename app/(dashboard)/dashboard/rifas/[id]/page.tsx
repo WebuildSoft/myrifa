@@ -38,7 +38,9 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Image from "next/image"
+import CopyLinkButton from "./CopyLinkButton"
 import RifaActionsClient from "./RifaActionsClient"
+import { TransactionActions } from "./TransactionActions"
 
 export default async function RifaDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const session = await auth()
@@ -72,6 +74,10 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                 include: {
                     buyer: true
                 }
+            },
+            prizes: {
+                orderBy: { position: "asc" },
+                include: { winner: true }
             }
         }
     })
@@ -128,177 +134,224 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                 <RifaActionsClient rifa={{ id: rifa.id, slug: rifa.slug, title: rifa.title, status: rifa.status }} />
             </header>
 
-            <main className="p-6 space-y-8 max-w-4xl mx-auto">
-                {/* Status Hero Card */}
-                <section className="relative overflow-hidden bg-gradient-to-br from-primary to-purple-800 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl shadow-primary/20">
-                    <div className="flex justify-between items-start mb-10">
-                        <Badge className={`${currentStatus.color} hover:${currentStatus.color} text-white border-transparent px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] h-auto shadow-lg`}>
-                            {currentStatus.label}
-                        </Badge>
-                        <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-md">
-                            <TrendingUp className="opacity-100 scale-110" />
-                        </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-12 items-end relative z-10">
-                        <div className="space-y-3">
-                            <p className="text-white/70 text-xs font-black uppercase tracking-[0.2em]">Total arrecadado</p>
-                            <h2 className="text-6xl font-black leading-none tracking-tighter drop-shadow-sm">{formattedTotalRaised}</h2>
-                            <div className="flex items-center gap-3 mt-4">
-                                <div className="bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full flex items-center gap-2 border border-white/10">
-                                    <Target className="h-3 w-3 opacity-60" />
-                                    <span className="text-xs font-black uppercase tracking-wider text-white">Meta: {formattedTargetRevenue}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="space-y-6">
-                            <div className="w-full bg-black/20 rounded-full h-5 overflow-hidden border border-white/10 p-1 backdrop-blur-sm">
-                                <div className="bg-white h-full rounded-full transition-all duration-1000 shadow-[0_0_20px_rgba(255,255,255,0.8)] relative" style={{ width: `${progressPercentage}%` }}>
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-                                </div>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <div className="flex items-center justify-between">
-                                    <p className="text-2xl font-black">{progressPercentage}% <span className="text-white/60 font-medium text-sm">concluído</span></p>
-                                    <span className="text-xs font-black text-white/80 uppercase tracking-widest">{paidNumbers} vendidos</span>
-                                </div>
-                                <div className="flex items-center justify-between text-[10px] text-white/50 font-black uppercase tracking-[0.15em] pt-1">
-                                    <span>{availableNumbers} números livres</span>
-                                    <span>{reservedNumbers} reservas ativas</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Abstract elements */}
-                    <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-[100px]"></div>
-                    <div className="absolute -top-10 -left-10 w-48 h-48 bg-purple-400/20 rounded-full blur-[80px]"></div>
-                </section>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                    {/* Configuration Summary */}
-                    <CardWrapper title="Configurações da Campanha">
-                        <div className="space-y-5">
-                            <ConfigItem icon={<Layers className="h-4 w-4" />} label="Categoria" value={rifa.category} />
-                            <ConfigItem icon={<Gift className="h-4 w-4" />} label="Método" value={rifa.drawMethod} />
-                            <ConfigItem icon={<Calendar className="h-4 w-4" />} label="Premiação" value={rifa.drawDate ? new Date(rifa.drawDate).toLocaleDateString("pt-BR") : "Não definido"} />
-                            <ConfigItem icon={<UserCircle className="h-4 w-4" />} label="Limite/User" value={rifa.maxPerBuyer ? `${rifa.maxPerBuyer} cotas` : "Ilimitado"} />
-                            <ConfigItem icon={<Smartphone className="h-4 w-4" />} label="Visibilidade" value={rifa.isPrivate ? "Privada" : "Pública"} />
-                        </div>
-                    </CardWrapper>
-
-                    {/* Raffle Link Section */}
-                    <CardWrapper title="Link e Compartilhamento" className="md:col-span-2">
-                        <div className="h-full flex flex-col justify-between space-y-6">
-                            <div className="space-y-3">
-                                <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Link da sua Campanha</p>
-                                <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-primary/10 group overflow-hidden">
-                                    <span className="text-xs text-slate-500 flex-1 truncate font-mono">rifa.com.br/r/{rifa.slug}</span>
-                                    <button className="p-2 text-primary hover:bg-primary/10 rounded-2xl transition-colors active:scale-90">
-                                        <Copy className="h-5 w-5" />
-                                    </button>
+            <main className="p-6 space-y-8 max-w-7xl mx-auto">
+                <div className="grid lg:grid-cols-12 gap-8 items-start">
+                    {/* Main Content Column (Left - 8/12) */}
+                    <div className="lg:col-span-8 space-y-8">
+                        {/* Status Hero Card */}
+                        <section className="relative overflow-hidden bg-gradient-to-br from-primary to-purple-800 rounded-[2.5rem] p-8 md:p-10 text-white shadow-2xl shadow-primary/20">
+                            <div className="flex justify-between items-start mb-8">
+                                <Badge className={`${currentStatus.color} hover:${currentStatus.color} text-white border-transparent px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] h-auto shadow-lg`}>
+                                    {currentStatus.label}
+                                </Badge>
+                                <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-md">
+                                    <TrendingUp className="opacity-100 scale-110" />
                                 </div>
                             </div>
 
-                            <div className="flex gap-4">
-                                <Button className="flex-1 bg-[#25D366] hover:bg-[#20bd5a] text-white h-14 rounded-2xl font-black text-sm flex items-center gap-3 shadow-xl shadow-emerald-500/10 active:scale-95 transition-all">
-                                    <Share2 className="h-4 w-4" />
-                                    WhatsApp
-                                </Button>
-                                <Button variant="outline" className="w-16 h-14 bg-white dark:bg-slate-900 border-primary/20 rounded-2xl flex items-center justify-center text-primary group active:scale-95 transition-all">
-                                    <QrCode className="h-6 w-6 group-hover:scale-110 transition-transform" />
-                                </Button>
-                            </div>
-                        </div>
-                    </CardWrapper>
-                </div>
-
-                {/* Quick Actions Grid */}
-                <section>
-                    <h3 className="font-sans font-black text-slate-900 dark:text-white mb-6 px-1 uppercase tracking-widest text-[10px]">Gerenciamento de Fluxo</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <QuickActionButton icon={<Share2 />} label="Divulgar" color="text-blue-500" bg="bg-blue-50" darkBg="dark:bg-blue-900/20" href={`/r/${rifa.slug}`} external />
-                        <QuickActionButton icon={<Users />} label="Apoiadores" color="text-amber-500" bg="bg-amber-50" darkBg="dark:bg-amber-900/20" href={`/dashboard/rifas/${rifa.id}/compradores`} />
-                        <QuickActionButton icon={<Edit />} label="Editar Campanha" color="text-purple-500" bg="bg-purple-50" darkBg="dark:bg-purple-900/20" href={`/dashboard/rifas/${rifa.id}/editar`} />
-
-                        {rifa.status === "DRAWN" ? (
-                            <div className="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900 opacity-50 rounded-[2rem] border border-transparent">
-                                <CheckCircle2 className="h-8 w-8 mb-3 text-slate-400" />
-                                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 text-center">Finalizada</span>
-                            </div>
-                        ) : (
-                            <Button className="flex flex-col h-auto p-6 gap-3 bg-primary text-white rounded-[2rem] shadow-xl shadow-primary/20 group hover:scale-[1.02] transition-transform" asChild>
-                                <Link href={`/sorteio/${rifa.id}`}>
-                                    <Gift className="h-8 w-8 mb-0 group-hover:rotate-12 transition-transform" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-center">Finalizar e Premiar</span>
-                                </Link>
-                            </Button>
-                        )}
-                    </div>
-                </section>
-
-                <div className="grid lg:grid-cols-3 gap-8">
-                    {/* Detailed Sales View */}
-                    <div className="lg:col-span-2 bg-white dark:bg-slate-800 p-10 rounded-[2.5rem] border border-primary/5 shadow-sm space-y-8">
-                        <div className="flex justify-between items-start">
-                            <div className="space-y-1">
-                                <h3 className="font-black text-slate-900 dark:text-white text-lg">Histórico Semanal</h3>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Desempenho de Vendas</p>
-                            </div>
-                            <Badge className="bg-emerald-100 text-emerald-600 border-none font-black text-[10px] uppercase tracking-widest">+12.4%</Badge>
-                        </div>
-
-                        <div className="flex items-end justify-between h-48 gap-4 px-2">
-                            {[42, 68, 35, 85, 52, 98, 90].map((val, i) => (
-                                <div key={i} className="flex-1 space-y-3 group cursor-pointer">
-                                    <div
-                                        className={`w-full rounded-t-2xl transition-all duration-700 group-hover:scale-x-105 active:scale-y-95 ${i === 6 ? 'bg-primary shadow-[0_0_20px_rgba(236,91,19,0.3)]' : 'bg-primary/10 dark:bg-primary/20'}`}
-                                        style={{ height: `${val}%` }}
-                                    ></div>
-                                    <div className="text-[9px] text-slate-400 font-black text-center uppercase tracking-widest">
-                                        {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'][i]}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Recent Buyers Side */}
-                    <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-primary/5 shadow-sm space-y-6 overflow-hidden flex flex-col">
-                        <div className="flex justify-between items-center mb-2">
-                            <h3 className="font-black text-slate-900 dark:text-white text-sm uppercase tracking-widest">Recentes</h3>
-                            <Link className="text-primary text-[10px] font-black uppercase tracking-widest hover:underline" href={`/dashboard/rifas/${rifa.id}/compradores`}>Ver</Link>
-                        </div>
-
-                        <div className="space-y-4 flex-1">
-                            {rifa.buyers.length > 0 ? (
-                                rifa.buyers.map((buyer) => (
-                                    <div key={buyer.id} className="flex items-center gap-3 p-3 bg-slate-50/50 dark:bg-slate-900/30 rounded-2xl transition-all hover:bg-white dark:hover:bg-slate-900 hover:shadow-md border border-transparent hover:border-primary/5 group">
-                                        <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-[11px] uppercase group-hover:bg-primary group-hover:text-white transition-colors">
-                                            {buyer.name.substring(0, 2)}
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">{buyer.name}</h4>
-                                            <p className="text-[9px] text-slate-400 font-bold">{new Date(buyer.createdAt).toLocaleDateString("pt-BR")}</p>
-                                        </div>
-                                        <div className="p-1 px-2.5 rounded-full bg-primary/5 text-primary text-[9px] font-black uppercase">
-                                            Pago
+                            <div className="grid md:grid-cols-2 gap-8 items-end relative z-10">
+                                <div className="space-y-3">
+                                    <p className="text-white/70 text-[10px] font-black uppercase tracking-[0.2em]">Total arrecadado</p>
+                                    <h2 className="text-5xl font-black leading-none tracking-tighter drop-shadow-sm">{formattedTotalRaised}</h2>
+                                    <div className="flex items-center gap-3 mt-4">
+                                        <div className="bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full flex items-center gap-2 border border-white/10">
+                                            <Target className="h-3 w-3 opacity-60" />
+                                            <span className="text-[10px] font-black uppercase tracking-wider text-white">Meta: {formattedTargetRevenue}</span>
                                         </div>
                                     </div>
-                                ))
-                            ) : (
-                                <div className="h-full flex flex-col items-center justify-center opacity-30 text-center py-10">
-                                    <Ticket className="h-8 w-8 mb-2" />
-                                    <p className="text-xs font-black uppercase tracking-widest">Vazio</p>
                                 </div>
-                            )}
+
+                                <div className="space-y-5">
+                                    <div className="w-full bg-black/20 rounded-full h-4 overflow-hidden border border-white/10 p-1 backdrop-blur-sm">
+                                        <div className="bg-white h-full rounded-full transition-all duration-1000 shadow-[0_0_20px_rgba(255,255,255,0.8)] relative" style={{ width: `${progressPercentage}%` }}>
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-xl font-black">{progressPercentage}% <span className="text-white/60 font-medium text-xs">apoio</span></p>
+                                            <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">{paidNumbers}/{rifa.totalNumbers}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-[9px] text-white/50 font-black uppercase tracking-[0.15em] pt-1">
+                                            <span>{availableNumbers} livres</span>
+                                            <span>{reservedNumbers} reservas</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Abstract elements */}
+                            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-[100px]"></div>
+                            <div className="absolute -top-10 -left-10 w-48 h-48 bg-purple-400/20 rounded-full blur-[80px]"></div>
+                        </section>
+                        {/* Winners Section */}
+                        <CardWrapper title="Ganhadores da Campanha">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {rifa.prizes.map((prize) => (
+                                    <div key={prize.id} className="relative p-5 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-primary/5 group transition-all hover:bg-white dark:hover:bg-slate-900 hover:shadow-md">
+                                        <div className="flex justify-between items-start mb-3">
+                                            <div className="space-y-0.5">
+                                                <span className="text-[9px] font-black text-primary uppercase tracking-widest">{prize.position}º Prêmio</span>
+                                                <h4 className="text-xs font-black text-slate-900 dark:text-white leading-tight truncate max-w-[120px]">{prize.title}</h4>
+                                            </div>
+                                            <Badge variant={prize.winnerId ? "default" : "outline"} className={`h-5 rounded-full text-[8px] font-black uppercase tracking-widest ${prize.winnerId ? 'bg-emerald-500/10 text-emerald-600 border-none' : 'text-slate-400'}`}>
+                                                {prize.winnerId ? 'Sorteado' : 'Pendente'}
+                                            </Badge>
+                                        </div>
+
+                                        {prize.winner ? (
+                                            <div className="space-y-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-[10px] uppercase">
+                                                        {prize.winner.name.substring(0, 2)}
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="text-[11px] font-black text-slate-900 dark:text-white leading-none truncate">{prize.winner.name}</p>
+                                                        <p className="text-[9px] font-bold text-slate-400 mt-1">Cota: #{prize.winnerNumber?.toString().padStart(3, '0')}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex gap-2 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
+                                                    <Button size="sm" variant="outline" className="flex-1 h-8 rounded-xl border-emerald-500/20 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 gap-2 text-[9px] font-black uppercase tracking-widest" asChild>
+                                                        <Link href={`https://wa.me/${prize.winner.whatsapp.replace(/\D/g, '')}?text=Olá ${prize.winner.name}, parabéns! Você ganhou o ${prize.position}º prêmio (${prize.title}) na nossa campanha ${rifa.title}!`} target="_blank">
+                                                            <Smartphone className="h-3 w-3" />
+                                                            Zap
+                                                        </Link>
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="py-4 text-center opacity-30 flex flex-col items-center justify-center border border-dashed border-slate-300 dark:border-slate-700 rounded-2xl">
+                                                <span className="text-[8px] font-black uppercase tracking-widest">Aguardando</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </CardWrapper>
+
+                        {/* Quick Actions Grid */}
+                        <section>
+                            <h3 className="font-sans font-black text-slate-900 dark:text-white mb-6 px-1 uppercase tracking-widest text-[10px]">Gerenciamento de Fluxo</h3>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <QuickActionButton icon={<Share2 />} label="Divulgar" color="text-blue-500" bg="bg-blue-50" darkBg="dark:bg-blue-900/20" href={`/r/${rifa.slug}`} external />
+                                <QuickActionButton icon={<Users />} label="Apoiadores" color="text-amber-500" bg="bg-amber-50" darkBg="dark:bg-amber-900/20" href={`/dashboard/rifas/${rifa.id}/compradores`} />
+                                <QuickActionButton icon={<Edit />} label="Editar Campanha" color="text-purple-500" bg="bg-purple-50" darkBg="dark:bg-purple-900/20" href={`/dashboard/rifas/${rifa.id}/editar`} />
+
+                                {rifa.status === "DRAWN" ? (
+                                    <div className="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900 opacity-50 rounded-[2rem] border border-transparent">
+                                        <CheckCircle2 className="h-8 w-8 mb-3 text-slate-400" />
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 text-center">Finalizada</span>
+                                    </div>
+                                ) : (
+                                    <Button className="flex flex-col h-auto p-6 gap-3 bg-primary text-white rounded-[2rem] shadow-xl shadow-primary/20 group hover:scale-[1.02] transition-transform" asChild>
+                                        <Link href={`/sorteio/${rifa.id}`}>
+                                            <Gift className="h-8 w-8 mb-0 group-hover:rotate-12 transition-transform" />
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-center">Premiar</span>
+                                        </Link>
+                                    </Button>
+                                )}
+                            </div>
+                        </section>
+
+                        {/* Detailed Sales View */}
+                        <div className="bg-white dark:bg-slate-800 p-10 rounded-[2.5rem] border border-primary/5 shadow-sm space-y-8">
+                            <div className="flex justify-between items-start">
+                                <div className="space-y-1">
+                                    <h3 className="font-black text-slate-900 dark:text-white text-lg">Histórico Semanal</h3>
+                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Desempenho de Vendas</p>
+                                </div>
+                                <Badge className="bg-emerald-100 text-emerald-600 border-none font-black text-[10px] uppercase tracking-widest">+12.4%</Badge>
+                            </div>
+
+                            <div className="flex items-end justify-between h-48 gap-4 px-2">
+                                {[42, 68, 35, 85, 52, 98, 90].map((val, i) => (
+                                    <div key={i} className="flex-1 space-y-3 group cursor-pointer">
+                                        <div
+                                            className={`w-full rounded-t-2xl transition-all duration-700 group-hover:scale-x-105 active:scale-y-95 ${i === 6 ? 'bg-primary shadow-[0_0_20px_rgba(236,91,19,0.3)]' : 'bg-primary/10 dark:bg-primary/20'}`}
+                                            style={{ height: `${val}%` }}
+                                        ></div>
+                                        <div className="text-[9px] text-slate-400 font-black text-center uppercase tracking-widest">
+                                            {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'][i]}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    {/* Sidebar Column (Right - 4/12) */}
+                    <div className="lg:col-span-4 space-y-6">
+                        {/* Configuration Summary */}
+                        <CardWrapper title="Configurações">
+                            <div className="space-y-5">
+                                <ConfigItem icon={<Layers className="h-4 w-4" />} label="Categoria" value={rifa.category} />
+                                <ConfigItem icon={<Gift className="h-4 w-4" />} label="Método" value={rifa.drawMethod} />
+                                <ConfigItem icon={<Calendar className="h-4 w-4" />} label="Premiação" value={rifa.drawDate ? new Date(rifa.drawDate).toLocaleDateString("pt-BR") : "Não definido"} />
+                                <ConfigItem icon={<UserCircle className="h-4 w-4" />} label="Limite/User" value={rifa.maxPerBuyer ? `${rifa.maxPerBuyer} cotas` : "Ilimitado"} />
+                                <ConfigItem icon={<Smartphone className="h-4 w-4" />} label="Visibilidade" value={rifa.isPrivate ? "Privada" : "Pública"} />
+                            </div>
+                        </CardWrapper>
+
+                        {/* Raffle Link Section */}
+                        <CardWrapper title="Compartilhamento">
+                            <div className="space-y-6">
+                                <div className="space-y-3">
+                                    <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Link da sua Campanha</p>
+                                    <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-primary/10 group overflow-hidden">
+                                        <span className="text-xs text-slate-500 flex-1 truncate font-mono">rifa.com.br/r/{rifa.slug}</span>
+                                        <CopyLinkButton url={`https://rifa.com.br/r/${rifa.slug}`} />
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <Button className="flex-1 bg-[#25D366] hover:bg-[#20bd5a] text-white h-14 rounded-2xl font-black text-sm flex items-center gap-3 shadow-xl shadow-emerald-500/10 active:scale-95 transition-all">
+                                        <Share2 className="h-4 w-4" />
+                                        WhatsApp
+                                    </Button>
+                                    <Button variant="outline" className="w-16 h-14 bg-white dark:bg-slate-900 border-primary/20 rounded-2xl flex items-center justify-center text-primary group active:scale-95 transition-all">
+                                        <QrCode className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardWrapper>
+
+                        {/* Recent Buyers Side */}
+                        <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-primary/5 shadow-sm space-y-6 overflow-hidden flex flex-col">
+                            <div className="flex justify-between items-center mb-2">
+                                <h3 className="font-black text-slate-900 dark:text-white text-[10px] uppercase tracking-widest border-l-2 border-primary pl-3">Apoiadores Recentes</h3>
+                                <Link className="text-primary text-[10px] font-black uppercase tracking-widest hover:underline" href={`/dashboard/rifas/${rifa.id}/compradores`}>Ver Tudo</Link>
+                            </div>
+
+                            <div className="space-y-4">
+                                {rifa.buyers.length > 0 ? (
+                                    rifa.buyers.map((buyer) => (
+                                        <div key={buyer.id} className="flex items-center gap-3 p-3 bg-slate-50/50 dark:bg-slate-900/30 rounded-2xl transition-all hover:bg-white dark:hover:bg-slate-900 hover:shadow-md border border-transparent hover:border-primary/5 group">
+                                            <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-[10px] uppercase group-hover:bg-primary group-hover:text-white transition-colors">
+                                                {buyer.name.substring(0, 2)}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="text-[11px] font-black text-slate-900 dark:text-white truncate">{buyer.name}</h4>
+                                                <p className="text-[8px] text-slate-400 font-bold">{new Date(buyer.createdAt).toLocaleDateString("pt-BR")}</p>
+                                            </div>
+                                            <div className="p-1 px-2.5 rounded-full bg-primary/5 text-primary text-[8px] font-black uppercase">
+                                                Pago
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center opacity-30 text-center py-10">
+                                        <Ticket className="h-8 w-8 mb-2" />
+                                        <p className="text-[10px] font-black uppercase tracking-widest">Nenhum apoiador</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div >
 
                 {/* Transaction Table */}
-                <section className="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-primary/5 shadow-sm overflow-hidden">
+                < section className="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-primary/5 shadow-sm overflow-hidden" >
                     <div className="p-8 border-b border-slate-100 dark:border-slate-700/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="space-y-1">
                             <h4 className="font-black text-lg">Histórico de Transações</h4>
@@ -320,7 +373,8 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                                     <th className="px-8 py-5">Números</th>
                                     <th className="px-8 py-5">Valor</th>
                                     <th className="px-8 py-5">Data/Hora</th>
-                                    <th className="px-8 py-5 text-right">Status</th>
+                                    <th className="px-8 py-5">Status</th>
+                                    <th className="px-8 py-5 text-right">Ações</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-700/30">
@@ -351,10 +405,13 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                                             <td className="px-8 py-5 text-slate-400 font-bold">
                                                 {new Date(tx.createdAt).toLocaleString("pt-BR", { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
                                             </td>
-                                            <td className="px-8 py-5 text-right">
+                                            <td className="px-8 py-5">
                                                 <Badge variant={tx.status === "PAID" ? "default" : tx.status === "PENDING" ? "outline" : "destructive"} className="font-black text-[9px] uppercase tracking-widest px-3">
                                                     {tx.status === "PAID" ? "Pago" : tx.status === "PENDING" ? "Pendente" : "Cancelado"}
                                                 </Badge>
+                                            </td>
+                                            <td className="px-8 py-5 text-right">
+                                                <TransactionActions transactionId={tx.id} status={tx.status} />
                                             </td>
                                         </tr>
                                     ))
@@ -371,9 +428,9 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                             </tbody>
                         </table>
                     </div>
-                </section>
-            </main>
-        </div>
+                </section >
+            </main >
+        </div >
     )
 }
 

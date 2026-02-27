@@ -24,6 +24,11 @@ export default async function EditarRifaPage({ params }: { params: Promise<{ id:
         where: {
             id,
             userId: session.user.id
+        },
+        include: {
+            prizes: {
+                orderBy: { position: "asc" }
+            }
         }
     })
 
@@ -69,14 +74,21 @@ export default async function EditarRifaPage({ params }: { params: Promise<{ id:
                     </div>
                 </div>
 
-                <EditRifaForm rifa={{
-                    id: rifa.id,
-                    title: rifa.title,
-                    description: rifa.description,
-                    rules: rifa.rules,
-                    coverImage: rifa.coverImage,
-                    images: rifa.images
-                }} />
+                <EditRifaForm
+                    rifa={{
+                        id: rifa.id,
+                        title: rifa.title,
+                        description: rifa.description,
+                        rules: rifa.rules,
+                        coverImage: rifa.coverImage,
+                        images: rifa.images
+                    }}
+                    initialPrizes={(rifa as any).prizes.map((p: any) => ({
+                        id: p.id,
+                        title: p.title,
+                        position: p.position
+                    }))}
+                />
             </main>
         </div>
     )

@@ -19,6 +19,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ImageSlider } from "@/components/rifa/ImageSlider"
 import { RifaStatus } from "@prisma/client"
+import { PublicWinners } from "@/components/rifa/PublicWinners"
 
 // Simple Button component for reuse inside this file
 function Button({ className, children, ...props }: any) {
@@ -64,6 +65,10 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                 select: { id: true, number: true, status: true }
             },
             user: { select: { name: true, image: true } },
+            prizes: {
+                orderBy: { position: "asc" },
+                include: { winner: true }
+            },
             _count: {
                 select: { numbers: { where: { status: "PAID" } } }
             }
@@ -165,6 +170,18 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                 </div>
                             </div>
 
+                            {rifa.status === RifaStatus.DRAWN && (
+                                <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center gap-3">
+                                    <div className="size-8 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0">
+                                        <Trophy className="h-4 w-4" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-black text-emerald-600 uppercase tracking-widest leading-none">Campanha Finalizada</p>
+                                        <p className="text-[10px] text-emerald-600/70 font-bold mt-1">O sorteio já foi realizado e os ganhadores definidos.</p>
+                                    </div>
+                                </div>
+                            )}
+
                             {rifa.description && (
                                 <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-5">
                                     {rifa.description}
@@ -235,17 +252,21 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                 </button>
                             </div>
 
-                            <NumberGrid
-                                rifaId={rifa.id}
-                                numbers={rifa.numbers}
-                                price={Number(rifa.numberPrice)}
-                                currencyFormatted={formattedPrice}
-                                maxPerBuyer={rifa.maxPerBuyer}
-                                balloonShape={rifa.balloonShape}
-                                primaryColor={rifa.primaryColor}
-                                rifaTitle={rifa.title}
-                                rifaCover={rifa.coverImage}
-                            />
+                            {rifa.status === RifaStatus.DRAWN ? (
+                                <PublicWinners prizes={rifa.prizes} />
+                            ) : (
+                                <NumberGrid
+                                    rifaId={rifa.id}
+                                    numbers={rifa.numbers}
+                                    price={Number(rifa.numberPrice)}
+                                    currencyFormatted={formattedPrice}
+                                    maxPerBuyer={rifa.maxPerBuyer}
+                                    balloonShape={rifa.balloonShape}
+                                    primaryColor={rifa.primaryColor}
+                                    rifaTitle={rifa.title}
+                                    rifaCover={rifa.coverImage}
+                                />
+                            )}
 
                             <div className="mt-6 pt-6 border-t border-slate-50 dark:border-slate-700/50 flex justify-center">
                                 <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-700/30 px-5 py-2.5 rounded-full text-slate-500 font-bold text-sm">

@@ -84,10 +84,26 @@ model Rifa {
   user               User          @relation(fields: [userId], references: [id])
   numbers            RifaNumber[]
   transactions       Transaction[]
+  prizes             Prize[]
 
   @@index([userId])
   @@index([status])
   @@index([createdAt])
+}
+
+model Prize {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  position    Int       // 1, 2, 3...
+  winnerId    String?
+  winnerNumber Int?
+  drawnAt     DateTime?
+  rifaId      String
+  rifa        Rifa      @relation(fields: [rifaId], references: [id], onDelete: Cascade)
+  winner      Buyer?    @relation(fields: [winnerId], references: [id])
+
+  @@index([rifaId])
 }
 
 model RifaNumber {
@@ -117,6 +133,7 @@ model Buyer {
   rifa         Rifa          @relation(fields: [rifaId], references: [id])
   numbers      RifaNumber[]
   transactions Transaction[]
+  prizes       Prize[]
 
   @@index([rifaId])
   @@index([whatsapp])
