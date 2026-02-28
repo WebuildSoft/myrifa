@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight, Ticket } from "lucide-react"
 
-import { processCheckoutAction } from "@/actions/checkout"
+import { processCheckoutAction, checkPaymentStatusAction } from "@/actions/checkout"
 import { CheckoutHeader } from "@/components/checkout/CheckoutHeader"
 import { CheckoutSteps } from "@/components/checkout/CheckoutSteps"
 import { OrderSummary } from "@/components/checkout/OrderSummary"
@@ -69,6 +69,30 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
         }
         return () => { if (timerRef.current) clearInterval(timerRef.current) }
     }, [step])
+
+    // PIX Payment Status Polling
+    useEffect(() => {
+        let pollingInterval: NodeJS.Timeout
+
+        if (step === 3 && pixData.txId) {
+            // Check status every 3 seconds
+            pollingInterval = setInterval(async () => {
+                try {
+                    const result = await checkPaymentStatusAction(pixData.txId!)
+                    if (result.status === "PAID") {
+                        clearInterval(pollingInterval)
+                        setStep(4)
+                    }
+                } catch (error) {
+                    console.error("Error polling payment status:", error)
+                }
+            }, 3000)
+        }
+
+        return () => {
+            if (pollingInterval) clearInterval(pollingInterval)
+        }
+    }, [step, pixData.txId])
 
     if (!checkoutData) {
         return (
@@ -183,7 +207,6 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                                 secsLeft={secsLeft}
                                 copied={copied}
                                 onCopy={handleCopyPix}
-                                onSimulateSuccess={() => setStep(4)}
                             />
                         )}
 

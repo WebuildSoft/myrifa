@@ -9,10 +9,9 @@ interface StepPixPaymentProps {
     secsLeft: string
     copied: boolean
     onCopy: () => void
-    onSimulateSuccess?: () => void
 }
 
-export function StepPixPayment({ pixData, secondsLeft, minutesLeft, secsLeft, copied, onCopy, onSimulateSuccess }: StepPixPaymentProps) {
+export function StepPixPayment({ pixData, secondsLeft, minutesLeft, secsLeft, copied, onCopy }: StepPixPaymentProps) {
     return (
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm p-8">
             <div className="flex flex-col items-center text-center">
@@ -60,12 +59,6 @@ export function StepPixPayment({ pixData, secondsLeft, minutesLeft, secsLeft, co
                     <span className="animate-spin rounded-full h-3 w-3 border-2 border-blue-600 border-t-transparent shrink-0" />
                     Aguardando confirmação do pagamento... Esta tela será atualizada automaticamente.
                 </div>
-
-                {onSimulateSuccess && (
-                    <button onClick={onSimulateSuccess} className="mt-6 text-xs text-slate-300 hover:text-slate-500 underline">
-                        Simular aprovação (Dev)
-                    </button>
-                )}
             </div>
         </div>
     )

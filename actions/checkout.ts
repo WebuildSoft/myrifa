@@ -136,3 +136,19 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
         return { error: error.message || "Erro ao processar checkout" }
     }
 }
+
+export async function checkPaymentStatusAction(transactionId: string) {
+    try {
+        const transaction = await prisma.transaction.findUnique({
+            where: { id: transactionId },
+            select: { status: true }
+        })
+
+        if (!transaction) return { error: "Transação não encontrada" }
+
+        return { status: transaction.status }
+    } catch (error) {
+        console.error("Error checking payment status:", error)
+        return { error: "Erro ao verificar status" }
+    }
+}
