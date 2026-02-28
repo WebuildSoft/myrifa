@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/prisma"
 import { notFound } from "next/navigation"
+import Link from "next/link"
 import { NumberGrid } from "@/components/rifa/NumberGrid"
-import { Sparkles, Ticket, Info, HelpCircle } from "lucide-react"
+import { Sparkles, Ticket, Info, HelpCircle, Diamond } from "lucide-react"
 import { Metadata } from "next"
 import { RifaStatus } from "@prisma/client"
 import { PublicWinners } from "@/components/rifa/PublicWinners"
@@ -191,6 +192,48 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                     </div>
                 </div>
             </main>
+
+            <section className="max-w-[1400px] mx-auto px-3 md:px-6 mb-12">
+                <div className="bg-gradient-to-br from-primary to-primary/80 rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl shadow-primary/20 group">
+                    <div className="absolute -right-10 -bottom-10 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                        <Sparkles className="w-64 h-64" />
+                    </div>
+
+                    <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
+                        <div className="space-y-6">
+                            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
+                                <Diamond className="w-4 h-4" />
+                                <span className="text-[10px] font-black uppercase tracking-widest">Oportunidade</span>
+                            </div>
+
+                            <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
+                                Quer lançar sua <br />
+                                <span className="text-white/80">própria campanha?</span>
+                            </h2>
+
+                            <p className="text-lg text-white/70 font-medium leading-relaxed max-w-md">
+                                Junte-se a milhares de organizadores e crie sua campanha de arrecadação profissional em minutos.
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-4 justify-end">
+                            <Link
+                                href="/register"
+                                className="inline-flex items-center justify-center gap-3 bg-white text-primary px-8 h-16 rounded-2xl font-black uppercase tracking-wider hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10 text-sm whitespace-nowrap"
+                            >
+                                <Sparkles className="w-5 h-5" />
+                                Começar Agora
+                            </Link>
+                            <Link
+                                href="/sobre"
+                                className="inline-flex items-center justify-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-8 h-16 rounded-2xl font-black uppercase tracking-wider transition-all text-sm whitespace-nowrap"
+                            >
+                                Saiba Mais
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <PublicFooter />
         </div>

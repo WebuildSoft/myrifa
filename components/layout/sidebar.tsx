@@ -12,7 +12,7 @@ import { FeedbackModal } from "../dashboard/FeedbackModal"
 const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Minhas Campanhas", href: "/dashboard/rifas", icon: Ticket },
-    { name: "Relatórios", href: "/relatorios", icon: BarChart3 },
+    { name: "Relatórios", href: "/relatorios", icon: BarChart3, disabled: true },
     { name: "Planos", href: "/assinatura", icon: CreditCard },
     { name: "Perfil", href: "/conta", icon: User },
 ]
@@ -60,6 +60,28 @@ export function Sidebar() {
                 <div className="flex-1 overflow-y-auto py-6 px-4 space-y-2">
                     {navigation.map((item) => {
                         const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
+
+                        if (item.disabled) {
+                            return (
+                                <div
+                                    key={item.name}
+                                    className={cn(
+                                        "flex items-center px-4 py-3 text-sm font-semibold rounded-xl opacity-50 cursor-not-allowed",
+                                        "text-slate-400"
+                                    )}
+                                >
+                                    <item.icon
+                                        className="mr-3 h-5 w-5 flex-shrink-0 text-slate-400"
+                                        aria-hidden="true"
+                                    />
+                                    {item.name}
+                                    <span className="ml-auto text-[8px] font-black uppercase tracking-tighter bg-slate-100 dark:bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded-md border border-slate-200 dark:border-slate-700">
+                                        Breve
+                                    </span>
+                                </div>
+                            )
+                        }
+
                         return (
                             <Link
                                 key={item.name}
@@ -76,11 +98,6 @@ export function Sidebar() {
                                     aria-hidden="true"
                                 />
                                 {item.name}
-                                {item.name === "Relatórios" && (
-                                    <span className="ml-auto text-[8px] font-black uppercase tracking-tighter bg-amber-500/10 text-amber-600 px-1.5 py-0.5 rounded-md border border-amber-500/20">
-                                        Breve
-                                    </span>
-                                )}
                             </Link>
                         )
                     })}
