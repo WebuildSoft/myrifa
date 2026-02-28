@@ -38,41 +38,43 @@ export function RecentSalesTable({ transactions }: RecentSalesTableProps) {
                             Nenhuma venda registrada ainda.
                         </div>
                     ) : (
-                        <Table>
-                            <TableHeader className="bg-slate-50/50 dark:bg-slate-800/50">
-                                <TableRow className="hover:bg-transparent border-primary/5">
-                                    <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider pl-8">Comprador</TableHead>
-                                    <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider">Campanha</TableHead>
-                                    <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider">Valor</TableHead>
-                                    <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider">Status</TableHead>
-                                    <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider text-right">Ações</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {transactions.map((tx) => (
-                                    <TableRow key={tx.id} className="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                                        <TableCell className="font-bold text-slate-900 dark:text-slate-100 py-4 pl-8">{tx.buyer.name}</TableCell>
-                                        <TableCell className="text-slate-600 dark:text-slate-400 font-medium">{tx.rifa.title}</TableCell>
-                                        <TableCell className="font-extrabold text-slate-900 dark:text-slate-100">
-                                            {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(tx.amount))}
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge className={cn(
-                                                "border-none font-bold text-[10px] px-3 py-1 rounded-full",
-                                                tx.status === "PAID" ? "bg-green-50 text-green-600" :
-                                                    tx.status === "PENDING" ? "bg-orange-50 text-orange-600" : "bg-red-50 text-red-600"
-                                            )}>
-                                                {tx.status === "PAID" ? "Pago" :
-                                                    tx.status === "PENDING" ? "Pendente" : "Cancelado"}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-right pr-8">
-                                            <TransactionActions transactionId={tx.id} status={tx.status} />
-                                        </TableCell>
+                        <div className="overflow-x-auto">
+                            <Table className="min-w-[700px]">
+                                <TableHeader className="bg-slate-50/50 dark:bg-slate-800/50">
+                                    <TableRow className="hover:bg-transparent border-primary/5">
+                                        <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider pl-8">Comprador</TableHead>
+                                        <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider">Campanha</TableHead>
+                                        <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider">Valor</TableHead>
+                                        <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider">Status</TableHead>
+                                        <TableHead className="py-5 font-bold text-slate-500 text-xs uppercase tracking-wider text-right">Ações</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {transactions.map((tx) => (
+                                        <TableRow key={tx.id} className="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                            <TableCell className="font-bold text-slate-900 dark:text-slate-100 py-4 pl-8">{tx.buyer.name}</TableCell>
+                                            <TableCell className="text-slate-600 dark:text-slate-400 font-medium">{tx.rifa.title}</TableCell>
+                                            <TableCell className="font-extrabold text-slate-900 dark:text-slate-100">
+                                                {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(tx.amount))}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge className={cn(
+                                                    "border-none font-bold text-[10px] px-3 py-1 rounded-full",
+                                                    tx.status === "PAID" ? "bg-green-50 text-green-600" :
+                                                        tx.status === "PENDING" ? "bg-orange-50 text-orange-600" : "bg-red-50 text-red-600"
+                                                )}>
+                                                    {tx.status === "PAID" ? "Pago" :
+                                                        tx.status === "PENDING" ? "Pendente" : "Cancelado"}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="text-right pr-8">
+                                                <TransactionActions transactionId={tx.id} status={tx.status} />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     )}
                 </CardContent>
             </Card>

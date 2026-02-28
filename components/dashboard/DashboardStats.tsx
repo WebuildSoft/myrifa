@@ -50,7 +50,7 @@ export function DashboardStats({ totalRaised, activeRifasCount, ticketsSold }: D
     ]
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 font-sans">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 font-sans">
             {stats.map((stat, i) => (
                 <Card key={i} className="bg-white dark:bg-slate-900 border-primary/5 shadow-sm rounded-2xl overflow-hidden group hover:shadow-md transition-all">
                     <CardContent className="p-6">

@@ -127,7 +127,7 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
                                 ></div>
                             </div>
                         </div>
-                        <h1 className="text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
+                        <h1 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
                             {step === 1 && "Primeiro, os detalhes da campanha"}
                             {step === 2 && "Personalize o visual da página"}
                             {step === 3 && "Configure as cotas e valores"}
@@ -138,25 +138,25 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
             </div>
 
             {/* Step Indicators */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-2 md:gap-4">
                 {steps.map((s) => (
                     <div
                         key={s.id}
-                        className={`relative p-4 rounded-2xl border transition-all duration-300 ${step === s.id
+                        className={`relative p-2 md:p-4 rounded-xl md:rounded-2xl border transition-all duration-300 ${step === s.id
                             ? "bg-white dark:bg-slate-900 border-primary shadow-lg shadow-primary/5"
                             : step > s.id
                                 ? "bg-primary/5 border-primary/20"
                                 : "bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800"
                             }`}
                     >
-                        <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${step === s.id ? "bg-primary text-white" : step > s.id ? "bg-primary/20 text-primary" : "bg-slate-200 dark:bg-slate-800 text-slate-400"
+                        <div className="flex flex-col md:flex-row items-center md:items-center gap-1 md:gap-3">
+                            <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center transition-colors ${step === s.id ? "bg-primary text-white" : step > s.id ? "bg-primary/20 text-primary" : "bg-slate-200 dark:bg-slate-800 text-slate-400"
                                 }`}>
-                                {step > s.id ? <Check className="h-6 w-6" /> : <s.icon className="h-5 w-5" />}
+                                {step > s.id ? <Check className="h-4 w-4 md:h-6 md:w-6" /> : <s.icon className="h-4 w-4 md:h-5 md:w-5" />}
                             </div>
-                            <div className="hidden md:block">
-                                <p className={`text-[10px] font-bold uppercase tracking-wider ${step >= s.id ? "text-primary/60" : "text-slate-400"}`}>Passo 0{s.id}</p>
-                                <p className={`text-sm font-bold ${step >= s.id ? "text-slate-900 dark:text-white" : "text-slate-400"}`}>{s.name}</p>
+                            <div className="text-center md:text-left">
+                                <p className={`text-[8px] md:text-[10px] font-bold uppercase tracking-wider ${step >= s.id ? "text-primary/60" : "text-slate-400"}`}>P0{s.id}</p>
+                                <p className={`text-[10px] md:text-sm font-bold truncate max-w-[50px] md:max-w-none ${step >= s.id ? "text-slate-900 dark:text-white" : "text-slate-400"}`}>{s.name}</p>
                             </div>
                         </div>
                     </div>
