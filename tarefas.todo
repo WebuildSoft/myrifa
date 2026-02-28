@@ -72,7 +72,7 @@
         "key": 1772305414453,
         "children": [],
         "todo": {
-          "content": "criar na pagina inicial um card que mostra os planos premium",
+          "content": "criar na pagina inicial um card que mostra os planos premium em imagemm",
           "id": 1772305414453,
           "level": "default",
           "done": false,
@@ -158,6 +158,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1772306520738"
+    "version": "1772311654560"
   }
 }

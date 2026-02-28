@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { signOut } from "next-auth/react"
 import { useState, useEffect } from "react"
+import { FeedbackModal } from "../dashboard/FeedbackModal"
 
 const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -87,9 +88,12 @@ export function Sidebar() {
                             <p className="text-[10px] font-bold text-primary uppercase tracking-wider">Suporte</p>
                         </div>
                         <p className="text-xs text-slate-500 mb-3 leading-relaxed">Precisa de ajuda com suas campanhas?</p>
-                        <Button variant="outline" size="sm" className="w-full bg-white dark:bg-slate-800 border-primary/20 text-primary hover:bg-primary hover:text-white transition-all text-[11px] font-bold h-8">
-                            Falar com Consultor
-                        </Button>
+                        <div className="space-y-2">
+                            <Button variant="outline" size="sm" className="w-full bg-white dark:bg-slate-800 border-primary/20 text-primary hover:bg-primary hover:text-white transition-all text-[11px] font-bold h-8">
+                                Falar com Consultor
+                            </Button>
+                            <FeedbackModal />
+                        </div>
                     </div>
                 </div>
 
