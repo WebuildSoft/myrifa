@@ -1,0 +1,86 @@
+{
+  "todotree": {
+    "tree": [
+      {
+        "key": 1772299774373,
+        "children": [
+          {
+            "key": 1772299788124,
+            "children": [],
+            "todo": {
+              "content": "configurar o layout deixar mas centralizado o a card",
+              "id": 1772299788124,
+              "level": "default",
+              "done": false,
+              "start": 1772299788124
+            }
+          },
+          {
+            "key": 1772299827420,
+            "children": [],
+            "todo": {
+              "content": "o rodape ainda ta escrito myrifa intermediação tem que troca pra o novo brand",
+              "id": 1772299827420,
+              "level": "default",
+              "done": false,
+              "start": 1772299827420
+            }
+          },
+          {
+            "key": 1772299899237,
+            "children": [],
+            "todo": {
+              "content": "o batao ajuda  no menu quando faz o checkout  nao funciona",
+              "id": 1772299899237,
+              "level": "default",
+              "done": false,
+              "start": 1772299899237
+            }
+          },
+          {
+            "key": 1772299964989,
+            "children": [],
+            "todo": {
+              "content": "logo abaixo do total tem  o aceitar o temos de uso nao seria bom colocar um botao de check box pro proprio cliente aceita ?",
+              "id": 1772299964989,
+              "level": "default",
+              "done": false,
+              "start": 1772299964989
+            }
+          }
+        ],
+        "todo": {
+          "content": "pagina de finalizar compras",
+          "id": 1772299774373,
+          "level": "default",
+          "done": false,
+          "start": 1772299774373
+        }
+      },
+      {
+        "key": 1772300060814,
+        "children": [],
+        "todo": {
+          "content": "",
+          "id": 1772300060814,
+          "level": "default",
+          "done": false,
+          "start": 1772300060814
+        }
+      }
+    ],
+    "expandKeys": [],
+    "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
+    "add_mode": "bottom",
+    "virtual": false,
+    "timelines": [],
+    "showLine": false,
+    "playFontSize": 24,
+    "title": "tarefas",
+    "autoSort": false,
+    "showEndTime": false,
+    "simpleMode": false,
+    "lang": "en",
+    "version": "1772300060838"
+  }
+}

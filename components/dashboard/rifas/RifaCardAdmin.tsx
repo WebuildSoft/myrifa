@@ -32,8 +32,8 @@ export function RifaCardAdmin({ rifa }: RifaCardAdminProps) {
     }
 
     const statusLabels: Record<string, string> = {
-        ACTIVE: "Ativa",
-        DRAFT: "Rascunho",
+        ACTIVE: "Ativa (Pública)",
+        DRAFT: "Rascunho (Privada)",
         PAUSED: "Pausada",
         CLOSED: "Encerrada",
         DRAWN: "Premiada",
@@ -57,7 +57,14 @@ export function RifaCardAdmin({ rifa }: RifaCardAdminProps) {
             </div>
 
             <CardContent className="p-6">
-                <h3 className="text-lg font-bold mb-4 line-clamp-1 group-hover:text-primary transition-colors">{rifa.title}</h3>
+                <div className="flex items-start justify-between mb-2">
+                    <h3 className="text-lg font-bold line-clamp-1 group-hover:text-primary transition-colors">{rifa.title}</h3>
+                </div>
+                {rifa.status === "DRAFT" && (
+                    <p className="text-[10px] text-amber-600 font-bold uppercase tracking-tight mb-4 flex items-center gap-1">
+                        ⚠️ Não aparece na listagem pública
+                    </p>
+                )}
 
                 <div className="space-y-4">
                     <div>

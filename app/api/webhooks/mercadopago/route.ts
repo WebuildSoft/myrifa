@@ -75,6 +75,12 @@ export async function POST(request: Request) {
                         data: { status: "PAID" }
                     })
 
+                    // Update Rifa total raised
+                    await prisma.rifa.update({
+                        where: { id: transaction.rifaId },
+                        data: { totalRaised: { increment: transaction.amount } }
+                    })
+
                     // Trigger WhatsApp confirmation
                     if (transaction.buyer.whatsapp) {
                         const message = templates.paymentConfirmed(

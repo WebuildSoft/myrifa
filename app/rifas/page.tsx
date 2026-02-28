@@ -30,9 +30,9 @@ export default async function PublicRifasPage() {
                                 <Zap className="h-4 w-4 text-primary fill-primary" />
                                 <span className="text-[10px] font-black uppercase tracking-widest text-primary">Sorteios Ativos</span>
                             </div>
-                            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">Escolha sua sorte</h1>
+                            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">Explorar Campanhas</h1>
                             <p className="text-slate-500 dark:text-slate-400 font-medium max-w-xl">
-                                Participe de campanhas auditadas e regulamentadas. Diversos prêmios, causas nobres e experiências incríveis esperando por você.
+                                Participe de campanhas de arrecadação digital e apoie causas importantes. Transparência e tecnologia na palma da sua mão.
                             </p>
                         </div>
 

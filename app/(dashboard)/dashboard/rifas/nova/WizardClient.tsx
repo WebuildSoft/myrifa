@@ -167,6 +167,12 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
                 <div className="lg:col-span-2 space-y-8">
                     <Card className="border-none shadow-none bg-transparent">
                         <CardContent className="p-0">
+                            {error && (
+                                <div className="mb-6 flex items-center gap-3 p-4 bg-red-50 text-red-600 rounded-2xl border border-red-100 animate-in shake duration-300">
+                                    <AlertCircle className="h-5 w-5" />
+                                    <p className="text-sm font-bold">{error}</p>
+                                </div>
+                            )}
                             <form onSubmit={handleCreateDraft}>
                                 {step === 1 && (
                                     <InfoStep
@@ -224,13 +230,6 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
                             </form>
                         </CardContent>
                     </Card>
-
-                    {error && (
-                        <div className="flex items-center gap-3 p-4 bg-red-50 text-red-600 rounded-2xl border border-red-100 animate-in shake duration-300">
-                            <AlertCircle className="h-5 w-5" />
-                            <p className="text-sm font-bold">{error}</p>
-                        </div>
-                    )}
                 </div>
 
                 <div className="lg:col-span-1">

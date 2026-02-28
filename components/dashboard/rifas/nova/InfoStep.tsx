@@ -1,5 +1,7 @@
 "use client"
 
+import React from "react"
+
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -42,22 +44,31 @@ export function InfoStep({
     onNext,
     setError
 }: InfoStepProps) {
+    const topRef = React.useRef<HTMLDivElement>(null)
 
     const handleNext = () => {
         if (!title || title.length < 3) {
             setError("O título deve ter no mínimo 3 caracteres.")
+            topRef.current?.scrollIntoView({ behavior: 'smooth' })
             return
         }
         if (prizes.some(p => p.title.trim().length < 3)) {
             setError("Todos os prêmios devem ter nomes válidos (mín. 3 caracteres).")
+            topRef.current?.scrollIntoView({ behavior: 'smooth' })
             return
         }
         setError("")
         onNext()
     }
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && (e.target as HTMLElement).tagName !== 'TEXTAREA') {
+            e.preventDefault()
+        }
+    }
+
     return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div ref={topRef} onKeyDown={handleKeyDown} className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="grid gap-6">
                 <div className="space-y-2">
                     <Label htmlFor="title" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Nome da Campanha</Label>
