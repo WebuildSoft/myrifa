@@ -73,6 +73,7 @@ interface PricingSectionProps {
     title?: React.ReactNode
     subtitle?: string
     showTitle?: boolean
+    currentPlan?: string
 }
 
 export function PricingSection({
@@ -82,29 +83,55 @@ export function PricingSection({
         </>
     ),
     subtitle = "Comece grátis e escale conforme sua necessidade. Sem taxas ocultas.",
-    showTitle = true
+    showTitle = true,
+    currentPlan
 }: PricingSectionProps) {
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
 
     const handleSubscribe = (href: string) => {
-        if (!session?.user) {
-            toast.error("Você precisa estar logado para assinar um plano.")
-            window.location.href = "/register"
+        console.log("handleSubscribe called with:", href)
+        console.log("Session status:", status)
+        console.log("User session:", session?.user)
+
+        if (status === "loading") {
+            toast.info("Aguardando carregar sua sessão...")
             return
         }
 
-        const userId = (session.user as any).id
+        if (!session?.user) {
+            toast.error("Você precisa estar logado para assinar um plano.")
+            setTimeout(() => {
+                window.location.href = "/register"
+            }, 1000)
+            return
+        }
+
+        const user = session.user as any
+        const userId = user.id || user.sub
 
         if (!userId) {
-            toast.error("Erro ao identificar usuário. Tente novamente.")
+            console.error("User ID not found in session:", session)
+            toast.error("Erro ao identificar seu usuário. Por favor, saia e entre novamente.")
             return
         }
 
         // Se for um link do Stripe, anexa o client_reference_id
         if (href.startsWith("https://buy.stripe.com")) {
-            const stripeUrl = new URL(href)
-            stripeUrl.searchParams.set("client_reference_id", userId)
-            window.location.href = stripeUrl.toString()
+            try {
+                const stripeUrl = new URL(href)
+                stripeUrl.searchParams.set("client_reference_id", userId)
+
+                // Opcional: passar o e-mail também para facilitar
+                if (user.email) {
+                    stripeUrl.searchParams.set("prefilled_email", user.email)
+                }
+
+                console.log("Redirecting to Stripe:", stripeUrl.toString())
+                window.location.href = stripeUrl.toString()
+            } catch (err) {
+                console.error("Error creating Stripe URL:", err)
+                window.location.href = href // Fallback para o link original sem o ID se der erro no URL
+            }
         } else {
             window.location.href = href
         }
@@ -182,9 +209,10 @@ export function PricingSection({
                                     }`}
                                 variant={plan.variant}
                                 onClick={() => handleSubscribe(plan.href)}
+                                disabled={currentPlan === plan.name}
                             >
-                                {plan.buttonText}
-                                <ArrowRight className="ml-2 h-4 w-4" />
+                                {currentPlan === plan.name ? "Plano Atual" : plan.buttonText}
+                                {currentPlan !== plan.name && <ArrowRight className="ml-2 h-4 w-4" />}
                             </Button>
                         </div>
                     ))}
