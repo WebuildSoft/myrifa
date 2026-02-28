@@ -1,6 +1,7 @@
 import { auth } from "@/auth"
-import { Search, Bell } from "lucide-react"
+import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { NotificationBell } from "./NotificationBell"
 
 export async function Header() {
     const session = await auth()
@@ -17,10 +18,7 @@ export async function Header() {
             </div>
 
             <div className="flex items-center gap-6">
-                <button className="relative p-2 text-slate-500 hover:text-primary transition-colors group">
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900 group-hover:scale-110 transition-transform"></span>
-                </button>
+                <NotificationBell />
 
                 <div className="flex items-center gap-3 pl-6 border-l border-slate-200 dark:border-slate-700">
                     <div className="text-right">

@@ -84,7 +84,23 @@ export async function POST(request: Request) {
                         )
                         await sendWhatsAppMessage(transaction.buyer.whatsapp, message)
                     }
-                    console.log(`Payment confirmed for transaction ${transaction.id}, numbers secured!`)
+
+                    // Create In-App Notification for the owner
+                    const formattedAmount = new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL"
+                    }).format(Number(transaction.amount))
+
+                    await prisma.notification.create({
+                        data: {
+                            userId: transaction.rifa.userId,
+                            title: "Novo pagamento recebido! 🎉",
+                            message: `Você recebeu ${formattedAmount} de ${transaction.buyer.name} para a rifa "${transaction.rifa.title}".`,
+                            read: false
+                        }
+                    })
+
+                    console.log(`Payment confirmed for transaction ${transaction.id}, numbers secured and owner notified!`)
                 }
             } else if (externalReference && (status === "cancelled" || status === "rejected")) {
                 // Free numbers if failed
