@@ -5,11 +5,24 @@ import { sendWhatsAppMessage, templates } from "@/lib/evolution"
 export async function POST(request: Request) {
     try {
         const url = new URL(request.url)
-        const topic = url.searchParams.get("topic") || url.searchParams.get("type")
+        let body: any = {}
+
+        try {
+            // Tentamos ler o corpo da requisição json
+            body = await request.json()
+            console.log("Webhook body recebido:", body)
+        } catch (e) {
+            console.log("No JSON body in webhook")
+        }
+
+        // Pega query param OU o campo do body via JSON Webhook
+        const topic = url.searchParams.get("topic") || url.searchParams.get("type") || body?.type || body?.topic
         const rifaId = url.searchParams.get("rifaId")
 
+        console.log(`Processing webhook - Topic: ${topic}, RifaId: ${rifaId}`)
+
         if (topic === "payment") {
-            const paymentId = url.searchParams.get("data.id") || url.searchParams.get("id")
+            const paymentId = url.searchParams.get("data.id") || url.searchParams.get("id") || body?.data?.id || body?.id
 
             if (!paymentId) {
                 return Response.json({ error: "Missing payment ID" }, { status: 400 })
