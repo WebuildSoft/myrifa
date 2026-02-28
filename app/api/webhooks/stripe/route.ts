@@ -77,6 +77,68 @@ export async function POST(req: Request) {
             }
             break
         }
+        case "payment_intent.succeeded": {
+            const paymentIntent = event.data.object as Stripe.PaymentIntent
+            const { type, rifaId, transactionId } = paymentIntent.metadata
+
+            // Idempotency check
+            const existingEvent = await (prisma as any).webhookEvent.findUnique({
+                where: { id: event.id }
+            })
+            if (existingEvent) return NextResponse.json({ received: true })
+
+            // Register event
+            await (prisma as any).webhookEvent.create({
+                data: { id: event.id, provider: 'STRIPE', type: event.type }
+            })
+
+            if (type === 'RIFA_PAYMENT' && rifaId && transactionId) {
+                // Find transaction
+                const transaction = await prisma.transaction.findUnique({
+                    where: { id: transactionId },
+                    include: { buyer: true, rifa: true }
+                })
+
+                if (transaction && transaction.status !== "PAID") {
+                    await prisma.$transaction(async (tx) => {
+                        // Update transaction
+                        await tx.transaction.update({
+                            where: { id: transaction.id },
+                            data: { status: "PAID", paidAt: new Date() }
+                        })
+
+                        // Update numbers
+                        await tx.rifaNumber.updateMany({
+                            where: { buyerId: transaction.buyerId, rifaId },
+                            data: { status: "PAID" }
+                        })
+
+                        // Update Rifa total raised AND Quota Commission Paid
+                        await tx.rifa.update({
+                            where: { id: rifaId },
+                            data: {
+                                totalRaised: { increment: transaction.amount },
+                                quotaCommissionPaid: { increment: transaction.amount }
+                            } as any
+                        })
+
+                        // Add notification for commission payment
+                        const formattedAmount = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(transaction.amount));
+                        await tx.notification.create({
+                            data: {
+                                userId: transaction.rifa.userId, // Assuming the rifa has a userId for the owner
+                                title: "Comissão de Campanha Recebida! 💰",
+                                message: `Você recebeu ${formattedAmount} de comissão pela campanha "${transaction.rifa.title}".`,
+                                read: false
+                            }
+                        });
+                    })
+
+                    console.log(`Raffle payment (commission) confirmed for transaction ${transactionId}`)
+                }
+            }
+            break
+        }
         case "payment_intent.payment_failed": {
             const paymentIntent = event.data.object as Stripe.PaymentIntent
             const userId = paymentIntent.metadata?.userId // Precisamos garantir que isso seja passado no metadata se possível

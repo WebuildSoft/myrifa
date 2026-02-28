@@ -31,8 +31,16 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
             return { error: "O organizador da campanha ainda não configurou os recebimentos. Tente novamente mais tarde." }
         }
 
-        // 1. Transaction to reserve numbers and create buyer
+        // 1. Transaction to reserve numbers, create buyer and determine destination
         const checkoutResult = await prisma.$transaction(async (tx) => {
+            // Find Rifa within transaction
+            const rifaTx = await tx.rifa.findUnique({
+                where: { id: validated.rifaId },
+                include: { user: true }
+            })
+
+            if (!rifaTx) throw new Error("Campanha não encontrada")
+
             // Create or find buyer
             let buyer = await tx.buyer.findFirst({
                 where: { whatsapp: validated.whatsapp }
@@ -74,38 +82,74 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 }
             })
 
+            const amount = Number(rifaTx.numberPrice) * validated.numbers.length
+
+            // --- Atomic Destination Logic ---
+            let destination: 'PLATFORM' | 'ORGANIZER' = 'ORGANIZER'
+            let provider: 'STRIPE' | 'MERCADO_PAGO' = 'MERCADO_PAGO'
+
+            const goal = Number(rifaTx.quotaCommissionGoal || 0)
+            const reserved = Number(rifaTx.quotaCommissionReserved || 0)
+            const percent = Number(rifaTx.quotaCommissionPercent || 0.05)
+
+            // Se ainda não reservamos o suficiente para atingir a meta
+            if (reserved < goal) {
+                const raffleChance = Math.random()
+                if (raffleChance <= percent) {
+                    destination = 'PLATFORM'
+                    provider = 'STRIPE'
+
+                    // Incrementamos o reserved para "bloquear" essa parte da meta para outros checkouts
+                    await (tx.rifa as any).update({
+                        where: { id: (rifaTx as any).id },
+                        data: {
+                            quotaCommissionReserved: { increment: amount }
+                        }
+                    })
+                }
+            }
+
             // Create Transaction record
-            const amount = Number(rifa.numberPrice) * validated.numbers.length
             const transactionRecord = await tx.transaction.create({
                 data: {
                     amount,
                     status: "PENDING",
                     method: validated.paymentMethod,
                     buyerId: buyer.id,
-                    rifaId: rifa.id,
+                    rifaId: rifaTx.id,
                     numbers: validated.numbers,
-                    expiresAt: new Date(Date.now() + 30 * 60 * 1000) // 30 min expiration
+                    expiresAt: new Date(Date.now() + 30 * 60 * 1000), // 30 min expiration
+                    provider,
+                    destination
                 }
             })
 
-            return { transactionRecord, buyer, amount }
+            return { transactionRecord, buyer, amount, provider, destination }
         })
 
-        // 2. Generate Payment via PaymentService
+        const provider = checkoutResult.provider
+        const destination = checkoutResult.destination
+        const accessToken = provider === 'STRIPE' ? undefined : ownerAccessToken
+
         if (validated.paymentMethod === "PIX") {
             const paymentResult = await PaymentService.createPixPayment({
                 amount: checkoutResult.amount,
                 description: `Compra Rifa ${rifa.title} - ${validated.numbers.length} números`,
                 externalReference: checkoutResult.transactionRecord.id,
                 buyer: checkoutResult.buyer,
-                accessToken: ownerAccessToken,
-                rifaId: rifa.id
+                accessToken: accessToken ?? undefined,
+                rifaId: rifa.id,
+                provider
             })
 
             // Update transaction with External ID
             await prisma.transaction.update({
                 where: { id: checkoutResult.transactionRecord.id },
-                data: { externalId: paymentResult.id }
+                data: {
+                    externalId: paymentResult.id,
+                    pixQrCode: provider === 'STRIPE' ? paymentResult.qrCode : undefined,
+                    pixQrCodeText: paymentResult.qrCodeCopy
+                }
             })
 
             // 3. Send WhatsApp notification via NotificationService

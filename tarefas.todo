@@ -67,6 +67,83 @@
           "done": false,
           "start": 1772300060814
         }
+      },
+      {
+        "key": 1772305414453,
+        "children": [],
+        "todo": {
+          "content": "criar na pagina inicial um card que mostra os planos premium",
+          "id": 1772305414453,
+          "level": "default",
+          "done": false,
+          "start": 1772305414453
+        }
+      },
+      {
+        "key": 1772305581719,
+        "children": [],
+        "todo": {
+          "content": "somente mostra como pago quando o cliente de fato confirma a compra  dos numeros",
+          "id": 1772305581719,
+          "level": "default",
+          "done": false,
+          "start": 1772305581719
+        }
+      },
+      {
+        "key": 1772305664071,
+        "children": [],
+        "todo": {
+          "content": "e se o cliente quiser cancela a comprar? tem que te uma função no dashboard de cancelamento  e que numero volte a fica normal",
+          "id": 1772305664071,
+          "level": "default",
+          "done": false,
+          "start": 1772305664071
+        }
+      },
+      {
+        "key": 1772305747336,
+        "children": [],
+        "todo": {
+          "content": "botao de divulgar no detalhes da rifa nao ta funcioando  E nem o botao de compartilhamento  do whaspp e o qr code nao aparece",
+          "id": 1772305747336,
+          "level": "default",
+          "done": false,
+          "start": 1772305747336
+        }
+      },
+      {
+        "key": 1772306286702,
+        "children": [],
+        "todo": {
+          "content": "no passo 3 na hora que coloca a quantide de cota mostra a proncentagem do plano gratis  e o plano free tipo 5%  2% 1%   e explica bem pra o cliente enteder e atualizar o termos e serviço  e como funcina e seçao ajuda",
+          "id": 1772306286702,
+          "level": "default",
+          "done": false,
+          "start": 1772306286702
+        }
+      },
+      {
+        "key": 1772306486444,
+        "children": [],
+        "todo": {
+          "content": "no compartilha na rifa prublica no botao de compartilhamento coloca tambem um icone do instagram",
+          "id": 1772306486444,
+          "level": "default",
+          "done": false,
+          "start": 1772306486444
+        }
+      },
+      {
+        "key": 1772306520639,
+        "children": [],
+        "todo": {
+          "content": "",
+          "id": 1772306520639,
+          "level": "default",
+          "done": false,
+          "start": 1772306520639
+        }
       }
     ],
     "expandKeys": [],
@@ -81,6 +158,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1772300060838"
+    "version": "1772306520738"
   }
 }

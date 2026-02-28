@@ -23,7 +23,7 @@ export default async function RegisterPage({
                 </div>
                 <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Criar Conta</h2>
                 <p className="text-slate-500 dark:text-slate-400 font-medium">
-                    Preencha seus dados para começar a criar suas rifas hoje.
+                    Preencha seus dados para começar a criar suas campanhas hoje.
                 </p>
             </div>
 

@@ -24,7 +24,7 @@ const STEP_TIPS = {
         strategies: [
             "Use verbos de ação no título (Ex: 'CONCORRA', 'GANHE')",
             "Destaque o valor do prêmio principal",
-            "Crie uma descrição emocionante sobre o objetivo da rifa",
+            "Crie uma descrição emocionante sobre o objetivo da campanha",
             "Adicione fotos reais e de alta qualidade dos prêmios"
         ]
     },

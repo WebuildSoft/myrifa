@@ -19,7 +19,7 @@ export async function publishRifaAction(rifaId: string) {
         revalidatePath(`/dashboard/rifas/${rifaId}`)
         return { success: true }
     } catch (error) {
-        return { error: "Não foi possível publicar a rifa" }
+        return { error: "Não foi possível publicar a campanha" }
     }
 }
 
@@ -48,8 +48,8 @@ export async function cancelarRifaAction(rifaId: string) {
         const rifa = await prisma.rifa.findUnique({
             where: { id: rifaId, userId: session.user.id }
         })
-        if (!rifa) return { error: "Rifa não encontrada" }
-        if (rifa.status === "DRAWN") return { error: "Rifas sorteadas não podem ser canceladas" }
+        if (!rifa) return { error: "Campanha não encontrada" }
+        if (rifa.status === "DRAWN") return { error: "Campanhas sorteadas não podem ser canceladas" }
 
         await prisma.rifa.update({
             where: { id: rifaId },
@@ -60,7 +60,7 @@ export async function cancelarRifaAction(rifaId: string) {
         revalidatePath(`/dashboard/rifas/${rifaId}`)
         return { success: true }
     } catch (error) {
-        return { error: "Não foi possível cancelar a rifa" }
+        return { error: "Não foi possível cancelar a campanha" }
     }
 }
 
@@ -72,14 +72,14 @@ export async function deleteRifaAction(rifaId: string) {
         const rifa = await prisma.rifa.findUnique({
             where: { id: rifaId, userId: session.user.id }
         })
-        if (!rifa) return { error: "Rifa não encontrada" }
-        if (rifa.status === "DRAWN") return { error: "Não é possível excluir uma rifa que já foi sorteada." }
+        if (!rifa) return { error: "Campanha não encontrada" }
+        if (rifa.status === "DRAWN") return { error: "Não é possível excluir uma campanha que já foi sorteada." }
 
         await prisma.$executeRaw`UPDATE "Rifa" SET status = 'DELETED' WHERE id = ${rifaId}`
         revalidatePath("/dashboard")
         revalidatePath("/dashboard/rifas")
         return { success: true }
     } catch (error) {
-        return { error: "Erro ao excluir a rifa." }
+        return { error: "Erro ao excluir a campanha." }
     }
 }

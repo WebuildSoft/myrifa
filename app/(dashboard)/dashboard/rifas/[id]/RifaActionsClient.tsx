@@ -50,7 +50,7 @@ export default function RifaActionsClient({ rifa }: RifaActionsClientProps) {
         try {
             const res = await deleteRifaAction(rifa.id)
             if (res.success) {
-                toast.success("Rifa excluída com sucesso!")
+                toast.success("Campanha excluída com sucesso!")
                 router.push("/dashboard/rifas")
             } else {
                 toast.error(res.error || "Erro ao excluir rifa")
@@ -67,7 +67,7 @@ export default function RifaActionsClient({ rifa }: RifaActionsClientProps) {
         <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" className="hidden md:flex rounded-full gap-2 font-black text-[10px] uppercase tracking-wider" asChild>
                 <Link href={`/r/${rifa.slug}`} target="_blank">
-                    <ExternalLink className="h-3 w-3" /> Ver Rifa
+                    <ExternalLink className="h-3 w-3" /> Ver Campanha
                 </Link>
             </Button>
 
@@ -85,14 +85,14 @@ export default function RifaActionsClient({ rifa }: RifaActionsClientProps) {
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
                         <Link href={`/dashboard/rifas/${rifa.id}/editar`} className="flex items-center gap-2 py-2 text-primary font-bold w-full">
-                            <Edit className="h-4 w-4" /> Editar Rifa
+                            <Edit className="h-4 w-4" /> Editar Campanha
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         className="text-destructive focus:text-destructive flex items-center gap-2 py-2 rounded-xl cursor-pointer"
                         onSelect={() => setShowDeleteDialog(true)}
                     >
-                        <Trash2 className="h-4 w-4" /> Excluir Rifa
+                        <Trash2 className="h-4 w-4" /> Excluir Campanha
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

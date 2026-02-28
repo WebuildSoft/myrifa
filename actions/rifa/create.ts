@@ -83,13 +83,15 @@ export async function createRifaAction(formData: FormData) {
                     slug,
                     userId: session.user?.id as string,
                     status: RifaStatus.DRAFT,
+                    quotaCommissionPercent: user.plan === "INSTITUTIONAL" ? 0.01 : user.plan === "PRO" ? 0.02 : 0.05,
+                    quotaCommissionGoal: (result.data.totalNumbers * result.data.numberPrice) * (user.plan === "INSTITUTIONAL" ? 0.01 : user.plan === "PRO" ? 0.02 : 0.05),
                     prizes: prizes ? {
                         create: prizes.map((p: any) => ({
                             title: p.title,
                             position: p.position
                         }))
                     } : undefined
-                }
+                } as any
             })
 
             const numbers = Array.from({ length: result.data.totalNumbers }, (_, i) => ({
@@ -113,6 +115,6 @@ export async function createRifaAction(formData: FormData) {
         return { success: true, rifaId: rifa.id, slug: rifa.slug }
     } catch (error: any) {
         console.error("Failed to create rifa:", error)
-        return { error: "Falha ao criar rifa. Tente novamente." }
+        return { error: "Falha ao criar campanha. Tente novamente." }
     }
 }

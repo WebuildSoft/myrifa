@@ -15,6 +15,7 @@ import { ConfigCard } from "@/components/dashboard/rifa-details/ConfigCard"
 import { SharingCard } from "@/components/dashboard/rifa-details/SharingCard"
 import { RecentBuyersCard } from "@/components/dashboard/rifa-details/RecentBuyersCard"
 import { TransactionTable } from "@/components/dashboard/rifa-details/TransactionTable"
+import { QuotaCommissionCard } from "@/components/dashboard/rifa-details/QuotaCommissionCard"
 
 export default async function RifaDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const session = await auth()
@@ -114,6 +115,12 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                                 winner: p.winner ? { name: p.winner.name, whatsapp: (p.winner as any).whatsapp } : null
                             }))}
                             rifaTitle={rifa.title}
+                        />
+
+                        <QuotaCommissionCard
+                            paid={Number(rifa.quotaCommissionPaid || 0)}
+                            goal={Number(rifa.quotaCommissionGoal || 0)}
+                            percent={Number(rifa.quotaCommissionPercent || 0.05)}
                         />
 
                         <ActionGrid rifaId={rifa.id} slug={rifa.slug} status={rifa.status} />

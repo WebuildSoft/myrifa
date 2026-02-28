@@ -16,13 +16,15 @@ import { toast } from "sonner"
 const plans = [
     {
         name: "FREE",
+        label: "START",
         price: "R$ 0",
         description: "Ideal para iniciantes que querem testar o potencial das campanhas digitais.",
         features: [
             "Até 3 campanhas ativas",
-            "Taxa de 5% por apoio",
+            "Taxa de Sistema: ~5% (Sorteio)",
             "Até 500 cotas de apoio",
             "Suporte via e-mail",
+            "Dashboard Simplificado"
         ],
         buttonText: "Começar Grátis",
         href: "/register",
@@ -32,17 +34,18 @@ const plans = [
     },
     {
         name: "PRO",
-        price: "R$ 49,90",
+        label: "GROWTH",
+        price: "R$ 29,90",
         period: "/mês",
-        description: "Para organizadores profissionais que buscam escala e taxas reduzidas.",
+        description: "Para organizadores que buscam escala com taxas reduzidas e mais recursos.",
         features: [
             "Campanhas ativas ilimitadas",
-            "Taxa reduzida de 2%",
+            "Taxa de Sistema: ~2% (Sorteio)",
             "Imagens personalizadas premium",
             "Visual de cotas exclusivos",
             "Suporte VIP via WhatsApp",
         ],
-        buttonText: "Assinar PRO",
+        buttonText: "Assinar GROWTH",
         href: "https://buy.stripe.com/6oUfZgcsRfiWaSNdf7gQE00",
         variant: "default" as const,
         highlight: true,
@@ -51,17 +54,18 @@ const plans = [
     },
     {
         name: "INSTITUTIONAL",
-        price: "R$ 149,90",
+        label: "BUSINESS",
+        price: "R$ 129,90",
         period: "/mês",
-        description: "Estrutura completa para ONGs, Igrejas e grandes organizações sociais.",
+        description: "Estrutura completa para grandes organizações e campanhas de alto volume.",
         features: [
             "Tudo do plano PRO",
-            "Menor taxa: apenas 1%",
+            "Taxa de Sistema: ~1% (Mínima)",
             "Dashboard multi-org",
             "Auditoria de campanhas",
             "Gerente de conta exclusivo",
         ],
-        buttonText: "Assinar INSTITUTIONAL",
+        buttonText: "Assinar BUSINESS",
         href: "https://buy.stripe.com/aFabJ0fF35Im2mhcb3gQE01",
         variant: "outline" as const,
         icon: <ShieldCheck className="h-5 w-5 text-slate-400" />,
@@ -181,7 +185,7 @@ export function PricingSection({
                                     }`}>
                                     {plan.icon}
                                 </div>
-                                <h3 className="text-xl font-black mb-2">{plan.name}</h3>
+                                <h3 className="text-xl font-black mb-2">{plan.label || plan.name}</h3>
                                 <div className="flex items-baseline gap-1 mb-3">
                                     <span className="text-4xl font-black tracking-tight">{plan.price}</span>
                                     {plan.period && <span className="text-slate-500 text-sm font-bold">{plan.period}</span>}

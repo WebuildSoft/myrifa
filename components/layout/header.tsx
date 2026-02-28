@@ -13,7 +13,7 @@ export async function Header() {
                 <Search className="h-4 w-4 text-slate-400 group-focus-within:text-primary transition-colors" />
                 <Input
                     className="bg-transparent border-none focus-visible:ring-0 text-sm w-full placeholder:text-slate-400 h-8"
-                    placeholder="Buscar rifas ou transações..."
+                    placeholder="Buscar campanhas ou transações..."
                 />
             </div>
 

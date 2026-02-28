@@ -76,7 +76,7 @@ export default async function DashboardPage() {
                         <div>
                             <h3 className="font-semibold text-amber-800 dark:text-amber-500">Configuração Pendente!</h3>
                             <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
-                                Você precisa configurar seu Token do Mercado Pago para conseguir receber os pagamentos das suas rifas via PIX automático.
+                                Você precisa configurar seu Token do Mercado Pago para conseguir receber os pagamentos das suas campanhas via PIX automático.
                             </p>
                         </div>
                     </div>

@@ -4,8 +4,8 @@ import { redirect } from "next/navigation"
 import WizardClient from "./WizardClient"
 
 export const metadata = {
-    title: 'Nova Campanha - Rifa Online',
-    description: 'Crie uma nova campanha de rifa',
+    title: 'Nova Campanha - MyRifa',
+    description: 'Crie uma nova campanha de arrecadação',
 }
 
 export default async function NovaRifaPage() {

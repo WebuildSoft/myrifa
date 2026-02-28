@@ -105,6 +105,6 @@ export async function updateRifaAction(rifaId: string, formData: FormData) {
         return { success: true }
     } catch (error) {
         console.error("Update error:", error)
-        return { error: "Não foi possível atualizar a rifa" }
+        return { error: "Não foi possível atualizar a campanha" }
     }
 }

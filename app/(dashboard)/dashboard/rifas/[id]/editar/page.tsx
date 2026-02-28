@@ -46,7 +46,7 @@ export default async function EditarRifaPage({ params }: { params: Promise<{ id:
                     </Button>
                     <div>
                         <h1 className="font-sans font-black text-lg text-slate-900 dark:text-white leading-none">
-                            Editar Rifa
+                            Editar Campanha
                         </h1>
                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">
                             Atualize sua campanha

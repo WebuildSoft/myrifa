@@ -1,5 +1,10 @@
 import { MercadoPagoConfig, Payment } from "mercadopago"
 import { headers } from "next/headers"
+import Stripe from "stripe"
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+    apiVersion: "2024-12-18.acacia" as any
+})
 
 export interface CreatePixPaymentParams {
     amount: number
@@ -9,16 +14,53 @@ export interface CreatePixPaymentParams {
         name: string
         email?: string | null
     }
-    accessToken: string
+    accessToken?: string // Optional if using Stripe
     rifaId: string
+    provider?: 'STRIPE' | 'MERCADO_PAGO'
 }
 
 export class PaymentService {
-    static async createPixPayment({ amount, description, externalReference, buyer, accessToken, rifaId }: CreatePixPaymentParams) {
+    static async createPixPayment(params: CreatePixPaymentParams) {
+        if (params.provider === 'STRIPE') {
+            return this.createStripePixPayment(params);
+        }
+        return this.createMercadoPagoPixPayment(params);
+    }
 
-        // Dynamically instantiate the client for the specific user generating the sale
+    private static async createStripePixPayment({ amount, description, externalReference, buyer, rifaId }: CreatePixPaymentParams) {
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: Math.round(amount * 100), // Stripe uses cents
+            currency: 'brl',
+            payment_method_types: ['pix'],
+            description,
+            metadata: {
+                transactionId: externalReference,
+                rifaId,
+                type: 'RIFA_PAYMENT'
+            },
+            receipt_email: buyer.email || undefined
+        });
+
+        // To get the QR Code, we need to confirm the payment intent with payment_method: { type: 'pix' }
+        // or just return the client secret and handle it on frontend. 
+        // But since we want the QR code now to show it like MP:
+        const confirmedIntent = await stripe.paymentIntents.confirm(paymentIntent.id, {
+            payment_method_data: { type: 'pix' },
+            return_url: `${process.env.NEXT_PUBLIC_APP_URL}/r/success`
+        });
+
+        const nextAction = confirmedIntent.next_action?.pix_display_qr_code;
+
+        return {
+            id: paymentIntent.id,
+            qrCode: nextAction?.image_url_png, // URL for image
+            qrCodeCopy: nextAction?.data // Text for copy/paste
+        }
+    }
+
+    private static async createMercadoPagoPixPayment({ amount, description, externalReference, buyer, accessToken, rifaId }: CreatePixPaymentParams) {
         const client = new MercadoPagoConfig({
-            accessToken: accessToken,
+            accessToken: accessToken!,
             options: { timeout: 10000 }
         })
 
@@ -27,10 +69,9 @@ export class PaymentService {
         const [firstName, ...lastNameParts] = buyer.name.split(" ")
         const lastName = lastNameParts.join(" ") || "Silva"
 
-        // Discover base URL dynamically or fallback to env for the webhook notification URL
         const headersList = await headers()
         const host = headersList.get("host") || process.env.NEXTAUTH_URL?.replace("https://", "") || "myrifa.com.br"
-        const protocol = process.env.NODE_ENV === "development" ? "https" : "https" // MP requires HTTPS even in dev basically, so use Ngrok/localtunnel if testing
+        const protocol = "https"
 
         const notificationUrl = `${protocol}://${host}/api/webhooks/mercadopago?rifaId=${rifaId}`
 
@@ -43,7 +84,7 @@ export class PaymentService {
                     email: buyer.email || "contato@rifa.com.br",
                     first_name: firstName,
                     last_name: lastName,
-                    identification: { type: 'CPF', number: '19119119100' } // Placeholder for MP rules
+                    identification: { type: 'CPF', number: '19119119100' }
                 },
                 external_reference: externalReference,
                 notification_url: notificationUrl

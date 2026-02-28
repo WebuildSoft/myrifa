@@ -58,7 +58,7 @@ export function MercadoPagoSettings({ initialToken }: { initialToken?: string | 
                     </div>
                     <div className="flex items-start justify-between mt-1">
                         <p className="text-xs text-muted-foreground max-w-[80%]">
-                            Seu token fica criptografado no nosso banco de dados e só é usado para gerar os pagamentos das Suas Rifas.
+                            Seu token fica criptografado no nosso banco de dados e só é usado para gerar os pagamentos das Suas Campanhas.
                         </p>
                     </div>
                 </div>
