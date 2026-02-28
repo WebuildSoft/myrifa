@@ -46,7 +46,7 @@ const plans = [
             "Suporte VIP via WhatsApp",
         ],
         buttonText: "Assinar GROWTH",
-        href: "https://buy.stripe.com/6oUfZgcsRfiWaSNdf7gQE00",
+        href: "https://buy.stripe.com/cNifZgcsR0o27GB6QJgQE02",
         variant: "default" as const,
         highlight: true,
         icon: <Crown className="h-5 w-5 text-white" />,
@@ -66,7 +66,7 @@ const plans = [
             "Gerente de conta exclusivo",
         ],
         buttonText: "Assinar BUSINESS",
-        href: "https://buy.stripe.com/aFabJ0fF35Im2mhcb3gQE01",
+        href: "https://buy.stripe.com/bJe28q9gFeeS3ql5MFgQE03",
         variant: "outline" as const,
         icon: <ShieldCheck className="h-5 w-5 text-slate-400" />,
         color: "slate"

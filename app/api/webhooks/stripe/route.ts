@@ -35,8 +35,8 @@ export async function POST(req: Request) {
 
             // Map Price ID to Plan Enum
             let plan: "FREE" | "PRO" | "INSTITUTIONAL" = "FREE"
-            if (priceId === "price_1T5s30BwZiN8YdGtkCBsDnmm") plan = "PRO"
-            if (priceId === "price_1T5s31BwZiN8YdGts7cugSZ9") plan = "INSTITUTIONAL"
+            if (priceId === "price_1T5s30BwZiN8YdGtkCBsDnmm" || priceId === "price_1T5uKYBwZiN8YdGtzwriPfQR") plan = "PRO"
+            if (priceId === "price_1T5s31BwZiN8YdGts7cugSZ9" || priceId === "price_1T5uKYBwZiN8YdGtriz7jC98") plan = "INSTITUTIONAL"
 
             if (plan !== "FREE") {
                 await prisma.user.update({
