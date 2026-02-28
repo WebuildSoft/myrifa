@@ -21,6 +21,7 @@ model User {
   pixKey        String?
   plan          Plan      @default(FREE)
   planExpiresAt DateTime?
+  mercadoPagoAccessToken String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]

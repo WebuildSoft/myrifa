@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { User, Mail, Smartphone, CreditCard } from "lucide-react"
+import { User, Mail, Smartphone } from "lucide-react"
+import { MercadoPagoSettings } from "@/components/dashboard/conta/MercadoPagoSettings"
 
 export default async function ContaPage() {
     const session = await auth()
@@ -22,7 +23,7 @@ export default async function ContaPage() {
             <div>
                 <h1 className="text-3xl font-bold tracking-tight">Sua Conta</h1>
                 <p className="text-muted-foreground mt-1">
-                    Gerencie suas informações pessoais e configurações de pagamento.
+                    Gerencie suas informações pessoais e integrações de pagamentos.
                 </p>
             </div>
 
@@ -59,25 +60,7 @@ export default async function ContaPage() {
                 </CardContent>
             </Card>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Pagamentos (Recebimento)</CardTitle>
-                    <CardDescription>Configure como você deseja receber o valor das suas rifas.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="pixKey">Chave PIX</Label>
-                        <div className="relative">
-                            <CreditCard className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input id="pixKey" defaultValue={user.pixKey || ""} className="pl-10" placeholder="Sua chave PIX para recebimento" />
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                            Esta chave será usada para transferirmos seus ganhos após a conclusão das rifas.
-                        </p>
-                    </div>
-                    <Button>Atualizar Dados Bancários</Button>
-                </CardContent>
-            </Card>
+            <MercadoPagoSettings initialToken={user.mercadoPagoAccessToken} />
 
             <Card className="border-red-200 bg-red-50/50">
                 <CardHeader>

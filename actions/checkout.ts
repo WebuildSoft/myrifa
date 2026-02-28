@@ -19,11 +19,17 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
         const validated = checkoutSchema.parse(data)
 
         const rifa = await prisma.rifa.findUnique({
-            where: { id: validated.rifaId }
+            where: { id: validated.rifaId },
+            include: { user: true }
         })
 
         if (!rifa) throw new Error("Campanha não encontrada")
         if (rifa.status === ("DELETED" as any)) throw new Error("Esta rifa não está mais disponível.")
+
+        const ownerAccessToken = rifa.user?.mercadoPagoAccessToken
+        if (!ownerAccessToken) {
+            return { error: "O organizador da campanha ainda não configurou os recebimentos. Tente novamente mais tarde." }
+        }
 
         // 1. Transaction to reserve numbers and create buyer
         const checkoutResult = await prisma.$transaction(async (tx) => {
@@ -91,7 +97,9 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 amount: checkoutResult.amount,
                 description: `Compra Rifa ${rifa.title} - ${validated.numbers.length} números`,
                 externalReference: checkoutResult.transactionRecord.id,
-                buyer: checkoutResult.buyer
+                buyer: checkoutResult.buyer,
+                accessToken: ownerAccessToken,
+                rifaId: rifa.id
             })
 
             // Update transaction with External ID

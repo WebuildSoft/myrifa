@@ -2,12 +2,11 @@ import { prisma } from "@/lib/prisma"
 import { MercadoPagoConfig, Payment } from 'mercadopago'
 import { sendWhatsAppMessage, templates } from "@/lib/evolution"
 
-const client = new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || '' })
-
 export async function POST(request: Request) {
     try {
         const url = new URL(request.url)
         const topic = url.searchParams.get("topic") || url.searchParams.get("type")
+        const rifaId = url.searchParams.get("rifaId")
 
         if (topic === "payment") {
             const paymentId = url.searchParams.get("data.id") || url.searchParams.get("id")
@@ -16,7 +15,24 @@ export async function POST(request: Request) {
                 return Response.json({ error: "Missing payment ID" }, { status: 400 })
             }
 
-            // Verify payment with MP
+            if (!rifaId) {
+                return Response.json({ error: "Missing rifaId for multi-tenant routing" }, { status: 400 })
+            }
+
+            // Find the Rifa owner's Mercado Pago Token
+            const rifa = await prisma.rifa.findUnique({
+                where: { id: rifaId },
+                include: { user: true }
+            })
+
+            const ownerToken = rifa?.user?.mercadoPagoAccessToken
+
+            if (!ownerToken) {
+                return Response.json({ error: "Rifa owner has no MP Token configured" }, { status: 400 })
+            }
+
+            // Verify payment with MP using the owner's specific token
+            const client = new MercadoPagoConfig({ accessToken: ownerToken })
             const paymentApi = new Payment(client)
             const paymentInfo = await paymentApi.get({ id: paymentId })
 
