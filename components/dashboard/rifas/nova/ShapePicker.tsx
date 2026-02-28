@@ -39,14 +39,15 @@ export function ShapePicker({ value, onChange, userPlan }: ShapePickerProps) {
                                 isLocked && "opacity-60 cursor-not-allowed hover:border-slate-200 dark:hover:border-slate-800"
                             )}
                         >
-                            {/* Shape Preview Icon */}
                             <div className="h-12 w-full flex items-center justify-center pt-2">
-                                <div className={cn(
-                                    "w-8 h-8 transition-transform group-hover:scale-110",
-                                    shape.radiusClass,
-                                    shape.clipPathClass,
-                                    isSelected ? "bg-primary" : (isLocked ? "bg-slate-300 dark:bg-slate-700" : "bg-slate-800 dark:bg-slate-200")
-                                )} />
+                                <div
+                                    className={cn(
+                                        "w-8 h-8 transition-transform group-hover:scale-110",
+                                        shape.radiusClass,
+                                        isSelected ? "bg-primary" : (isLocked ? "bg-slate-300 dark:bg-slate-700" : "bg-slate-800 dark:bg-slate-200")
+                                    )}
+                                    style={shape.clipPathStyle ? { clipPath: shape.clipPathStyle } : undefined}
+                                />
                             </div>
 
                             <span className={cn(
