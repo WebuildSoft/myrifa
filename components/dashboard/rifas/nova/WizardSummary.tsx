@@ -14,6 +14,7 @@ interface WizardSummaryProps {
     totalNumbers: number
     numberPrice: number
     currentStep: number
+    userPlan: string
 }
 
 const STEP_TIPS = {
@@ -63,9 +64,10 @@ const STEP_TIPS = {
     }
 }
 
-export function WizardSummary({ totalNumbers, numberPrice, currentStep }: WizardSummaryProps) {
+export function WizardSummary({ totalNumbers, numberPrice, currentStep, userPlan }: WizardSummaryProps) {
     const totalRevenue = totalNumbers * numberPrice
-    const platformFee = totalRevenue * 0.05
+    const feePercentage = userPlan === "INSTITUTIONAL" ? 0.01 : userPlan === "PRO" ? 0.02 : 0.05
+    const platformFee = totalRevenue * feePercentage
     const estimatedProfit = totalRevenue - platformFee
 
     const formatCurrency = (val: number) => {
@@ -100,7 +102,7 @@ export function WizardSummary({ totalNumbers, numberPrice, currentStep }: Wizard
                             </div>
                             <div className="h-px bg-white/10 my-1"></div>
                             <div className="flex justify-between items-center text-sm font-bold">
-                                <span className="opacity-70">Taxa Plataforma (5%)</span>
+                                <span className="opacity-70">Manutenção do Sistema ({feePercentage * 100}%)</span>
                                 <span className="text-red-200">- {formatCurrency(platformFee)}</span>
                             </div>
                         </div>

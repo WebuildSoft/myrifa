@@ -14,6 +14,7 @@ interface ReviewStepProps {
     drawDate: string
     theme: string
     loading: boolean
+    userPlan: string
     onPublish: () => void
     onKeepDraft: () => void
 }
@@ -28,12 +29,16 @@ export function ReviewStep({
     drawDate,
     theme,
     loading,
+    userPlan,
     onPublish,
     onKeepDraft
 }: ReviewStepProps) {
     const origin = typeof window !== "undefined" ? window.location.origin : ""
     const totalRevenue = totalNumbers * numberPrice
-    const platformFee = totalRevenue * 0.05
+
+    // Fee percentage based on plan
+    const feePercentage = userPlan === "INSTITUTIONAL" ? 0.01 : userPlan === "PRO" ? 0.02 : 0.05
+    const platformFee = totalRevenue * feePercentage
     const estimatedProfit = totalRevenue - platformFee
 
     const formatCurrency = (val: number) => {
@@ -130,10 +135,20 @@ export function ReviewStep({
                                     <p className="text-[10px] text-slate-500 font-bold italic">{formatCurrency(numberPrice)} /cada</p>
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-bold text-primary uppercase tracking-wider">Seu Lucro Etimado</p>
+                                    <p className="text-[10px] font-bold text-primary uppercase tracking-wider">Lucro Estimado do Organizador</p>
                                     <p className="text-xl font-black text-primary">{formatCurrency(estimatedProfit)}</p>
                                     <p className="text-[10px] text-slate-500 font-bold italic">Livre de Taxas</p>
                                 </div>
+                            </div>
+
+                            <div className="mt-6 p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[10px] font-black uppercase text-slate-400">Manutenção da Plataforma ({feePercentage * 100}%)</span>
+                                    <span className="text-[10px] font-black text-red-400">-{formatCurrency(platformFee)}</span>
+                                </div>
+                                <p className="text-[9px] text-slate-500 leading-tight font-medium italic">
+                                    Este valor é destinado ao custeio de infraestrutura, gateways de pagamento PIX e segurança da sua campanha.
+                                </p>
                             </div>
                         </div>
                     </div>

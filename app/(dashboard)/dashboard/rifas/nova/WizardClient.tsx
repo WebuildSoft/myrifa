@@ -211,7 +211,6 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
                                         onBack={() => setStep(2)}
                                     />
                                 )}
-
                                 {step === 4 && (
                                     <ReviewStep
                                         rifaId={rifaInfo.id}
@@ -223,6 +222,7 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
                                         drawDate={rifaInfo.drawDate}
                                         theme={rifaInfo.theme}
                                         loading={loading}
+                                        userPlan={userPlan}
                                         onPublish={handlePublish}
                                         onKeepDraft={() => router.push(`/dashboard/rifas/${rifaInfo.id}`)}
                                     />
@@ -237,6 +237,7 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
                         totalNumbers={rifaInfo.totalNumbers}
                         numberPrice={rifaInfo.numberPrice}
                         currentStep={step}
+                        userPlan={userPlan}
                     />
                 </div>
             </div>
