@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
+import Link from "next/link"
+import { AlertTriangle, ArrowRight } from "lucide-react"
 
 import { DashboardStats } from "@/components/dashboard/DashboardStats"
 import { DashboardCTA } from "@/components/dashboard/DashboardCTA"
@@ -14,7 +16,11 @@ export default async function DashboardPage() {
     const activeStatuses = ["DRAFT", "ACTIVE", "PAUSED", "CLOSED", "DRAWN", "CANCELLED"] as any[]
 
     // Fetch metrics with parallel queries for maximum speed
-    const [activeRifasCount, totalRaisedResult, ticketsSold, recentTransactions] = await Promise.all([
+    const [user, activeRifasCount, totalRaisedResult, ticketsSold, recentTransactions] = await Promise.all([
+        prisma.user.findUnique({
+            where: { id: userId },
+            select: { mercadoPagoAccessToken: true }
+        }),
         prisma.rifa.count({
             where: { userId, status: "ACTIVE" as any }
         }),
@@ -60,6 +66,29 @@ export default async function DashboardPage() {
                     Bem-vindo de volta, {session.user.name?.split(" ")[0]}! Aqui está o resumo das suas campanhas.
                 </p>
             </div>
+
+            {!user?.mercadoPagoAccessToken && (
+                <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                    <div className="flex gap-3 items-start">
+                        <div className="p-2 bg-amber-100 dark:bg-amber-900/40 rounded-lg shrink-0">
+                            <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-500" />
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-amber-800 dark:text-amber-500">Configuração Pendente!</h3>
+                            <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
+                                Você precisa configurar seu Token do Mercado Pago para conseguir receber os pagamentos das suas rifas via PIX automático.
+                            </p>
+                        </div>
+                    </div>
+                    <Link
+                        href="/conta"
+                        className="shrink-0 flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                    >
+                        Configurar agora
+                        <ArrowRight className="w-4 h-4" />
+                    </Link>
+                </div>
+            )}
 
             <DashboardStats
                 totalRaised={totalRaised}
