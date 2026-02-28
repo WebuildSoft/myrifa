@@ -76,6 +76,11 @@ export function Sidebar() {
                                     aria-hidden="true"
                                 />
                                 {item.name}
+                                {item.name === "Relatórios" && (
+                                    <span className="ml-auto text-[8px] font-black uppercase tracking-tighter bg-amber-500/10 text-amber-600 px-1.5 py-0.5 rounded-md border border-amber-500/20">
+                                        Breve
+                                    </span>
+                                )}
                             </Link>
                         )
                     })}
@@ -89,8 +94,11 @@ export function Sidebar() {
                         </div>
                         <p className="text-xs text-slate-500 mb-3 leading-relaxed">Precisa de ajuda com suas campanhas?</p>
                         <div className="space-y-2">
-                            <Button variant="outline" size="sm" className="w-full bg-white dark:bg-slate-800 border-primary/20 text-primary hover:bg-primary hover:text-white transition-all text-[11px] font-bold h-8">
+                            <Button variant="outline" size="sm" className="w-full bg-white dark:bg-slate-800 border-primary/20 text-primary/40 hover:bg-white cursor-not-allowed transition-all text-[11px] font-bold h-8 flex items-center justify-between px-3">
                                 Falar com Consultor
+                                <span className="text-[8px] font-black uppercase tracking-tighter bg-primary/10 text-primary px-1.5 py-0.5 rounded-md">
+                                    Breve
+                                </span>
                             </Button>
                             <FeedbackModal />
                         </div>

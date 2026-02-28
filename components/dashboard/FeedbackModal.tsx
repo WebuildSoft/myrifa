@@ -110,7 +110,7 @@ export function FeedbackModal() {
                                                     <SelectValue placeholder="Selecione o tipo..." />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="rounded-xl border-slate-200 dark:border-slate-800">
+                                            <SelectContent className="rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl">
                                                 <SelectItem value="SUGGESTION" className="flex items-center gap-2">
                                                     <div className="flex items-center gap-2">
                                                         <Sparkles className="h-4 w-4 text-amber-500" />

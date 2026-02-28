@@ -77,7 +77,7 @@ export default function RifaActionsClient({ rifa }: RifaActionsClientProps) {
                         <MoreVertical className="h-5 w-5 text-primary" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2">
+                <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 bg-white dark:bg-slate-900 border border-primary/10 shadow-xl">
                     <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
                         <Link href={`/r/${rifa.slug}`} target="_blank" className="flex items-center gap-2 py-2 w-full">
                             <ExternalLink className="h-4 w-4" /> Página Pública

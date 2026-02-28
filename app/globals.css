@@ -26,6 +26,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   
   /* Larger Radii for modern look */
   --radius-sm: 0.5rem;
