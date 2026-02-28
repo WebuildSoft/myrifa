@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { RifaStatus, TransactionStatus } from "@prisma/client"
 import { Ticket, ChevronDown, ChevronUp, Copy, CheckCircle2, Clock, AlertCircle, TicketCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -17,9 +16,9 @@ export function OrderCard({ transaction }: OrderCardProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const { rifa, numbers, status, createdAt, amount, id } = transaction
 
-    const isPaid = status === TransactionStatus.PAID
-    const isPending = status === TransactionStatus.PENDING
-    const isFinished = rifa.status === RifaStatus.DRAWN || rifa.status === RifaStatus.CLOSED
+    const isPaid = status === "PAID"
+    const isPending = status === "PENDING"
+    const isFinished = rifa.status === "DRAWN" || rifa.status === "CLOSED"
 
     const copyNumbers = () => {
         const nums = numbers.map((n: any) => n.number.toString().padStart(6, '0')).join(', ')

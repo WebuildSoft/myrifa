@@ -65,7 +65,7 @@ export async function searchBuyerOrders(query: string) {
         // Clean up the response to map numbers correctly to the transaction
         const formattedTransactions = transactions.map(tx => ({
             id: tx.id,
-            amount: tx.amount,
+            amount: Number(tx.amount),
             status: tx.status,
             createdAt: tx.createdAt,
             rifa: tx.rifa,
