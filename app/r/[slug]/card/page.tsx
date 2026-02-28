@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { notFound } from "next/navigation"
-import { Trophy, QrCode as QrIcon } from "lucide-react"
+import { Trophy, Ticket } from "lucide-react"
 import Image from "next/image"
 
 export default async function StoryCardPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -17,7 +17,7 @@ export default async function StoryCardPage({ params }: { params: Promise<{ slug
     if (!rifa || rifa.isPrivate) notFound()
 
     const progress = Math.round((rifa._count.numbers / rifa.totalNumbers) * 100)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || ''
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     const url = `${appUrl}/r/${rifa.slug}`
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`
 
@@ -33,11 +33,20 @@ export default async function StoryCardPage({ params }: { params: Promise<{ slug
                 <div className="relative z-10 flex-1 flex flex-col p-8 pt-16">
 
                     <div className="flex flex-col items-center gap-4 mb-8">
-                        <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-xl">
-                            <Trophy className="w-10 h-10 text-yellow-400" />
+                        <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-xl overflow-hidden relative">
+                            {rifa.images && rifa.images.length > 0 ? (
+                                <Image
+                                    src={rifa.images[0]}
+                                    alt={rifa.title}
+                                    fill
+                                    className="object-cover"
+                                />
+                            ) : (
+                                <Trophy className="w-10 h-10 text-yellow-400" />
+                            )}
                         </div>
                         <div className="text-center">
-                            <p className="text-violet-300 font-bold tracking-[0.2em] text-xs uppercase mb-1">Grande Oportunidade</p>
+                            <p className="text-violet-300 font-bold tracking-[0.2em] text-xs uppercase mb-1">Campanha Oficial</p>
                             <h1 className="text-white text-3xl font-black leading-tight uppercase tracking-tighter">
                                 {rifa.title}
                             </h1>
@@ -79,12 +88,18 @@ export default async function StoryCardPage({ params }: { params: Promise<{ slug
                         </div>
 
                         <div className="text-center">
-                            <p className="text-white font-bold text-sm mb-1 uppercase tracking-tighter">Aponte a câmera para participar</p>
+                            <p className="text-white font-bold text-sm mb-1 uppercase tracking-tighter">Acesse o link nesta postagem e participe!</p>
                             <p className="text-violet-300 text-[10px] font-medium break-all">{url.replace('https://', '')}</p>
                         </div>
                     </div>
 
-                    <div className="mt-auto pb-8 text-center">
+                    <div className="mt-auto pb-8 flex flex-col items-center gap-4 text-center">
+                        <div className="flex items-center gap-1.5 opacity-50">
+                            <div className="bg-white/10 p-1 rounded-md">
+                                <Ticket className="w-4 h-4 text-white" />
+                            </div>
+                            <span className="text-white font-black tracking-widest text-xs uppercase">MyRifa</span>
+                        </div>
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/5">
                             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                             <span className="text-white text-[10px] font-bold tracking-widest uppercase">Sistema 100% Seguro</span>

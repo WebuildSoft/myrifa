@@ -3,8 +3,8 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { revalidatePath } from "next/cache"
-import crypto from "crypto"
 import { sendWhatsAppMessage, templates } from "@/lib/evolution"
+import { DrawService } from "@/services/draw"
 
 export async function drawRifaAction(rifaId: string, prizeId: string) {
     const session = await auth()
@@ -17,9 +17,6 @@ export async function drawRifaAction(rifaId: string, prizeId: string) {
                 numbers: {
                     where: { status: "PAID" },
                     include: { buyer: true }
-                },
-                _count: {
-                    select: { numbers: { where: { status: "PAID" } } }
                 },
                 prizes: true
             }
@@ -34,68 +31,57 @@ export async function drawRifaAction(rifaId: string, prizeId: string) {
         if (!prize) return { error: "Prêmio não encontrado" }
         if (prize.winnerId) return { error: "A premiação deste prêmio já foi realizada!" }
 
-        // Check if it reached min percentage (Make it optional for manual draw)
-        // const progress = Math.round((rifa._count.numbers / rifa.totalNumbers) * 100)
-        // if (progress < rifa.minPercentToRaffle) {
-        //     return { error: `A campanha não atingiu a meta mínima de ${rifa.minPercentToRaffle}% para ser finalizada.` }
-        // }
+        const eligibleTickets = rifa.numbers.map(n => ({
+            number: n.number,
+            buyerId: n.buyerId as string,
+            buyer: n.buyer
+        }))
 
-        if (rifa.numbers.length === 0) {
-            return { error: "Não há apoios registrados para realizar a premiação." }
+        const drawResult = DrawService.selectWinner(eligibleTickets)
+
+        // Log attempt for auditability
+        await DrawService.logDrawAttempt(rifaId, prizeId, drawResult)
+
+        if (!drawResult.success || !drawResult.winningTicket) {
+            return { error: drawResult.error || "Falha ao selecionar vencedor" }
         }
 
-        // Evitar que o mesmo número ganhe mais de um prêmio na mesma campanha (opcional)
-        // Por enquanto vamos permitir, mas podemos filtrar futuramente se o usuário pedir.
-        // Se quisermos evitar ganhadores repetidos:
-        // const alreadyWinningNumbers = rifa.prizes.map(p => p.winnerNumber).filter(n => n !== null) as number[]
-        // const availableTickets = rifa.numbers.filter(t => !alreadyWinningNumbers.includes(t.number))
+        const winner = drawResult.winningTicket
 
-        const availableTickets = rifa.numbers
+        // Update Prize and Rifa Status in DB
+        await prisma.$transaction(async (tx) => {
+            await tx.prize.update({
+                where: { id: prizeId },
+                data: {
+                    winnerId: winner.buyerId,
+                    winnerNumber: winner.number,
+                    drawnAt: new Date()
+                }
+            })
 
-        if (availableTickets.length === 0) {
-            return { error: "Não há mais bilhetes disponíveis para premiação." }
-        }
+            const remainingPrizes = await tx.prize.count({
+                where: { rifaId, winnerId: null }
+            })
 
-        // Algoritmo de premiação criptográfica segura
-        const maxIndex = availableTickets.length - 1
-        const randomBuffer = crypto.randomBytes(4)
-        const randomNumber = randomBuffer.readUInt32LE(0)
-        const winningIndex = randomNumber % (maxIndex + 1)
-
-        const winningTicket = availableTickets[winningIndex]
-
-        // Update Prize with winner
-        await prisma.prize.update({
-            where: { id: prizeId },
-            data: {
-                winnerId: winningTicket.buyerId,
-                winnerNumber: winningTicket.number,
-                drawnAt: new Date()
+            if (remainingPrizes === 0) {
+                await tx.rifa.update({
+                    where: { id: rifaId },
+                    data: { status: "DRAWN" }
+                })
             }
         })
 
-        // Se todos os prêmios foram sorteados, podemos marcar a rifa como DRAWN
-        const remainingPrizes = await prisma.prize.count({
-            where: { rifaId, winnerId: null }
-        })
-
-        if (remainingPrizes === 0) {
-            await prisma.rifa.update({
-                where: { id: rifaId },
-                data: { status: "DRAWN" }
-            })
-        }
-
-        // Send WhatsApp notification to winner
-        if (winningTicket.buyer?.whatsapp) {
+        // Notify Winner via WhatsApp
+        if (winner.buyer?.whatsapp) {
             const message = templates.winner(
-                winningTicket.buyer.name,
+                winner.buyer.name,
                 rifa.title,
-                winningTicket.number
+                winner.number
             )
-            await sendWhatsAppMessage(winningTicket.buyer.whatsapp, message)
+            await sendWhatsAppMessage(winner.buyer.whatsapp, message)
         }
 
+        // Revalidate Cache
         revalidatePath(`/dashboard/rifas/${rifaId}`)
         revalidatePath(`/r/${rifa.slug}`)
         revalidatePath(`/sorteio/${rifaId}`)
@@ -103,8 +89,8 @@ export async function drawRifaAction(rifaId: string, prizeId: string) {
 
         return {
             success: true,
-            winnerNumber: winningTicket.number,
-            winnerName: winningTicket.buyer?.name
+            winnerNumber: winner.number,
+            winnerName: winner.buyer?.name
         }
     } catch (error) {
         console.error("Draw error:", error)

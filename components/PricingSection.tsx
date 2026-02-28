@@ -67,6 +67,78 @@ const plans = [
     },
 ]
 
+function FeatureItem({ feature, highlight }: { feature: string, highlight?: boolean }) {
+    return (
+        <li className="flex items-start gap-3">
+            <div className={`mt-1 size-5 rounded-full flex items-center justify-center shrink-0 ${highlight ? "bg-primary/20 text-primary" : "bg-slate-50 dark:bg-slate-900 text-slate-400"
+                }`}>
+                <Check className="h-3 w-3" />
+            </div>
+            <span className="text-xs font-bold text-slate-600 dark:text-slate-300 leading-tight">{feature}</span>
+        </li>
+    )
+}
+
+function PricingCard({ plan }: { plan: typeof plans[0] }) {
+    return (
+        <div
+            className={`relative group bg-white dark:bg-slate-800 rounded-[3rem] p-8 border transition-all duration-300 ${plan.highlight
+                ? "border-primary shadow-2xl shadow-primary/20 scale-105 z-10"
+                : "border-slate-100 dark:border-slate-700 hover:border-primary/30"
+                }`}
+        >
+            {plan.highlight && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-black px-6 py-2 rounded-full uppercase tracking-widest shadow-xl">
+                    Mais Popular
+                </div>
+            )}
+
+            <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                    <div className={`size-12 rounded-2xl flex items-center justify-center ${plan.highlight ? "bg-primary text-white shadow-lg shadow-primary/30" : "bg-slate-50 dark:bg-slate-900 text-slate-400"
+                        }`}>
+                        {plan.icon}
+                    </div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{plan.name}</span>
+                </div>
+
+                <div>
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white">{plan.name}</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 leading-relaxed min-h-[40px]">
+                        {plan.description}
+                    </p>
+                </div>
+
+                <div className="py-4 border-y border-slate-50 dark:border-slate-700">
+                    <div className="flex items-baseline gap-1">
+                        <span className="text-4xl font-black text-slate-900 dark:text-white">{plan.price}</span>
+                        {plan.period && <span className="text-slate-400 font-bold">{plan.period}</span>}
+                    </div>
+                </div>
+
+                <ul className="space-y-4 min-h-[220px]">
+                    {plan.features.map((feature) => (
+                        <FeatureItem key={feature} feature={feature} highlight={plan.highlight} />
+                    ))}
+                </ul>
+
+                <Button
+                    asChild
+                    className={`w-full h-14 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all active:scale-95 ${plan.highlight
+                        ? "bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/20"
+                        : "bg-slate-50 dark:bg-slate-900 hover:bg-primary/5 hover:text-primary text-slate-600 dark:text-slate-300 border-none"
+                        }`}
+                >
+                    <Link href={plan.href}>
+                        {plan.buttonText}
+                        {plan.highlight && <ArrowRight className="ml-2 h-4 w-4" />}
+                    </Link>
+                </Button>
+            </div>
+        </div>
+    )
+}
+
 interface PricingSectionProps {
     title?: string
     subtitle?: string
@@ -98,68 +170,7 @@ export function PricingSection({
 
                 <div className="grid gap-8 md:grid-cols-3">
                     {plans.map((plan) => (
-                        <div
-                            key={plan.name}
-                            className={`relative group bg-white dark:bg-slate-800 rounded-[3rem] p-8 border transition-all duration-300 ${plan.highlight
-                                ? "border-primary shadow-2xl shadow-primary/20 scale-105 z-10"
-                                : "border-slate-100 dark:border-slate-700 hover:border-primary/30"
-                                }`}
-                        >
-                            {plan.highlight && (
-                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-black px-6 py-2 rounded-full uppercase tracking-widest shadow-xl">
-                                    Mais Popular
-                                </div>
-                            )}
-
-                            <div className="space-y-6">
-                                <div className="flex items-center justify-between">
-                                    <div className={`size-12 rounded-2xl flex items-center justify-center ${plan.highlight ? "bg-primary text-white shadow-lg shadow-primary/30" : "bg-slate-50 dark:bg-slate-900 text-slate-400"
-                                        }`}>
-                                        {plan.icon}
-                                    </div>
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{plan.name}</span>
-                                </div>
-
-                                <div>
-                                    <h3 className="text-2xl font-black text-slate-900 dark:text-white">{plan.name}</h3>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 leading-relaxed min-h-[40px]">
-                                        {plan.description}
-                                    </p>
-                                </div>
-
-                                <div className="py-4 border-y border-slate-50 dark:border-slate-700">
-                                    <div className="flex items-baseline gap-1">
-                                        <span className="text-4xl font-black text-slate-900 dark:text-white">{plan.price}</span>
-                                        {plan.period && <span className="text-slate-400 font-bold">{plan.period}</span>}
-                                    </div>
-                                </div>
-
-                                <ul className="space-y-4 min-h-[220px]">
-                                    {plan.features.map((feature) => (
-                                        <li key={feature} className="flex items-start gap-3">
-                                            <div className={`mt-1 size-5 rounded-full flex items-center justify-center shrink-0 ${plan.highlight ? "bg-primary/20 text-primary" : "bg-slate-50 dark:bg-slate-900 text-slate-400"
-                                                }`}>
-                                                <Check className="h-3 w-3" />
-                                            </div>
-                                            <span className="text-xs font-bold text-slate-600 dark:text-slate-300 leading-tight">{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-
-                                <Button
-                                    asChild
-                                    className={`w-full h-14 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all active:scale-95 ${plan.highlight
-                                        ? "bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/20"
-                                        : "bg-slate-50 dark:bg-slate-900 hover:bg-primary/5 hover:text-primary text-slate-600 dark:text-slate-300 border-none"
-                                        }`}
-                                >
-                                    <Link href={plan.href}>
-                                        {plan.buttonText}
-                                        {plan.highlight && <ArrowRight className="ml-2 h-4 w-4" />}
-                                    </Link>
-                                </Button>
-                            </div>
-                        </div>
+                        <PricingCard key={plan.name} plan={plan} />
                     ))}
                 </div>
             </div>

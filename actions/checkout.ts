@@ -1,9 +1,9 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { MercadoPagoConfig, Payment } from "mercadopago"
 import { z } from "zod"
-import { sendWhatsAppMessage, templates } from "@/lib/evolution"
+import { PaymentService } from "@/services/payment"
+import { NotificationService } from "@/services/notification"
 
 const checkoutSchema = z.object({
     rifaId: z.string(),
@@ -22,7 +22,7 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
             where: { id: validated.rifaId }
         })
 
-        if (!rifa) throw new Error("Rifa not found")
+        if (!rifa) throw new Error("Campanha não encontrada")
         if (rifa.status === ("DELETED" as any)) throw new Error("Esta rifa não está mais disponível.")
 
         // 1. Transaction to reserve numbers and create buyer
@@ -68,9 +68,9 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 }
             })
 
-            // Create Transaction
+            // Create Transaction record
             const amount = Number(rifa.numberPrice) * validated.numbers.length
-            const transaction = await tx.transaction.create({
+            const transactionRecord = await tx.transaction.create({
                 data: {
                     amount,
                     status: "PENDING",
@@ -82,54 +82,42 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 }
             })
 
-            return { transaction, buyer, amount }
+            return { transactionRecord, buyer, amount }
         })
 
-        // 2. Generate Payment via MercadoPago
+        // 2. Generate Payment via PaymentService
         if (validated.paymentMethod === "PIX") {
-            const client = new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || '' })
-            const payment = new Payment(client)
-
-            const mpResponse = await payment.create({
-                body: {
-                    transaction_amount: checkoutResult.amount,
-                    description: `Compra Rifa ${rifa.title} - ${validated.numbers.length} números`,
-                    payment_method_id: 'pix',
-                    payer: {
-                        email: checkoutResult.buyer.email || "contato@rifa.com.br", // MP requires email sometimes
-                        first_name: checkoutResult.buyer.name.split(" ")[0],
-                        last_name: checkoutResult.buyer.name.split(" ").slice(1).join(" ") || "Silva",
-                        identification: { type: 'CPF', number: '19119119100' } // Placeholder for MP sandbox
-                    },
-                    external_reference: checkoutResult.transaction.id
-                }
+            const paymentResult = await PaymentService.createPixPayment({
+                amount: checkoutResult.amount,
+                description: `Compra Rifa ${rifa.title} - ${validated.numbers.length} números`,
+                externalReference: checkoutResult.transactionRecord.id,
+                buyer: checkoutResult.buyer
             })
 
-            // Update transaction with MP ID
+            // Update transaction with External ID
             await prisma.transaction.update({
-                where: { id: checkoutResult.transaction.id },
-                data: { externalId: mpResponse.id?.toString() }
+                where: { id: checkoutResult.transactionRecord.id },
+                data: { externalId: paymentResult.id }
             })
 
-            // 3. Send WhatsApp notification
+            // 3. Send WhatsApp notification via NotificationService
             const appUrl = process.env.NEXT_PUBLIC_APP_URL || ''
-            const checkoutUrl = `${appUrl}/r/${rifa.slug}/checkout/${checkoutResult.transaction.id}`
+            const checkoutUrl = `${appUrl}/r/${rifa.slug}/checkout/${checkoutResult.transactionRecord.id}`
 
-            const message = templates.newReservation(
-                validated.name,
-                rifa.title,
-                validated.numbers,
-                new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(checkoutResult.amount),
+            await NotificationService.sendReservationConfirm({
+                whatsapp: validated.whatsapp,
+                buyerName: validated.name,
+                rifaTitle: rifa.title,
+                numbers: validated.numbers,
+                amount: checkoutResult.amount,
                 checkoutUrl
-            )
-
-            await sendWhatsAppMessage(validated.whatsapp, message)
+            })
 
             return {
                 success: true,
-                qrCode: mpResponse.point_of_interaction?.transaction_data?.qr_code_base64,
-                qrCodeCopy: mpResponse.point_of_interaction?.transaction_data?.qr_code,
-                transactionId: checkoutResult.transaction.id
+                qrCode: paymentResult.qrCode,
+                qrCodeCopy: paymentResult.qrCodeCopy,
+                transactionId: checkoutResult.transactionRecord.id
             }
         }
 

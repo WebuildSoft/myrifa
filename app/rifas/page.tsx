@@ -1,9 +1,8 @@
 import { prisma } from "@/lib/prisma"
-import Link from "next/link"
+import { Ticket, Zap, Trophy, ShieldCheck, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Ticket, Search, Filter, ArrowRight, Zap, Trophy, ShieldCheck } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { RifaSearchNav } from "@/components/rifas/RifaSearchNav"
+import { RifaPublicCard } from "@/components/rifas/RifaPublicCard"
 
 export default async function PublicRifasPage() {
     const rifas = await prisma.rifa.findMany({
@@ -19,52 +18,9 @@ export default async function PublicRifasPage() {
         }
     })
 
-    const categoryLabels: Record<string, string> = {
-        SORTEIO: "Sorteio",
-        ARRECADACAO: "Solidária",
-        VIAGEM: "Viagem",
-        MISSAO: "Missão",
-        SAUDE: "Saúde",
-        ESPORTE: "Esporte",
-        OUTRO: "Outro",
-    }
-
     return (
         <div className="min-h-screen bg-[#fcfcfd] dark:bg-[#0f0a19] text-slate-900 dark:text-slate-100 font-sans">
-            {/* Header / Nav */}
-            <nav className="fixed top-0 w-full z-50 bg-white/70 dark:bg-[#0f0a19]/70 backdrop-blur-xl border-b border-primary/5 px-6 md:px-12 py-4">
-                <div className="max-w-7xl mx-auto flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2 group">
-                        <div className="size-10 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:rotate-6 transition-transform">
-                            <Ticket className="h-6 w-6" />
-                        </div>
-                        <span className="text-xl font-black tracking-tighter uppercase italic">
-                            My<span className="text-primary">Rifa</span>
-                        </span>
-                    </Link>
-
-                    <div className="hidden md:flex items-center gap-4 bg-slate-50 dark:bg-slate-900 px-4 py-2 rounded-2xl border border-primary/5">
-                        <Search className="h-4 w-4 text-slate-400" />
-                        <input
-                            placeholder="Buscar sorteios..."
-                            className="bg-transparent border-none outline-none text-sm font-medium w-64 placeholder:text-slate-400"
-                        />
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        <Link href="/minhas-cotas" className="hidden sm:block">
-                            <Button variant="ghost" className="text-[11px] font-black uppercase tracking-widest rounded-full">
-                                Minhas Cotas
-                            </Button>
-                        </Link>
-                        <Link href="/login">
-                            <Button className="bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/20 px-6 rounded-full text-[11px] font-black uppercase tracking-widest active:scale-95 transition-all">
-                                Criar Rifa
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
-            </nav>
+            <RifaSearchNav />
 
             <main className="pt-32 pb-20 px-6">
                 <div className="max-w-7xl mx-auto space-y-12">
@@ -99,62 +55,9 @@ export default async function PublicRifasPage() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {rifas.map((rifa) => {
-                                const progress = Math.round((rifa._count.numbers / rifa.totalNumbers) * 100)
-                                const formattedPrice = new Intl.NumberFormat("pt-BR", {
-                                    style: "currency",
-                                    currency: "BRL"
-                                }).format(Number(rifa.numberPrice))
-
-                                return (
-                                    <Link key={rifa.id} href={`/r/${rifa.slug}`} className="group block">
-                                        <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-primary/5 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 group-hover:-translate-y-2">
-                                            <div className="h-64 overflow-hidden relative">
-                                                <div className="absolute top-6 left-6 z-10">
-                                                    <Badge className="bg-white shadow-xl text-primary text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full border-none">
-                                                        {categoryLabels[rifa.category] ?? rifa.category}
-                                                    </Badge>
-                                                </div>
-                                                <img
-                                                    src={rifa.coverImage || "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=800&auto=format&fit=crop"}
-                                                    alt={rifa.title}
-                                                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                                />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                                                <div className="absolute bottom-6 right-6 font-black text-white text-2xl drop-shadow-lg">
-                                                    {formattedPrice}
-                                                </div>
-                                            </div>
-
-                                            <div className="p-8 space-y-6">
-                                                <div className="space-y-3">
-                                                    <h3 className="text-xl font-black line-clamp-2 leading-tight dark:text-white group-hover:text-primary transition-colors">
-                                                        {rifa.title}
-                                                    </h3>
-                                                    <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                                        <div
-                                                            className="h-full bg-primary rounded-full transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(124,59,237,0.4)]"
-                                                            style={{ width: `${progress}%` }}
-                                                        ></div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex justify-between items-center pt-6 border-t border-slate-50 dark:border-slate-800">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="size-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                                                            <Trophy className="h-4 w-4" />
-                                                        </div>
-                                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Garantido</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-2 text-primary font-black text-[11px] uppercase tracking-widest">
-                                                        Participar <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                )
-                            })}
+                            {rifas.map((rifa) => (
+                                <RifaPublicCard key={rifa.id} rifa={rifa as any} />
+                            ))}
                         </div>
                     )}
 

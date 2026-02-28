@@ -71,7 +71,7 @@ model Rifa {
   isPrivate          Boolean       @default(false)
   coverImage         String?
   images             String[]
-  balloonShape       BalloonShape  @default(CIRCLE)
+  balloonShape       BalloonShape  @default(ROUNDED)
   primaryColor       String?
   winnerId           String?
   winnerNumber       Int?
@@ -85,6 +85,7 @@ model Rifa {
   numbers            RifaNumber[]
   transactions       Transaction[]
   prizes             Prize[]
+  theme              RifaTheme     @default(DEFAULT)
 
   @@index([userId])
   @@index([status])
@@ -218,6 +219,8 @@ enum TransactionStatus {
 }
 
 enum BalloonShape {
+  SQUARE
+  ROUNDED
   CIRCLE
   HEART
   STAR
@@ -225,4 +228,15 @@ enum BalloonShape {
   DIAMOND
   SHIELD
   FLOWER
+}
+
+enum RifaTheme {
+  DEFAULT
+  OCEAN
+  SUNSET
+  MIDNIGHT
+  ROYAL
+  NEON
+  GALAXY
+  LUXURY
 }

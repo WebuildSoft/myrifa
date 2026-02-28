@@ -20,11 +20,14 @@ export default async function PublicResultPage({ params }: { params: Promise<{ s
         notFound()
     }
 
-    const anonymizeName = (name: string | null) => {
+    const anonymizeName = (name: string | null | undefined) => {
         if (!name) return "Vencedor"
         const parts = name.split(" ")
         return parts[0] + (parts.length > 1 ? ` ${parts[parts.length - 1].charAt(0)}.` : "")
     }
+
+    const firstPrizeWinner = rifa.prizes?.[0]?.winner?.name
+    const winnerName = anonymizeName(firstPrizeWinner)
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
