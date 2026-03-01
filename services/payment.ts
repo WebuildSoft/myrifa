@@ -70,10 +70,10 @@ export class PaymentService {
         const lastName = lastNameParts.join(" ") || "Silva"
 
         const headersList = await headers()
-        const host = headersList.get("host") || process.env.NEXTAUTH_URL?.replace("https://", "") || "myrifa.com.br"
         const protocol = "https"
-
-        const notificationUrl = `${protocol}://${host}/api/webhooks/mercadopago?rifaId=${rifaId}`
+        const host = headersList.get("host") || "myrifa.com.br"
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${protocol}://${host}`
+        const notificationUrl = `${baseUrl}/api/webhooks/mercadopago?rifaId=${rifaId}`
 
         const response = await payment.create({
             body: {

@@ -23,55 +23,17 @@ export async function POST(request: Request) {
         const topic = url.searchParams.get("topic") || url.searchParams.get("type") || body?.type || body?.topic
         const rifaId = url.searchParams.get("rifaId")
 
-        // 1. Validação de Assinatura (V01)
-        // Nota: Em um modelo multi-tenant onde cada cliente tem seu token, a validação de assinatura
-        // via Webhook Secret global é opcional. A segurança principal é garantida pelo "Double Check" (API Get) abaixo.
-        if (process.env.MERCADOPAGO_WEBHOOK_SECRET && signature && requestId) {
-            const parts = signature.split(',')
-            let ts = ''
-            let v1 = ''
-            parts.forEach(p => {
-                const [key, value] = p.trim().split('=')
-                if (key === 'ts') ts = value
-                if (key === 'v1') v1 = value
-            })
+        // 2. Processing
+        console.log(`Processing webhook - Topic: ${topic}, RifaId: ${rifaId}, ID: ${id}`)
 
-            const manifest = `id:${id};request-id:${requestId};ts:${ts};`
-            const hmac = crypto.createHmac('sha256', process.env.MERCADOPAGO_WEBHOOK_SECRET)
-            hmac.update(manifest)
-            const digest = hmac.digest('hex')
-
-            if (digest !== v1) {
-                console.error("V01: Invalid Mercado Pago Signature")
-                return Response.json({ error: "Invalid signature" }, { status: 401 })
-            }
-        }
-
-        // 2. Idempotência (L02)
-        const eventId = `mp_${id}_${topic}`
-        const existingEvent = await (prisma as any).webhookEvent.findUnique({
-            where: { id: eventId }
-        })
-
-        if (existingEvent) {
-            return Response.json({ success: true, message: "Already processed" })
-        }
-
-        console.log(`Processing webhook - Topic: ${topic}, RifaId: ${rifaId}`)
-
-        if (topic === "payment") {
+        if (topic === "payment" || topic === "merchant_order") {
             if (!id) {
-                return Response.json({ error: "Missing payment ID" }, { status: 400 })
+                return Response.json({ error: "Missing ID" }, { status: 400 })
             }
 
             if (!rifaId) {
                 return Response.json({ error: "Missing rifaId for multi-tenant routing" }, { status: 400 })
             }
-
-            // Registrar evento para evitar processamento duplo
-            await (prisma as any).webhookEvent.create({
-                data: { id: eventId, provider: 'MERCADO_PAGO', type: topic }
-            })
 
             // Find the Rifa owner's Mercado Pago Token
             const rifa = await prisma.rifa.findUnique({
@@ -92,6 +54,24 @@ export async function POST(request: Request) {
 
             const externalReference = paymentInfo.external_reference // This should be our Transaction ID
             const status = paymentInfo.status
+
+            console.log(`Payment check - ID: ${id}, Status: ${status}, Ref: ${externalReference}`)
+
+            // 2. Idempotência com base no Status (L02)
+            const eventId = `mp_${id}_${status}`
+            const existingEvent = await (prisma as any).webhookEvent.findUnique({
+                where: { id: eventId }
+            })
+
+            if (existingEvent) {
+                console.log(`Event ${eventId} already processed or status unchanged. Skipping.`)
+                return Response.json({ success: true, message: "Already processed" })
+            }
+
+            // Registrar evento para evitar processamento duplo do mesmo status
+            await (prisma as any).webhookEvent.create({
+                data: { id: eventId, provider: 'MERCADO_PAGO', type: topic }
+            })
 
             if (externalReference && status === "approved") {
                 // Find transaction
