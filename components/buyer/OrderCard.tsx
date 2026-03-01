@@ -88,7 +88,7 @@ export function OrderCard({ transaction }: OrderCardProps) {
                     {isPending && !isFinished && (
                         <div className="flex gap-3">
                             <Button asChild className="w-full bg-primary hover:bg-primary/90 text-white font-bold rounded-xl h-12 shadow-sm">
-                                <Link href={`/checkout/${transaction.id}`}>
+                                <Link href={`/checkout/pedido/${transaction.id}`}>
                                     Pagar Agora
                                 </Link>
                             </Button>

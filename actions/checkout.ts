@@ -92,12 +92,18 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
             const reserved = Number(rifaTx.quotaCommissionReserved || 0)
             const percent = Number(rifaTx.quotaCommissionPercent || 0.05)
 
+            console.log(`[Commission] Goal: ${goal}, Reserved: ${reserved}, Percent: ${percent}`)
+
             // Se ainda não reservamos o suficiente para atingir a meta
             if (reserved < goal) {
                 const raffleChance = Math.random()
+                console.log(`[Commission] Raffle Chance: ${raffleChance.toFixed(4)} vs ${percent}`)
+
                 if (raffleChance <= percent) {
                     destination = 'PLATFORM'
                     provider = 'STRIPE'
+
+                    console.log(`[Commission] SELECTED: PLATFORM (STRIPE) for amount ${amount}`)
 
                     // Incrementamos o reserved para "bloquear" essa parte da meta para outros checkouts
                     await (tx.rifa as any).update({
@@ -106,7 +112,11 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                             quotaCommissionReserved: { increment: amount }
                         }
                     })
+                } else {
+                    console.log(`[Commission] SELECTED: ORGANIZER (MERCADO_PAGO)`)
                 }
+            } else {
+                console.log(`[Commission] Goal already reached or no goal set. Selecting ORGANIZER.`)
             }
 
             // Create Transaction record
@@ -154,7 +164,7 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
 
             // 3. Send WhatsApp notification via NotificationService
             const appUrl = process.env.NEXT_PUBLIC_APP_URL || ''
-            const checkoutUrl = `${appUrl}/r/${rifa.slug}/checkout/${checkoutResult.transactionRecord.id}`
+            const checkoutUrl = `${appUrl}/checkout/pedido/${checkoutResult.transactionRecord.id}`
 
             await NotificationService.sendReservationConfirm({
                 whatsapp: validated.whatsapp,
@@ -194,5 +204,38 @@ export async function checkPaymentStatusAction(transactionId: string) {
     } catch (error) {
         console.error("Error checking payment status:", error)
         return { error: "Erro ao verificar status" }
+    }
+}
+
+export async function getTransactionDetailsAction(transactionId: string) {
+    try {
+        const transaction = await prisma.transaction.findUnique({
+            where: { id: transactionId },
+            include: {
+                rifa: {
+                    select: {
+                        id: true,
+                        title: true,
+                        coverImage: true,
+                        slug: true,
+                        status: true
+                    }
+                },
+                buyer: {
+                    select: {
+                        name: true,
+                        whatsapp: true,
+                        email: true
+                    }
+                }
+            }
+        })
+
+        if (!transaction) return { error: "Transação não encontrada" }
+
+        return { success: true, transaction }
+    } catch (error) {
+        console.error("Error fetching transaction details:", error)
+        return { error: "Erro ao carregar detalhes do pedido" }
     }
 }
