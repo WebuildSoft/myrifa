@@ -72,8 +72,21 @@ export class PaymentService {
         const headersList = await headers()
         const protocol = "https"
         const host = headersList.get("host") || "myrifa.com.br"
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${protocol}://${host}`
-        const notificationUrl = `${baseUrl}/api/webhooks/mercadopago?rifaId=${rifaId}`
+
+        // Priority: Dynamic host from request (if not localhost), then env var
+        let baseUrl = `${protocol}://${host}`
+
+        if (host.includes('localhost') || host.includes('127.0.0.1')) {
+            if (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('localhost')) {
+                baseUrl = process.env.NEXT_PUBLIC_APP_URL
+            }
+        }
+
+        // Final check: Mercado Pago rejects localhost/127.0.0.1
+        const isLocal = baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')
+        const notificationUrl = isLocal
+            ? undefined
+            : `${baseUrl.replace(/\/$/, "")}/api/webhooks/mercadopago?rifaId=${rifaId}`
 
         const response = await payment.create({
             body: {
