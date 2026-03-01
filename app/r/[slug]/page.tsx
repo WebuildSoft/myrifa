@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import type { CSSProperties } from "react"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { NumberGrid } from "@/components/rifa/NumberGrid"
@@ -79,7 +80,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
     ]
 
     const paidNumbers = rifa._count.numbers
-    const progress = Math.round((paidNumbers / rifa.totalNumbers) * 100)
+    const progress = rifa.totalNumbers > 0 ? Math.round((paidNumbers / rifa.totalNumbers) * 100) : 0
 
     const formattedPrice = new Intl.NumberFormat("pt-BR", {
         style: "currency",
@@ -95,7 +96,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
             '--color-primary': rifa.primaryColor,
             '--ring': rifa.primaryColor
         } : {})
-    } as React.CSSProperties
+    } as CSSProperties
 
     return (
         <div className={cn(
@@ -152,7 +153,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                         <Ticket className={cn("w-5 h-5", themeConfig.primary)} />
                                         Escolha suas cotas
                                     </h2>
-                                    <button className={cn("text-slate-400 transition-colors hover:", themeConfig.primary)}>
+                                    <button className={cn("text-slate-400 transition-colors", themeConfig.primary.replace('text-', 'hover:text-'))}>
                                         <HelpCircle className="w-5 h-5" />
                                     </button>
                                 </div>

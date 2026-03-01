@@ -1,4 +1,6 @@
-export type RifaTheme = 'DEFAULT' | 'OCEAN' | 'SUNSET' | 'MIDNIGHT' | 'ROYAL' | 'NEON' | 'GALAXY' | 'LUXURY'
+import type { CSSProperties } from "react"
+
+export type RifaTheme = 'DEFAULT' | 'OCEAN' | 'SUNSET' | 'MIDNIGHT' | 'ROYAL' | 'NEON' | 'GALAXY' | 'LUXURY' | 'FLOWER'
 
 interface ThemeConfig {
     body: string
@@ -75,7 +77,7 @@ export const THEME_CONFIGS: Record<RifaTheme, ThemeConfig> = {
             '--primary': '#d97706',
             '--color-primary': '#d97706',
             '--ring': '#d97706'
-        } as React.CSSProperties,
+        } as CSSProperties,
         isPremium: true
     },
     NEON: {
@@ -89,7 +91,7 @@ export const THEME_CONFIGS: Record<RifaTheme, ThemeConfig> = {
             '--primary': '#00ff9f',
             '--color-primary': '#00ff9f',
             '--ring': '#00ff9f'
-        } as React.CSSProperties,
+        } as CSSProperties,
         isPremium: true
     },
     GALAXY: {
@@ -103,7 +105,7 @@ export const THEME_CONFIGS: Record<RifaTheme, ThemeConfig> = {
             '--primary': '#8b5cf6',
             '--color-primary': '#8b5cf6',
             '--ring': '#8b5cf6'
-        } as React.CSSProperties,
+        } as CSSProperties,
         isPremium: true
     },
     LUXURY: {
@@ -117,7 +119,21 @@ export const THEME_CONFIGS: Record<RifaTheme, ThemeConfig> = {
             '--primary': '#af9164',
             '--color-primary': '#af9164',
             '--ring': '#af9164'
-        } as React.CSSProperties,
+        } as CSSProperties,
+        isPremium: true
+    },
+    FLOWER: {
+        body: "bg-[#fffafa] dark:bg-[#1a0f0f]",
+        primary: "text-rose-400",
+        primaryHex: "#fb7185",
+        text: "text-slate-900 dark:text-rose-50",
+        accent: "bg-rose-400/10",
+        selection: "selection:bg-rose-400/20",
+        cssVars: {
+            '--primary': '#fb7185',
+            '--color-primary': '#fb7185',
+            '--ring': '#fb7185'
+        } as CSSProperties,
         isPremium: true
     }
 }
