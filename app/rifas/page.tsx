@@ -65,7 +65,7 @@ export default async function PublicRifasPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-12">
                         {[
                             { icon: ShieldCheck, title: "Plataforma Segura", desc: "Pagamentos processados com tecnologia de ponta." },
-                            { icon: Zap, title: "Sorteio Instatâneo", desc: "Resultados automáticos baseados na loteria federal." },
+                            { icon: Zap, title: "Sorteio Transparente", desc: "Resultados baseados em sorteios auditáveis e seguros." },
                             { icon: Trophy, title: "Prêmios Reais", desc: "Milhares de vidas transformadas todos os meses." }
                         ].map((item, i) => (
                             <div key={i} className="flex gap-4 p-6 rounded-3xl bg-white dark:bg-slate-800/30 border border-primary/5">
@@ -84,7 +84,7 @@ export default async function PublicRifasPage() {
 
             <footer className="py-12 border-t border-primary/5 text-center px-6">
                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    © 2024 MyRifa • Jogue com responsabilidade.
+                    © 2024 MyRifa • Apoie com responsabilidade.
                 </p>
             </footer>
         </div>

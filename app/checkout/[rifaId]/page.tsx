@@ -239,7 +239,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                     </div>
                     <p className="text-slate-400 text-sm max-w-md mx-auto leading-relaxed">
                         MyRifa Intermediações LTDA.<br />
-                        A sorte está a um clique de distância. Jogue com responsabilidade.
+                        Sua contribuição faz a diferença. Apoie com responsabilidade.
                     </p>
                 </div>
             </footer>

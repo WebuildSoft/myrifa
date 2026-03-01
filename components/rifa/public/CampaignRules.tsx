@@ -22,7 +22,7 @@ export function CampaignRules({ rules }: CampaignRulesProps) {
             ) : (
                 <ul className="grid gap-3">
                     {[
-                        { icon: CheckCircle2, text: "Resultado baseado no sorteio oficial da Loteria Federal.", color: "text-emerald-500" },
+                        { icon: CheckCircle2, text: "Resultado baseado em sorteio transparente e auditável.", color: "text-emerald-500" },
                         { icon: Shield, text: "Apoio 100% seguro e criptografado.", color: "text-blue-500" },
                         { icon: Clock, text: "Reserva de 30 minutos após a seleção.", color: "text-amber-500" },
                         { icon: Trophy, text: "Entrega garantida pela plataforma MyRifa.", color: "text-violet-500" }

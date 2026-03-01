@@ -69,8 +69,11 @@ export async function searchBuyerOrders(query: string) {
             status: tx.status,
             createdAt: tx.createdAt,
             rifa: tx.rifa,
-            // Only include numbers from the specific buyer registry related to this transaction
-            numbers: tx.buyer.numbers
+            // Return the numbers directly from the transaction record
+            numbers: tx.numbers.map(n => ({
+                number: n,
+                status: tx.status === 'PAID' ? 'PAID' : 'RESERVED'
+            }))
         }))
 
         return { success: true, transactions: formattedTransactions }

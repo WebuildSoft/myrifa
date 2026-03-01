@@ -43,7 +43,10 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
 
             // Create or find buyer
             let buyer = await tx.buyer.findFirst({
-                where: { whatsapp: validated.whatsapp }
+                where: {
+                    whatsapp: validated.whatsapp,
+                    rifaId: validated.rifaId
+                }
             })
 
             if (!buyer) {
