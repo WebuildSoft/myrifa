@@ -3,7 +3,7 @@ import { authConfig } from "./auth.config"
 
 const { auth } = NextAuth(authConfig)
 
-export default auth((req) => {
+export const proxy = auth((req) => {
     // auth callback is handled in authConfig.callbacks.authorized
 })
 
