@@ -88,26 +88,33 @@ export class PaymentService {
             ? undefined
             : `${baseUrl.replace(/\/$/, "")}/api/webhooks/mercadopago?rifaId=${rifaId}`
 
-        const response = await payment.create({
-            body: {
-                transaction_amount: amount,
-                description,
-                payment_method_id: 'pix',
-                payer: {
-                    email: buyer.email || "contato@rifa.com.br",
-                    first_name: firstName,
-                    last_name: lastName,
-                    identification: { type: 'CPF', number: '19119119100' }
-                },
-                external_reference: externalReference,
-                notification_url: notificationUrl
-            }
-        })
+        console.log(`Creating MP Payment: ${externalReference}, URL: ${notificationUrl || 'NONE'}`)
 
-        return {
-            id: response.id?.toString(),
-            qrCode: response.point_of_interaction?.transaction_data?.qr_code_base64,
-            qrCodeCopy: response.point_of_interaction?.transaction_data?.qr_code
+        try {
+            const response = await payment.create({
+                body: {
+                    transaction_amount: amount,
+                    description,
+                    payment_method_id: 'pix',
+                    payer: {
+                        email: buyer.email || "contato@rifa.com.br",
+                        first_name: firstName,
+                        last_name: lastName,
+                        identification: { type: 'CPF', number: '19119119100' }
+                    },
+                    external_reference: externalReference,
+                    ...(notificationUrl && { notification_url: notificationUrl })
+                }
+            })
+
+            return {
+                id: response.id?.toString(),
+                qrCode: response.point_of_interaction?.transaction_data?.qr_code_base64,
+                qrCodeCopy: response.point_of_interaction?.transaction_data?.qr_code
+            }
+        } catch (error: any) {
+            console.error("Mercado Pago Payment Error:", error)
+            throw new Error(`Erro API Mercado Pago: ${error.message || 'Erro desconhecido'}`)
         }
     }
 }
