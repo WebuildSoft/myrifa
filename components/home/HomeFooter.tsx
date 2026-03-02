@@ -10,7 +10,7 @@ export function HomeFooter() {
                         <div className="size-8 bg-primary rounded-lg flex items-center justify-center text-white shadow-md">
                             <Ticket className="h-5 w-5" />
                         </div>
-                        <span className="text-lg font-black tracking-tighter uppercase italic dark:text-white">
+                        <span className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
                             My<span className="text-primary">Rifa</span>
                         </span>
                     </Link>

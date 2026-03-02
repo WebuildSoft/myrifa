@@ -9,7 +9,7 @@ export function PublicFooter() {
             <div className="mx-auto max-w-[1400px] px-6 text-center">
                 <div className="flex items-center justify-center gap-3 mb-6 opacity-40">
                     <Ticket className="w-6 h-6 text-primary" />
-                    <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">MyRifa</h2>
+                    <span className="text-lg font-black tracking-tight text-slate-900 dark:text-white">My<span className="text-primary">Rifa</span></span>
                 </div>
                 <p className="text-sm text-slate-400 max-w-[600px] mx-auto mb-6 font-medium leading-relaxed">
                     Apoiar causas sociais e campanhas é uma forma de gerar impacto positivo. Contribuímos para a transparência e segurança em todas as etapas.

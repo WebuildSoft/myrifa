@@ -11,7 +11,7 @@ export function PublicHeader() {
                     <div className="text-primary transition-transform group-hover:scale-110">
                         <Ticket className="w-8 h-8 rotate-12" />
                     </div>
-                    <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-white">MyRifa</h2>
+                    <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white">My<span className="text-primary">Rifa</span></span>
                 </Link>
                 <nav className="hidden md:flex items-center gap-8">
                     <Link href="/campanhas" className="text-sm font-bold hover:text-primary transition-colors">Campanhas</Link>

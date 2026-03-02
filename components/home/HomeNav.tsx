@@ -20,10 +20,8 @@ export function HomeNav() {
         <nav className="fixed top-0 w-full z-50 bg-white/70 dark:bg-[#0f0a19]/70 backdrop-blur-xl border-b border-primary/5 px-6 md:px-12 py-4">
             <div className="max-w-7xl mx-auto flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2 group">
-                    <div className="size-10 bg-gradient-to-br from-primary to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:rotate-6 transition-transform">
-                        <Ticket className="text-white h-6 w-6 rotate-12" />
-                    </div>
-                    <span className="text-xl font-black tracking-tighter uppercase italic dark:text-white">
+                    <Ticket className="text-primary h-7 w-7 rotate-12 group-hover:scale-110 transition-transform" />
+                    <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
                         My<span className="text-primary">Rifa</span>
                     </span>
                 </Link>
