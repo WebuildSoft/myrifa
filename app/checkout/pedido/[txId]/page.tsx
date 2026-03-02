@@ -121,7 +121,7 @@ export default function OrderCheckoutPage({ params }: { params: Promise<{ txId: 
                                 {transaction.pixQrCode && (
                                     <div className="relative inline-block p-4 bg-white rounded-3xl border-4 border-slate-50 shadow-inner">
                                         <Image
-                                            src={`data:image/png;base64,${transaction.pixQrCode}`}
+                                            src={transaction.pixQrCode.startsWith('http') ? transaction.pixQrCode : `data:image/png;base64,${transaction.pixQrCode}`}
                                             alt="QR Code PIX"
                                             width={240}
                                             height={240}
@@ -135,7 +135,7 @@ export default function OrderCheckoutPage({ params }: { params: Promise<{ txId: 
                                         <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">PIX Copia e Cola</label>
                                         <div className="flex gap-2">
                                             <div className="flex-1 bg-slate-50 dark:bg-slate-800 px-4 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 font-mono text-sm break-all line-clamp-2 text-slate-600 dark:text-slate-300">
-                                                {transaction.pixQrCodeText}
+                                                {transaction.pixQrCodeText || "Gerando código..."}
                                             </div>
                                             <Button
                                                 onClick={handleCopyPix}

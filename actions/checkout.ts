@@ -164,7 +164,7 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 where: { id: checkoutResult.transactionRecord.id },
                 data: {
                     externalId: paymentResult.id,
-                    pixQrCode: provider === 'STRIPE' ? paymentResult.qrCode : undefined,
+                    pixQrCode: paymentResult.qrCode,
                     pixQrCodeText: paymentResult.qrCodeCopy
                 }
             })
