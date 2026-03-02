@@ -182,6 +182,8 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 checkoutUrl
             })
 
+            console.log(`[Checkout] Success! QR Code exists: ${!!paymentResult.qrCode}, Copy text exists: ${!!paymentResult.qrCodeCopy}`)
+
             return {
                 success: true,
                 qrCode: paymentResult.qrCode,

@@ -49,6 +49,8 @@ export class PaymentService {
             return_url: `${process.env.NEXT_PUBLIC_APP_URL}/r/success`
         });
 
+        console.log(`[Stripe Response] Status: ${confirmedIntent.status}, Next Action: ${confirmedIntent.next_action?.type}`)
+
         const nextAction = confirmedIntent.next_action?.pix_display_qr_code;
 
         return {
@@ -112,6 +114,11 @@ export class PaymentService {
                     ...(notificationUrl && { notification_url: notificationUrl })
                 }
             })
+
+            console.log(`[MP Response] Status: ${response.status}, ID: ${response.id}`)
+            if (!response.point_of_interaction?.transaction_data) {
+                console.log(`[MP Response] WARNING: Missing point_of_interaction.transaction_data. Full interaction:`, JSON.stringify(response.point_of_interaction))
+            }
 
             return {
                 id: response.id?.toString(),

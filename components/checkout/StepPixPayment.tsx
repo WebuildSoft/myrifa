@@ -24,7 +24,7 @@ export function StepPixPayment({ pixData, secondsLeft, minutesLeft, secsLeft, co
                     <div className="w-52 h-52 relative">
                         {pixData.qrCode ? (
                             <Image
-                                src={`data:image/jpeg;base64,${pixData.qrCode}`}
+                                src={pixData.qrCode.startsWith('http') ? pixData.qrCode : `data:image/png;base64,${pixData.qrCode}`}
                                 alt="QR Code PIX"
                                 fill
                                 className="object-contain rounded-xl"
