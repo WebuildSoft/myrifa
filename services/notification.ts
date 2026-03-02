@@ -23,7 +23,7 @@ export class NotificationService {
             currency: "BRL"
         }).format(amount)
 
-        const message = templates.newReservation(
+        const message = await templates.newReservation(
             buyerName,
             rifaTitle,
             numbers,

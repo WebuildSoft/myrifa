@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Share2, Users, Edit, Gift, CheckCircle2 } from "lucide-react"
+import { Share2, Users, Edit, Gift, CheckCircle2, BarChart2 } from "lucide-react"
 import Link from "next/link"
 
 interface ActionGridProps {
@@ -29,8 +29,9 @@ export function ActionGrid({ rifaId, slug, status }: ActionGridProps) {
     return (
         <section>
             <h3 className="font-sans font-black text-slate-900 dark:text-white mb-6 px-1 uppercase tracking-widest text-[10px]">Gerenciamento de Fluxo</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <QuickActionButton icon={<Share2 />} label="Divulgar" color="text-blue-500" bg="bg-blue-50" darkBg="dark:bg-blue-900/20" href={`/r/${slug}`} external />
+                <QuickActionButton icon={<BarChart2 />} label="Analytics" color="text-emerald-500" bg="bg-emerald-50" darkBg="dark:bg-emerald-900/20" href={`/dashboard/rifas/${rifaId}/analytics`} />
                 <QuickActionButton icon={<Users />} label="Apoiadores" color="text-amber-500" bg="bg-amber-50" darkBg="dark:bg-amber-900/20" href={`/dashboard/rifas/${rifaId}/compradores`} />
                 <QuickActionButton icon={<Edit />} label="Editar Campanha" color="text-purple-500" bg="bg-purple-50" darkBg="dark:bg-purple-900/20" href={`/dashboard/rifas/${rifaId}/editar`} />
 

@@ -73,7 +73,7 @@ export async function drawRifaAction(rifaId: string, prizeId: string) {
 
         // Notify Winner via WhatsApp
         if (winner.buyer?.whatsapp) {
-            const message = templates.winner(
+            const message = await templates.winner(
                 winner.buyer.name,
                 rifa.title,
                 winner.number

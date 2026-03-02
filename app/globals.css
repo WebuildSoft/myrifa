@@ -9,11 +9,11 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
-  
+
   /* Stitch Colors */
   --color-primary: #7c3bed;
   --color-primary-foreground: #ffffff;
-  
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -29,7 +29,7 @@
 
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  
+
   /* Larger Radii for modern look */
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
@@ -59,7 +59,7 @@
   --input: #e2e8f0;
   --ring: #7c3bed;
   --radius: 1rem;
-  
+
   --sidebar: #ffffff;
   --sidebar-foreground: #171121;
   --sidebar-primary: #7c3bed;
@@ -89,7 +89,7 @@
   --border: rgba(255, 255, 255, 0.1);
   --input: rgba(255, 255, 255, 0.15);
   --ring: #7c3bed;
-  
+
   --sidebar: #1f1929;
   --sidebar-foreground: #f7f6f8;
   --sidebar-primary: #7c3bed;
@@ -98,12 +98,36 @@
   --sidebar-accent-foreground: #f7f6f8;
   --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-ring: #7c3bed;
+
+  /* Dashboard RGB Colors for Status Glows */
+  --indigo-rgb: 99, 102, 241;
+  --violet-rgb: 139, 92, 246;
+  --blue-rgb: 59, 130, 246;
+  --emerald-rgb: 16, 185, 129;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

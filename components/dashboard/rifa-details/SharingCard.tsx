@@ -8,7 +8,11 @@ interface SharingCardProps {
 }
 
 export function SharingCard({ slug }: SharingCardProps) {
-    const fullUrl = `https://rifa.com.br/r/${slug}`
+    // Short ?u= tracking params — imperceptible, 1-2 chars only
+    const base = `https://rifa.com.br/r/${slug}`
+    const u = (src: string) => `${base}?u=${src}`
+
+    const whatsappText = `🚀 Participe desta campanha incrível e garanta sua chance de ganhar!\n\n✅ 100% Seguro · ⚡ Sorteio Automático\n\n👉 Acesse agora: ${u("w")}`
 
     return (
         <DashboardCard title="Compartilhamento">
@@ -17,17 +21,36 @@ export function SharingCard({ slug }: SharingCardProps) {
                     <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Link da sua Campanha</p>
                     <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-primary/10 group overflow-hidden">
                         <span className="text-xs text-slate-500 flex-1 truncate font-mono">rifa.com.br/r/{slug}</span>
-                        <CopyLinkButton url={fullUrl} />
+                        <CopyLinkButton url={u("l")} />
                     </div>
                 </div>
 
                 <div className="flex gap-4">
-                    <Button className="flex-1 bg-[#25D366] hover:bg-[#20bd5a] text-white h-14 rounded-2xl font-black text-sm flex items-center gap-3 shadow-xl shadow-emerald-500/10 active:scale-95 transition-all">
-                        <Share2 className="h-4 w-4" />
-                        WhatsApp
+                    <Button
+                        className="flex-1 bg-[#25D366] hover:bg-[#20bd5a] text-white h-14 rounded-2xl font-black text-sm flex items-center gap-3 shadow-xl shadow-emerald-500/10 active:scale-95 transition-all"
+                        asChild
+                    >
+                        <a
+                            href={`https://wa.me/?text=${encodeURIComponent(whatsappText)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Share2 className="h-4 w-4" />
+                            WhatsApp
+                        </a>
                     </Button>
-                    <Button variant="outline" className="w-16 h-14 bg-white dark:bg-slate-900 border-primary/20 rounded-2xl flex items-center justify-center text-primary group active:scale-95 transition-all">
-                        <QrCode className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                    <Button
+                        variant="outline"
+                        className="w-16 h-14 bg-white dark:bg-slate-900 border-primary/20 rounded-2xl flex items-center justify-center text-primary group active:scale-95 transition-all"
+                        asChild
+                    >
+                        <a
+                            href={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(u("qr"))}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <QrCode className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                        </a>
                     </Button>
                 </div>
             </div>

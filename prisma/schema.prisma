@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,53 +7,81 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-        
 
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  email         String    @unique
-  emailVerified DateTime?
-  password      String?
-  image         String?
-  whatsapp      String?
-  pixKey        String?
-  plan          Plan      @default(FREE)
-  planExpiresAt DateTime?
+  id                     String         @id @default(cuid())
+  name                   String
+  email                  String         @unique
+  emailVerified          DateTime?
+  password               String?
+  image                  String?
+  whatsapp               String?
+  pixKey                 String?
+  plan                   Plan           @default(FREE)
+  planExpiresAt          DateTime?
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
   mercadoPagoAccessToken String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  rifas         Rifa[]
-  sessions      Session[]
-  notifications Notification[]
-  feedbacks     Feedback[]
+  role                   AdminRole      @default(USER)
+  totpSecret             String?
+  totpEnabled            Boolean        @default(false)
+  isBlocked              Boolean        @default(false)
+  lastActiveAt           DateTime?
+  accounts               Account[]
+  feedbacks              Feedback[]
+  notifications          Notification[]
+  rifas                  Rifa[]
+  sessions               Session[]
+  adminLogs              AdminLog[]
+  loginAttempts          LoginAttempt[]
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  VIEWER
+  USER
+}
+
+model AdminLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  resource  String?
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String
+  success   Boolean
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [email], references: [email])
+
+  @@index([email])
+  @@index([ip])
+  @@index([createdAt])
 }
 
 model Feedback {
-  id        String   @id @default(cuid())
+  id        String         @id @default(cuid())
   userId    String?
-  type      FeedbackType @default(SUGGESTION)
+  type      FeedbackType   @default(SUGGESTION)
   content   String
   status    FeedbackStatus @default(PENDING)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User?     @relation(fields: [userId], references: [id])
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  user      User?          @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([type])
-}
-
-enum FeedbackType {
-  ERROR
-  SUGGESTION
-  OTHER
-}
-
-enum FeedbackStatus {
-  PENDING
-  IN_PROGRESS
-  RESOLVED
 }
 
 model Account {
@@ -84,41 +111,42 @@ model Session {
 }
 
 model Rifa {
-  id                 String        @id @default(cuid())
-  slug               String        @unique
-  title              String
-  description        String?
-  rules              String?
-  category           Category      @default(SORTEIO)
-  status             RifaStatus    @default(DRAFT)
-  totalNumbers       Int
-  numberPrice        Decimal       @db.Decimal(10, 2)
-  minPercentToRaffle Int           @default(100)
-  maxPerBuyer        Int?
-  drawDate           DateTime?
-  drawMethod         DrawMethod    @default(MANUAL)
-  isPrivate          Boolean       @default(false)
-  coverImage         String?
-  images             String[]
-  balloonShape       BalloonShape  @default(ROUNDED)
-  primaryColor       String?
-  winnerId           String?
-  winnerNumber       Int?
-  drawnAt            DateTime?
-  totalRaised        Decimal       @default(0) @db.Decimal(10, 2)
-  userId             String
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
-  buyers             Buyer[]
-  user               User          @relation(fields: [userId], references: [id])
-  numbers            RifaNumber[]
-  transactions       Transaction[]
-  prizes             Prize[]
-  quotaCommissionPercent Float? // 0.05, 0.02, 0.01 etc
-  quotaCommissionGoal    Decimal? @db.Decimal(10, 2)
-  quotaCommissionPaid    Decimal? @default(0) @db.Decimal(10, 2)
-  quotaCommissionReserved Decimal? @default(0) @db.Decimal(10, 2) // Meta de reserva antecipada
-  theme              RifaTheme     @default(DEFAULT)
+  id                      String        @id @default(cuid())
+  slug                    String        @unique
+  title                   String
+  description             String?
+  category                Category      @default(SORTEIO)
+  status                  RifaStatus    @default(DRAFT)
+  totalNumbers            Int
+  numberPrice             Decimal       @db.Decimal(10, 2)
+  minPercentToRaffle      Int           @default(100)
+  maxPerBuyer             Int?
+  drawDate                DateTime?
+  drawMethod              DrawMethod    @default(MANUAL)
+  isPrivate               Boolean       @default(false)
+  coverImage              String?
+  images                  String[]
+  balloonShape            BalloonShape  @default(ROUNDED)
+  primaryColor            String?
+  winnerId                String?
+  winnerNumber            Int?
+  drawnAt                 DateTime?
+  totalRaised             Decimal       @default(0) @db.Decimal(10, 2)
+  userId                  String
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+  rules                   String?
+  theme                   RifaTheme     @default(DEFAULT)
+  quotaCommissionGoal     Decimal?      @db.Decimal(10, 2)
+  quotaCommissionPaid     Decimal?      @default(0) @db.Decimal(10, 2)
+  quotaCommissionPercent  Float?
+  quotaCommissionReserved Decimal?      @default(0) @db.Decimal(10, 2)
+  buyers                  Buyer[]
+  prizes                  Prize[]
+  user                    User          @relation(fields: [userId], references: [id])
+  numbers                 RifaNumber[]
+  transactions            Transaction[]
+  linkViews               LinkView[]
 
   @@index([userId])
   @@index([status])
@@ -126,16 +154,16 @@ model Rifa {
 }
 
 model Prize {
-  id          String    @id @default(cuid())
-  title       String
-  description String?
-  position    Int       // 1, 2, 3...
-  winnerId    String?
+  id           String    @id @default(cuid())
+  title        String
+  description  String?
+  position     Int
+  winnerId     String?
   winnerNumber Int?
-  drawnAt     DateTime?
-  rifaId      String
-  rifa        Rifa      @relation(fields: [rifaId], references: [id], onDelete: Cascade)
-  winner      Buyer?    @relation(fields: [winnerId], references: [id])
+  drawnAt      DateTime?
+  rifaId       String
+  rifa         Rifa      @relation(fields: [rifaId], references: [id], onDelete: Cascade)
+  winner       Buyer?    @relation(fields: [winnerId], references: [id])
 
   @@index([rifaId])
 }
@@ -165,18 +193,18 @@ model Buyer {
   rifaId       String
   createdAt    DateTime      @default(now())
   rifa         Rifa          @relation(fields: [rifaId], references: [id])
+  prizes       Prize[]
   numbers      RifaNumber[]
   transactions Transaction[]
-  prizes       Prize[]
 
   @@index([rifaId])
   @@index([whatsapp])
 }
 
 model Transaction {
-  id            String            @id @default(cuid())
-  amount        Decimal           @db.Decimal(10, 2)
-  status        TransactionStatus @default(PENDING)
+  id            String             @id @default(cuid())
+  amount        Decimal            @db.Decimal(10, 2)
+  status        TransactionStatus  @default(PENDING)
   method        PaymentMethod
   externalId    String?
   pixQrCode     String?
@@ -185,13 +213,13 @@ model Transaction {
   rifaId        String
   buyerId       String
   numbers       Int[]
-  provider      PaymentProvider   @default(MERCADO_PAGO)
-  destination   PaymentDestination @default(ORGANIZER)
   paidAt        DateTime?
   expiresAt     DateTime?
-  createdAt     DateTime          @default(now())
-  buyer         Buyer             @relation(fields: [buyerId], references: [id])
-  rifa          Rifa              @relation(fields: [rifaId], references: [id])
+  createdAt     DateTime           @default(now())
+  destination   PaymentDestination @default(ORGANIZER)
+  provider      PaymentProvider    @default(MERCADO_PAGO)
+  buyer         Buyer              @relation(fields: [buyerId], references: [id])
+  rifa          Rifa               @relation(fields: [rifaId], references: [id])
 
   @@index([rifaId])
   @@index([buyerId])
@@ -210,6 +238,28 @@ model Notification {
   @@index([userId])
   @@index([read])
   @@index([createdAt])
+}
+
+model WebhookEvent {
+  id        String          @id
+  provider  PaymentProvider
+  type      String
+  processed Boolean         @default(true)
+  createdAt DateTime        @default(now())
+
+  @@index([id, provider])
+}
+
+enum FeedbackType {
+  ERROR
+  SUGGESTION
+  OTHER
+}
+
+enum FeedbackStatus {
+  PENDING
+  IN_PROGRESS
+  RESOLVED
 }
 
 enum Plan {
@@ -268,8 +318,6 @@ enum TransactionStatus {
 }
 
 enum BalloonShape {
-  SQUARE
-  ROUNDED
   CIRCLE
   HEART
   STAR
@@ -277,6 +325,8 @@ enum BalloonShape {
   DIAMOND
   SHIELD
   FLOWER
+  SQUARE
+  ROUNDED
 }
 
 enum RifaTheme {
@@ -301,12 +351,70 @@ enum PaymentDestination {
   ORGANIZER
 }
 
-model WebhookEvent {
-  id        String   @id // ID do evento do Stripe ou MP
-  provider  PaymentProvider
-  type      String
-  processed Boolean  @default(true)
-  createdAt DateTime @default(now())
+model WhatsappConfig {
+  id               String   @id @default("default")
+  newReservation   String?  @db.Text
+  paymentConfirmed String?  @db.Text
+  winner           String?  @db.Text
+  updatedAt        DateTime @updatedAt
+}
 
-  @@index([id, provider])
+model Visitor {
+  id        String   @id @default(cuid())
+  visitorId String   @unique // Generated UUID on client
+  lastSeen  DateTime @default(now())
+  path      String?
+  userAgent String?
+  ip        String?
+
+  @@index([lastSeen])
+}
+
+enum ErrorSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model SystemError {
+  id          String        @id @default(cuid())
+  createdAt   DateTime      @default(now())
+  context     String        // Where the error occurred (e.g. "Checkout - Criação de PIX")
+  message     String        @db.Text  // Error message
+  stack       String?       @db.Text  // Full stack trace if available
+  severity    ErrorSeverity @default(HIGH)
+  source      String        @default("server") // "server" | "client" | "webhook"
+  url         String?       // Page URL where error occurred
+  userAgent   String?       // Browser info
+  userId      String?       // User ID if logged in
+  resolved    Boolean       @default(false)
+  resolvedAt  DateTime?
+  notes       String?       @db.Text  // Admin notes
+
+  @@index([createdAt])
+  @@index([severity])
+  @@index([resolved])
+}
+
+model LinkView {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  rifaId     String
+  rifa       Rifa     @relation(fields: [rifaId], references: [id], onDelete: Cascade)
+  sessionId  String   // Anonymous session ID from client
+  referrer   String?  // document.referrer parsed (e.g. "WhatsApp", "Google", "direto")
+  rawReferrer String? @db.Text // Full raw referrer URL
+  device     String   @default("desktop") // desktop | mobile | tablet
+  os         String?  // Windows | Android | iOS | macOS | Linux
+  browser    String?  // Chrome | Safari | Firefox | etc
+  duration   Int?     // Seconds spent on page
+  utmSource  String?  // ?utm_source=
+  utmMedium  String?  // ?utm_medium=
+  utmCampaign String? // ?utm_campaign=
+  ip         String?
+
+  @@index([rifaId])
+  @@index([createdAt])
+  @@index([rifaId, createdAt])
 }
