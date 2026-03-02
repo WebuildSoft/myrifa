@@ -88,9 +88,17 @@ export async function POST(req: Request) {
             if (existingEvent) return NextResponse.json({ received: true })
 
             // Register event
-            await (prisma as any).webhookEvent.create({
-                data: { id: event.id, provider: 'STRIPE', type: event.type }
-            })
+            try {
+                await (prisma as any).webhookEvent.create({
+                    data: { id: event.id, provider: 'STRIPE', type: event.type }
+                })
+            } catch (createError: any) {
+                if (createError.code === 'P2002') {
+                    console.log(`Event ${event.id} already processed concurrently. Skipping.`)
+                    return NextResponse.json({ received: true })
+                }
+                throw createError
+            }
 
             if (type === 'RIFA_PAYMENT' && rifaId && transactionId) {
                 // Find transaction

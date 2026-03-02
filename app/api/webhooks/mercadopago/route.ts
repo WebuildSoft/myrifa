@@ -70,9 +70,19 @@ export async function POST(request: Request) {
             }
 
             // Registrar evento para evitar processamento duplo do mesmo status
-            await (prisma as any).webhookEvent.create({
-                data: { id: eventId, provider: 'MERCADO_PAGO', type: topic }
-            })
+            try {
+                await (prisma as any).webhookEvent.create({
+                    data: { id: eventId, provider: 'MERCADO_PAGO', type: topic }
+                })
+            } catch (createError: any) {
+                // Se der erro de P2002 (Unique constraint), significa que outro processo
+                // já criou esse evento no milissegundo entre o nosso check e o create.
+                if (createError.code === 'P2002') {
+                    console.log(`Event ${eventId} created by a concurrent process. Skipping.`)
+                    return Response.json({ success: true, message: "Already processed concurrently" })
+                }
+                throw createError // Rethrow other errors
+            }
 
             if (externalReference && status === "approved") {
                 // Find transaction
