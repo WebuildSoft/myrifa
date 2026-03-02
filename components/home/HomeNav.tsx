@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Star, Menu, X } from "lucide-react"
+import { Ticket, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -21,7 +21,7 @@ export function HomeNav() {
             <div className="max-w-7xl mx-auto flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2 group">
                     <div className="size-10 bg-gradient-to-br from-primary to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:rotate-6 transition-transform">
-                        <Star className="text-white h-6 w-6 fill-white" />
+                        <Ticket className="text-white h-6 w-6 rotate-12" />
                     </div>
                     <span className="text-xl font-black tracking-tighter uppercase italic dark:text-white">
                         My<span className="text-primary">Rifa</span>
