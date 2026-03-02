@@ -46,56 +46,61 @@ export default function AdminLayout({
     }
 
     return (
-        <div className="dark flex h-screen bg-[#020617] text-slate-200 antialiased selection:bg-indigo-500/30 overflow-hidden">
+        <div className="dark min-h-screen bg-[#020617] text-slate-100 antialiased selection:bg-indigo-500/30 overflow-x-hidden" style={{ colorScheme: 'dark' }}>
+            {/* Critical Background Force */}
+            <div className="fixed inset-0 bg-[#020617] -z-50" />
+
             {/* Ambient background glow */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-indigo-500/5 blur-[120px]" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-violet-500/5 blur-[120px]" />
+                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-indigo-500/20 blur-[120px]" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-violet-500/20 blur-[120px]" />
             </div>
 
-            <AdminSidebar
-                user={session?.user}
-                isOpen={isSidebarOpen}
-                onClose={() => setIsSidebarOpen(false)}
-            />
+            <div className="flex h-screen overflow-hidden">
+                <AdminSidebar
+                    user={session?.user}
+                    isOpen={isSidebarOpen}
+                    onClose={() => setIsSidebarOpen(false)}
+                />
 
-            <main className="relative z-10 flex-1 flex flex-col h-screen overflow-hidden">
-                {/* Global Top Bar */}
-                <header className="h-20 flex items-center justify-between px-6 lg:px-10 border-b border-white/[0.05] shrink-0 bg-[#020617]/40 backdrop-blur-md">
-                    <div className="flex items-center space-x-4">
-                        {/* Mobile Toggle */}
-                        <button
-                            onClick={() => setIsSidebarOpen(true)}
-                            className="lg:hidden p-2 rounded-xl bg-white/[0.03] border border-white/[0.05] text-slate-300 hover:text-white transition-colors"
-                        >
-                            <Menu className="h-6 w-6" />
-                        </button>
+                <main className="relative z-10 flex-1 flex flex-col h-screen overflow-hidden">
+                    {/* Global Top Bar */}
+                    <header className="h-20 flex items-center justify-between px-6 lg:px-10 border-b border-white/[0.1] shrink-0 bg-[#020617]/80 backdrop-blur-xl">
+                        <div className="flex items-center space-x-4">
+                            {/* Mobile Toggle */}
+                            <button
+                                onClick={() => setIsSidebarOpen(true)}
+                                className="lg:hidden p-2.5 rounded-xl bg-white/[0.05] border border-white/[0.1] text-white hover:bg-white/[0.1] transition-all active:scale-95"
+                            >
+                                <Menu className="h-6 w-6" />
+                            </button>
 
-                        <div className="flex items-center space-x-2">
-                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                            <span className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] hidden sm:inline-block">Servidores Operacionais</span>
-                            <span className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] sm:hidden text-[10px]">Online</span>
+                            <div className="flex items-center space-x-3 bg-white/[0.05] border border-white/[0.1] px-4 py-2 rounded-full">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
+                                <span className="text-[10px] font-black text-white uppercase tracking-[0.2em] hidden sm:inline-block">Infraestrutura Operacional</span>
+                                <span className="text-[10px] font-black text-white uppercase tracking-[0.2em] sm:hidden">Online</span>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center space-x-6">
+                            <div className="text-right hidden sm:block">
+                                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em]">Console Administrativo</p>
+                                <p className="text-xs font-mono text-white font-bold">{new Date().toLocaleTimeString('pt-BR')}</p>
+                            </div>
+                            {/* Compact Brand for mobile header */}
+                            <div className="lg:hidden p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                                <ShieldCheck className="h-5 w-5 text-indigo-400" />
+                            </div>
+                        </div>
+                    </header>
+
+                    <div className="flex-1 overflow-y-auto custom-scrollbar px-4 sm:px-6 md:px-10 py-10 bg-transparent">
+                        <div className="max-w-7xl mx-auto">
+                            {children}
                         </div>
                     </div>
-
-                    <div className="flex items-center space-x-4">
-                        <div className="text-right hidden sm:block">
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Painel de Controle</p>
-                            <p className="text-xs font-mono text-slate-300">{new Date().toLocaleTimeString('pt-BR')}</p>
-                        </div>
-                        {/* Compact Brand for mobile header */}
-                        <div className="lg:hidden p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
-                            <ShieldCheck className="h-5 w-5 text-indigo-400" />
-                        </div>
-                    </div>
-                </header>
-
-                <div className="flex-1 overflow-y-auto custom-scrollbar px-4 sm:px-6 md:px-10 py-10">
-                    <div className="max-w-7xl mx-auto">
-                        {children}
-                    </div>
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
     )
 }

@@ -38,7 +38,7 @@ export default function EditRifaForm({ rifa, initialPrizes }: EditRifaFormProps)
     const [loading, setLoading] = useState(false)
     const [coverImage, setCoverImage] = useState(rifa.coverImage || "") // Added state for coverImage
     const [galleryImages, setGalleryImages] = useState<string[]>(rifa.images || []) // Added state for galleryImages
-    const [prizes, setPrizes] = useState(initialPrizes || [{ title: "", position: 1 }])
+    const [prizes, setPrizes] = useState((initialPrizes && initialPrizes.length > 0) ? initialPrizes : [{ title: "", position: 1 }])
 
     async function handleSubmit(formData: FormData) {
         setLoading(true)

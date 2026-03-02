@@ -12,6 +12,7 @@ interface RifaPublicCardProps {
         numberPrice: any
         totalNumbers: number
         _count: { numbers: number }
+        prizes: { title: string }[]
     }
 }
 
@@ -66,11 +67,16 @@ export function RifaPublicCard({ rifa }: RifaPublicCardProps) {
                     </div>
 
                     <div className="flex justify-between items-center pt-6 border-t border-slate-50 dark:border-slate-800">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                             <div className="size-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
                                 <Trophy className="h-4 w-4" />
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Garantido</span>
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 leading-none mb-1">Prêmio Principal</span>
+                                <span className="text-[11px] font-black text-slate-900 dark:text-white line-clamp-1 leading-none">
+                                    {rifa.prizes?.[0]?.title || "Consultar Prêmios"}
+                                </span>
+                            </div>
                         </div>
                         <div className="flex items-center gap-2 text-primary font-black text-[11px] uppercase tracking-widest">
                             Participar <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />

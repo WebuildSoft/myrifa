@@ -74,29 +74,28 @@ export async function updateRifaAction(rifaId: string, formData: FormData) {
                 }
             })
 
-            if (prizes.length > 0) {
-                for (const p of prizes) {
-                    if (p.id) {
-                        await tx.prize.update({
-                            where: { id: p.id },
-                            data: { title: p.title, position: p.position }
-                        })
-                    } else {
-                        await tx.prize.create({
-                            data: { title: p.title, position: p.position, rifaId: rifaId }
-                        })
-                    }
-                }
+            const prizeIdsToKeep = prizes.map((p: any) => p.id).filter(Boolean)
 
-                const prizeIdsToKeep = prizes.map((p: any) => p.id).filter(Boolean)
-                await tx.prize.deleteMany({
-                    where: {
-                        rifaId,
-                        id: { notIn: prizeIdsToKeep },
-                        winnerId: null
-                    }
-                })
+            for (const p of prizes) {
+                if (p.id) {
+                    await tx.prize.update({
+                        where: { id: p.id },
+                        data: { title: p.title, position: p.position }
+                    })
+                } else {
+                    await tx.prize.create({
+                        data: { title: p.title, position: p.position, rifaId: rifaId }
+                    })
+                }
             }
+
+            await tx.prize.deleteMany({
+                where: {
+                    rifaId,
+                    id: { notIn: prizeIdsToKeep },
+                    winnerId: null
+                }
+            })
         })
 
         revalidatePath(`/dashboard/rifas/${rifaId}`)

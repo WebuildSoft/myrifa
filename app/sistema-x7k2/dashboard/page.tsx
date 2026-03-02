@@ -67,19 +67,23 @@ export default async function AdminDashboardPage() {
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Page Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div className="space-y-1">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div className="space-y-3">
                     <div className="flex items-center space-x-2">
-                        <div className="px-2 py-0.5 rounded text-xs font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-widest">
-                            Overview
+                        <div className="px-3 py-1 rounded-full text-[10px] font-black bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                            Sistema em Tempo Real
                         </div>
                     </div>
-                    <h1 className="text-4xl font-extrabold tracking-tight text-white">Dashboard</h1>
-                    <p className="text-slate-300 text-sm max-w-md">Bem-vindo ao centro de comando. Aqui você monitora cada batida do sistema em tempo real.</p>
+                    <div className="space-y-1">
+                        <h1 className="text-5xl font-black tracking-tight text-white drop-shadow-md">Dashboard</h1>
+                        <p className="text-slate-100 text-base font-bold max-w-xl leading-relaxed opacity-100">
+                            Bem-vindo ao centro de comando. Aqui você monitora cada batida do sistema e o crescimento da plataforma.
+                        </p>
+                    </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                    <div className="h-10 px-4 rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center text-sm font-medium text-slate-200">
-                        <Calendar className="mr-2 h-4 w-4 text-indigo-400" />
+                    <div className="h-12 px-6 rounded-2xl bg-white/[0.07] border border-white/[0.15] flex items-center text-sm font-black text-white shadow-xl backdrop-blur-md">
+                        <Calendar className="mr-3 h-4 w-4 text-indigo-400" />
                         {now.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </div>
                 </div>
@@ -95,15 +99,15 @@ export default async function AdminDashboardPage() {
                     { title: "Total de Campanhas", value: totalRifas, sub: "Rifas criadas", icon: Calendar, color: "orange" },
                     { title: "Receita Global", value: `R$ ${totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, sub: "Total arrecadado", icon: TrendingUp, color: "yellow" }
                 ].map((stat, i) => (
-                    <Card key={i} className="group relative overflow-hidden border-white/[0.05] bg-white/[0.02] backdrop-blur-sm transition-all hover:bg-white/[0.04] hover:border-white/[0.1]">
-                        <div className={`absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 rounded-full bg-${stat.color}-500/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity`} />
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">{stat.title}</CardTitle>
-                            <stat.icon className={`h-4 w-4 text-${stat.color}-400/80 group-hover:scale-110 transition-transform`} />
+                    <Card key={i} className="group relative overflow-hidden border-white/[0.1] bg-white/[0.03] backdrop-blur-md transition-all hover:bg-white/[0.06] hover:border-white/[0.15] shadow-lg">
+                        <div className={`absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 rounded-full bg-${stat.color}-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity`} />
+                        <CardHeader className="flex flex-row items-center justify-between pb-3">
+                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-200">{stat.title}</CardTitle>
+                            <stat.icon className={`h-4 w-4 text-${stat.color}-400 group-hover:scale-110 transition-transform`} />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-black text-white tracking-tight leading-none mb-1">{stat.value}</div>
-                            <p className="text-xs font-medium text-slate-400">{stat.sub}</p>
+                            <div className="text-2xl font-black text-white tracking-tight leading-none mb-2">{stat.value}</div>
+                            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest opacity-80">{stat.sub}</p>
                         </CardContent>
                     </Card>
                 ))}
@@ -113,17 +117,17 @@ export default async function AdminDashboardPage() {
             {/* Services & Integrations */}
             <div className="grid gap-8 lg:grid-cols-3 items-start">
                 <div className="lg:col-span-1 space-y-6">
-                    <h2 className="text-xl font-bold text-white flex items-center">
-                        <span className="w-1.5 h-1.5 rounded-full bg-violet-500 mr-2 shadow-[0_0_8px_rgba(139,92,246,0.5)]" />
+                    <h2 className="text-xl font-black text-white flex items-center tracking-tight">
+                        <span className="w-2 h-2 rounded-full bg-violet-500 mr-3 shadow-[0_0_10px_rgba(139,92,246,0.6)]" />
                         Status da API
                     </h2>
                     <WhatsappStatus />
                 </div>
 
-                <Card className="lg:col-span-2 border-white/[0.05] bg-white/[0.02] backdrop-blur-sm">
-                    <CardHeader>
-                        <CardTitle className="text-lg font-bold text-white">Crescimento do Sistema</CardTitle>
-                        <CardDescription className="text-slate-500">Evolução de novos cadastros nos últimos 14 dias</CardDescription>
+                <Card className="lg:col-span-2 border-white/[0.1] bg-white/[0.03] backdrop-blur-md shadow-xl">
+                    <CardHeader className="pb-8">
+                        <CardTitle className="text-xl font-black text-white tracking-tight">Crescimento do Sistema</CardTitle>
+                        <CardDescription className="text-slate-200 font-medium">Evolução de novos cadastros nos últimos 14 dias</CardDescription>
                     </CardHeader>
                     <CardContent className="pt-0">
                         <GrowthChart data={chartData} />
