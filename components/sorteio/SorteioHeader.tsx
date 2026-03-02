@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Star, UserCircle2 } from "lucide-react"
+import { Ticket, UserCircle2 } from "lucide-react"
 
 interface SorteioHeaderProps {
     rifaId: string
@@ -9,8 +9,8 @@ export function SorteioHeader({ rifaId }: SorteioHeaderProps) {
     return (
         <header className="absolute top-0 w-full flex items-center justify-between px-6 md:px-10 py-6 z-50 bg-transparent">
             <Link href={`/dashboard/rifas/${rifaId}`} className="flex items-center gap-4 text-white hover:opacity-80 transition-opacity">
-                <div className="text-amber-400">
-                    <Star className="h-8 w-8 fill-amber-400" />
+                <div className="text-white">
+                    <Ticket className="h-8 w-8" />
                 </div>
                 <div className="flex flex-col">
                     <h2 className="text-white text-xl md:text-2xl font-black tracking-tighter leading-none">MyRifa</h2>
