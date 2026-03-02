@@ -26,6 +26,17 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
         if (!rifa) throw new Error("Campanha não encontrada")
         if (rifa.status === ("DELETED" as any)) throw new Error("Esta rifa não está mais disponível.")
 
+        // Validar limites por comprador
+        if (rifa.maxPerBuyer && validated.numbers.length > rifa.maxPerBuyer) {
+            return { error: `Você só pode comprar no máximo ${rifa.maxPerBuyer} cotas nesta campanha.` }
+        }
+
+        // Validar se os números estão no intervalo correto (ex: 0 a totalNumbers - 1)
+        const invalidNumbers = validated.numbers.filter(n => n < 0 || n >= rifa.totalNumbers)
+        if (invalidNumbers.length > 0) {
+            return { error: "Alguns números selecionados são inválidos para esta campanha." }
+        }
+
         const ownerAccessToken = rifa.user?.mercadoPagoAccessToken
         console.log(`[Checkout] Rifa found: ${rifa.id}, Owner: ${rifa.userId}, Token exists: ${!!ownerAccessToken}`)
 
