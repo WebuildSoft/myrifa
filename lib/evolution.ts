@@ -177,38 +177,47 @@ export const waTemplates = {
 
     defaults: {
         newReservation: `
-Olá *{cliente}*! 👋
+Olá, *{cliente}*! 😊
 
-Recebemos seu pedido para a rifa: *{rifa}*
+Recebemos sua reserva na campanha *{rifa}* — que ótima escolha!
 
-🔢 *Seus Números:* {numeros}
+🎫 *Suas Cotas Reservadas:* {numeros}
 💰 *Total:* {valor_total}
 
-Pague via PIX agora para garantir suas cotas:
+Agora é só pagar via PIX para confirmar e garantir sua participação:
 🔗 {pix_url}
 
-🔒 100% Seguro • 🎯 Sorteio Automático
+Aguardamos seu pagamento com carinho 💜
+_Equipe MyRifa_
 `.trim(),
 
         paymentConfirmed: `
-✅ *Pagamento Confirmado!*
+💜 *Participação Confirmada!*
 
-Olá *{cliente}*, seu pagamento para a rifa *{rifa}* foi aprovado! 🍀
+Olá, *{cliente}*! Que bom ter você com a gente 🙌
 
-🎫 *Seus Números da Sorte:* {numeros}
+Seu apoio à campanha *{rifa}* foi confirmado com sucesso!
 
-Você já está concorrendo ao prêmio. Boa sorte!
+🎫 *Suas cotas:* {numeros}
+
+Você já está participando! Acompanhe tudo por aqui e boa sorte 🍀
+
+_Obrigado por apoiar essa causa! — Equipe MyRifa_
 `.trim(),
 
         winner: `
-🎉🎉 *PARABÉNS, VOCÊ GANHOU!* 🎉🎉
+🎉 *VOCÊ FOI CONTEMPLADO(A)!* 🎉
 
-Olá *{cliente}*, temos uma notícia maravilhosa! Você foi o(a) grande vencedor(a) da rifa:
+Olá, *{cliente}*, que notícia incrível! 🥳
+
+Você foi o(a) grande contemplado(a) da campanha:
 🏆 *{rifa}*
 
-🔢 Seu número sorteado foi o: *{numero_vencedor}*
+🔢 Sua cota premiada: *{numero_vencedor}*
 
-Parabéns pela vitória! 🎊🥳
+Parabéns de coração! O organizador entrará em contato em breve para combinar a entrega do prêmio. 🎁
+
+_Com carinho — Equipe MyRifa_ 💜
 `.trim()
     }
 }
