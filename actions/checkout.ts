@@ -233,12 +233,13 @@ export async function getTransactionDetailsAction(transactionId: string) {
             where: { id: transactionId },
             include: {
                 rifa: {
-                    select: {
-                        id: true,
-                        title: true,
-                        coverImage: true,
-                        slug: true,
-                        status: true
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                mercadoPagoAccessToken: true
+                            }
+                        }
                     }
                 },
                 buyer: {
@@ -252,6 +253,53 @@ export async function getTransactionDetailsAction(transactionId: string) {
         })
 
         if (!transaction) return { error: "Transação não encontrada" }
+
+        // Se o pagamento for pendente mas não tiver os dados do PIX (bug anterior), tentamos gerar agora
+        if (transaction.status === "PENDING" && !transaction.pixQrCodeText) {
+            console.log(`[Checkout] Missing PIX data for transaction ${transactionId}. Regenerating...`)
+
+            const ownerAccessToken = (transaction.rifa as any).user?.mercadoPagoAccessToken
+
+            if (ownerAccessToken) {
+                try {
+                    const paymentResult = await PaymentService.createPixPayment({
+                        amount: Number(transaction.amount),
+                        description: `Pagamento Rifa ${transaction.rifa.title}`,
+                        externalReference: transaction.id,
+                        buyer: {
+                            name: (transaction.buyer as any).name,
+                            email: (transaction.buyer as any).email || `${(transaction.buyer as any).whatsapp}@myrifa.com.br`
+                        },
+                        accessToken: ownerAccessToken,
+                        rifaId: transaction.rifaId,
+                        provider: transaction.provider
+                    })
+
+                    // Atualiza o registro com os novos dados
+                    const updatedTx = await prisma.transaction.update({
+                        where: { id: transactionId },
+                        data: {
+                            pixQrCode: paymentResult.qrCode,
+                            pixQrCodeText: paymentResult.qrCodeCopy,
+                            externalId: paymentResult.id
+                        }
+                    })
+
+                    // Retorna a transação atualizada (mesclando com os dados de rifa/buyer que já temos)
+                    return {
+                        success: true,
+                        transaction: {
+                            ...transaction,
+                            pixQrCode: updatedTx.pixQrCode,
+                            pixQrCodeText: updatedTx.pixQrCodeText,
+                            externalId: updatedTx.externalId
+                        }
+                    }
+                } catch (regError) {
+                    console.error("[Checkout] Error regenerating PIX:", regError)
+                }
+            }
+        }
 
         return { success: true, transaction }
     } catch (error) {
