@@ -48,10 +48,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
                 <div className="w-full lg:w-1/2 flex flex-col p-8 lg:p-16 overflow-y-auto bg-white dark:bg-slate-900">
                     <div className="flex justify-between items-center mb-12">
                         <Link href="/" className="flex items-center gap-2 group">
-                            <div className="bg-primary p-2 rounded-xl group-hover:scale-110 transition-transform">
-                                <Ticket className="h-5 w-5 text-white" />
-                            </div>
-                            <span className="font-bold text-2xl text-slate-900 dark:text-slate-100 tracking-tight">MyRifa</span>
+                            <Ticket className="h-7 w-7 text-primary rotate-12 group-hover:scale-110 transition-transform" />
+                            <span className="font-black text-2xl text-slate-900 dark:text-slate-100 tracking-tight">My<span className="text-primary">Rifa</span></span>
                         </Link>
                     </div>
 
