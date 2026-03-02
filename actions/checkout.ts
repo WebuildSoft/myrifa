@@ -256,11 +256,13 @@ export async function getTransactionDetailsAction(transactionId: string) {
 
         // Se o pagamento for pendente mas não tiver os dados do PIX (bug anterior), tentamos gerar agora
         if (transaction.status === "PENDING" && !transaction.pixQrCodeText) {
-            console.log(`[Checkout] Missing PIX data for transaction ${transactionId}. Regenerating...`)
-
+            const isStripe = transaction.provider === 'STRIPE'
             const ownerAccessToken = (transaction.rifa as any).user?.mercadoPagoAccessToken
 
-            if (ownerAccessToken) {
+            console.log(`[Checkout] Missing PIX data for transaction ${transactionId}. Provider: ${transaction.provider}. Regenerating...`)
+
+            // Stripe usa a chave global do sistema, MP precisa do token do dono
+            if (isStripe || ownerAccessToken) {
                 try {
                     const paymentResult = await PaymentService.createPixPayment({
                         amount: Number(transaction.amount),
@@ -270,9 +272,9 @@ export async function getTransactionDetailsAction(transactionId: string) {
                             name: (transaction.buyer as any).name,
                             email: (transaction.buyer as any).email || `${(transaction.buyer as any).whatsapp}@myrifa.com.br`
                         },
-                        accessToken: ownerAccessToken,
+                        accessToken: isStripe ? undefined : ownerAccessToken,
                         rifaId: transaction.rifaId,
-                        provider: transaction.provider
+                        provider: transaction.provider as any
                     })
 
                     // Atualiza o registro com os novos dados
@@ -285,7 +287,7 @@ export async function getTransactionDetailsAction(transactionId: string) {
                         }
                     })
 
-                    // Retorna a transação atualizada (mesclando com os dados de rifa/buyer que já temos)
+                    // Retorna a transação atualizada
                     return {
                         success: true,
                         transaction: {
