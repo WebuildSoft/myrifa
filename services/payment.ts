@@ -59,8 +59,14 @@ export class PaymentService {
     }
 
     private static async createMercadoPagoPixPayment({ amount, description, externalReference, buyer, accessToken, rifaId }: CreatePixPaymentParams) {
+        console.log(`[PaymentService] instantiating MercadoPagoConfig for rifa ${rifaId}. Token length: ${accessToken?.length || 0}`)
+
+        if (!accessToken) {
+            throw new Error("Token do Mercado Pago não fornecido para o processamento.")
+        }
+
         const client = new MercadoPagoConfig({
-            accessToken: accessToken!,
+            accessToken: accessToken,
             options: { timeout: 10000 }
         })
 

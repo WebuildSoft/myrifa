@@ -27,7 +27,10 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
         if (rifa.status === ("DELETED" as any)) throw new Error("Esta rifa não está mais disponível.")
 
         const ownerAccessToken = rifa.user?.mercadoPagoAccessToken
+        console.log(`[Checkout] Rifa found: ${rifa.id}, Owner: ${rifa.userId}, Token exists: ${!!ownerAccessToken}`)
+
         if (!ownerAccessToken) {
+            console.log(`[Checkout] Error: Owner ${rifa.userId} has no MP token.`)
             return { error: "O organizador da campanha ainda não configurou os recebimentos. Tente novamente mais tarde." }
         }
 
@@ -150,10 +153,11 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 description: `Compra Rifa ${rifa.title} - ${validated.numbers.length} números`,
                 externalReference: checkoutResult.transactionRecord.id,
                 buyer: checkoutResult.buyer,
-                accessToken: accessToken ?? undefined,
+                accessToken: accessToken || undefined,
                 rifaId: rifa.id,
                 provider
             })
+            console.log(`[Checkout] Payment created with ID: ${paymentResult.id}`)
 
             // Update transaction with External ID
             await prisma.transaction.update({

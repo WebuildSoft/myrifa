@@ -44,10 +44,11 @@ export async function POST(request: Request) {
             const ownerToken = rifa?.user?.mercadoPagoAccessToken
 
             if (!ownerToken) {
+                console.error(`[Webhook MP] Error: Rifa ${rifaId} owner has no MP Token.`)
                 return Response.json({ error: "Rifa owner has no MP Token configured" }, { status: 400 })
             }
 
-            // Verify payment with MP using the owner's specific token
+            console.log(`[Webhook MP] Instantiating MP client for rifa ${rifaId}`)
             const client = new MercadoPagoConfig({ accessToken: ownerToken })
             const paymentApi = new Payment(client)
             const paymentInfo = await paymentApi.get({ id: id })
