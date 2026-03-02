@@ -20,6 +20,11 @@ export default async function RifasPage() {
         include: {
             _count: {
                 select: { numbers: { where: { status: "PAID" } } }
+            },
+            prizes: {
+                select: { title: true, position: true },
+                orderBy: { position: "asc" },
+                take: 1
             }
         }
     })

@@ -63,7 +63,7 @@ export function ReviewStep({
                             <div className="space-y-1">
                                 <p className="text-sm font-bold uppercase tracking-tight">Título e Resumo</p>
                                 <p className="text-sm text-slate-900 dark:text-white font-medium">{title}</p>
-                                <p className="text-xs text-slate-500 line-clamp-2">{description}</p>
+                                <p className="text-xs text-slate-500 whitespace-pre-wrap">{description}</p>
                             </div>
                         </div>
 

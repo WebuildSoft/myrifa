@@ -16,6 +16,11 @@ export default async function PublicRifasPage() {
         include: {
             _count: {
                 select: { numbers: { where: { status: "PAID" } } }
+            },
+            prizes: {
+                select: { title: true },
+                orderBy: { position: "asc" },
+                take: 1
             }
         }
     })

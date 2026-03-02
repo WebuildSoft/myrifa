@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Edit3 } from "lucide-react"
+import { ArrowRight, Edit3, Trophy } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface RifaCardAdminProps {
@@ -16,6 +16,7 @@ interface RifaCardAdminProps {
         _count: {
             numbers: number
         }
+        prizes: { title: string; position: number }[]
     }
 }
 
@@ -67,6 +68,20 @@ export function RifaCardAdmin({ rifa }: RifaCardAdminProps) {
                 )}
 
                 <div className="space-y-4">
+                    {rifa.prizes && rifa.prizes.length > 0 && (
+                        <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800/50 flex items-center gap-3">
+                            <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                <Trophy className="h-4 w-4" />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Prêmio Principal</p>
+                                <p className="text-[11px] font-bold text-slate-900 dark:text-white truncate uppercase tracking-tight">
+                                    {rifa.prizes[0].title}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
                     <div>
                         <div className="flex justify-between text-sm mb-2">
                             <span className="text-slate-500 font-bold text-xs uppercase tracking-tight">Vendas</span>

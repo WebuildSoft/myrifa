@@ -16,6 +16,7 @@ import { PublicFooter } from "@/components/rifa/public/PublicFooter"
 import { CampaignHero } from "@/components/rifa/public/CampaignHero"
 import { CampaignStatsCard } from "@/components/rifa/public/CampaignStatsCard"
 import { CampaignRules } from "@/components/rifa/public/CampaignRules"
+import { CampaignPrizes } from "@/components/rifa/public/CampaignPrizes"
 import { getThemeConfig } from "@/lib/themes"
 import { RifaViewTracker } from "@/components/analytics/RifaViewTracker"
 
@@ -131,6 +132,13 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                 themePrimary={themeConfig.primary}
                                 themeAccent={themeConfig.accent}
                                 drawDate={rifa.drawDate}
+                            />
+
+                            {/* Prizes Section */}
+                            <CampaignPrizes
+                                prizes={rifa.prizes}
+                                themePrimary={themeConfig.primary}
+                                themeAccent={themeConfig.accent}
                             />
 
                             {/* Share & Trust Badge */}

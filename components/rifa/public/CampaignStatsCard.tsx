@@ -117,7 +117,7 @@ export function CampaignStatsCard({
             )}
 
             {description && (
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-5">
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-5 whitespace-pre-wrap">
                     {description}
                 </p>
             )}
