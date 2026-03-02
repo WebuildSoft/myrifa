@@ -17,17 +17,20 @@ export default async function AnalyticsPage({ params }: { params: Promise<{ id: 
 
     const { id } = await params
 
-    const rifa = await prisma.rifa.findUnique({
-        where: { id, userId: session.user.id },
-        select: { id: true, title: true, slug: true, _count: { select: { buyers: true } } }
-    })
+    // Fetch rifa info and views in parallel
+    const [rifa, views] = await Promise.all([
+        prisma.rifa.findUnique({
+            where: { id, userId: session.user.id },
+            select: { id: true, title: true, slug: true, _count: { select: { buyers: true } } }
+        }),
+        (prisma as any).linkView.findMany({
+            where: { rifaId: id },
+            select: { createdAt: true }, // Optimized: only fetch necessary field for the chart
+            orderBy: { createdAt: "desc" },
+        })
+    ])
 
     if (!rifa) notFound()
-
-    const views = await (prisma as any).linkView.findMany({
-        where: { rifaId: id },
-        orderBy: { createdAt: "desc" },
-    })
 
     const totalViews = views.length
     const conversionRate = totalViews > 0 ? ((rifa._count.buyers / totalViews) * 100).toFixed(1) : "0"

@@ -14,10 +14,13 @@ import {
     ChevronLeft,
     ChevronRight,
     Search,
-    Server
+    Server,
+    X
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+
+import { signOut } from "next-auth/react"
 
 interface AdminSidebarProps {
     user: {
@@ -31,6 +34,10 @@ interface AdminSidebarProps {
 export default function AdminSidebar({ user, isOpen, onClose }: AdminSidebarProps) {
     const [isCollapsed, setIsCollapsed] = useState(false)
     const pathname = usePathname()
+
+    const handleLogout = async () => {
+        await signOut({ callbackUrl: "/sistema-x7k2/login" })
+    }
 
     // Handle mobile auto-close on navigate
     useEffect(() => {
@@ -65,6 +72,16 @@ export default function AdminSidebar({ user, isOpen, onClose }: AdminSidebarProp
                     isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
                 )}
             >
+                {/* Mobile Close Button */}
+                {isOpen && (
+                    <button
+                        onClick={onClose}
+                        className="lg:hidden absolute right-4 top-4 z-50 p-2 rounded-xl bg-white/[0.03] border border-white/[0.05] text-slate-300 hover:text-white transition-colors"
+                    >
+                        <X className="h-6 w-6" />
+                    </button>
+                )}
+
                 {/* Collapse Toggle Button (Desktop only) */}
                 <button
                     onClick={() => setIsCollapsed(!isCollapsed)}
@@ -171,18 +188,20 @@ export default function AdminSidebar({ user, isOpen, onClose }: AdminSidebarProp
                             )}
                         </div>
 
-                        <form action="/api/auth/signout" method="POST">
-                            <button className={cn(
+                        <button
+                            onClick={handleLogout}
+                            className={cn(
                                 "flex items-center justify-center rounded-xl bg-red-500/10 text-red-500 font-black uppercase tracking-widest transition-all active:scale-95 group/logout",
                                 isCollapsed ? "h-10 w-10 p-0 mt-4" : "w-full px-4 py-3 text-xs mt-0 hover:bg-red-500 text-red-400 hover:text-white"
-                            )} title="Sair">
-                                <LogOut className={cn(
-                                    "shrink-0 transition-transform duration-300 group-hover/logout:-translate-x-0.5",
-                                    isCollapsed ? "h-5 w-5" : "h-3.5 w-3.5 mr-2"
-                                )} />
-                                {!isCollapsed && "Sair"}
-                            </button>
-                        </form>
+                            )}
+                            title="Sair"
+                        >
+                            <LogOut className={cn(
+                                "shrink-0 transition-transform duration-300 group-hover/logout:-translate-x-0.5",
+                                isCollapsed ? "h-5 w-5" : "h-3.5 w-3.5 mr-2"
+                            )} />
+                            {!isCollapsed && "Sair"}
+                        </button>
                     </div>
                 </div>
             </aside>

@@ -58,7 +58,7 @@ export function ShareCampaign({ slug, title }: ShareCampaignProps) {
     const socialPlatforms = [
         {
             label: "WhatsApp",
-            href: `https://wa.me/?text=${encodeURIComponent(`🚀 Participe da campanha oficial *${title}* e garanta sua chance de ganhar!\n\n✅ 100% Seguro\n⚡ Sorteio Automático\n\n👉 Acesse o link oficial e garanta seus números antes que acabem: ${u("w")}`)}`,
+            href: `https://wa.me/?text=${encodeURIComponent(`🚀 Participe da campanha oficial *${title}* e garanta sua chance de ganhar!\n\n🔒 100% Seguro\n🎯 Sorteio Automático\n\n📲 Acesse o link oficial e garanta seus números antes que acabem: ${u("w")}`)}`,
             bg: "bg-[#25D366] hover:bg-[#1db954]",
             icon: SOCIAL_ICONS.WHATSAPP,
         },

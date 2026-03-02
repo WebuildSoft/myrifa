@@ -26,7 +26,15 @@ export const authConfig = {
 
             // Admin Route Logic
             if (isAdminRoute && !isLoginPage) {
-                if (!isLoggedIn || !isAdmin) return false // Will be handled by middleware to return 404
+                // Root admin path specifically should probably go to dashboard if admin, or login if not
+                if (nextUrl.pathname === "/sistema-x7k2") {
+                    if (isLoggedIn && isAdmin) return Response.redirect(new URL("/sistema-x7k2/dashboard", nextUrl))
+                    return Response.redirect(new URL("/sistema-x7k2/login", nextUrl))
+                }
+
+                if (!isLoggedIn || !isAdmin) {
+                    return Response.redirect(new URL("/sistema-x7k2/login", nextUrl))
+                }
                 return true
             }
 

@@ -184,22 +184,20 @@ Recebemos seu pedido para a rifa: *{rifa}*
 🔢 *Seus Números:* {numeros}
 💰 *Total:* {valor_total}
 
-Para garantir seus números, realize o pagamento via PIX através do link abaixo:
+Pague via PIX agora para garantir suas cotas:
 🔗 {pix_url}
 
-⚠️ *Atenção:* Seus números ficam reservados por tempo limitado.
-
-Boa sorte! 🍀
+🔒 100% Seguro • 🎯 Sorteio Automático
 `.trim(),
 
         paymentConfirmed: `
 ✅ *Pagamento Confirmado!*
 
-Olá *{cliente}*, seu pagamento para a rifa *{rifa}* foi aprovado com sucesso!
+Olá *{cliente}*, seu pagamento para a rifa *{rifa}* foi aprovado! 🍀
 
 🎫 *Seus Números da Sorte:* {numeros}
 
-Você já está participando do sorteio. Boa sorte! 🍀
+Você já está concorrendo ao prêmio. Boa sorte!
 `.trim(),
 
         winner: `

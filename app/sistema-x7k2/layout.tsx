@@ -46,7 +46,7 @@ export default function AdminLayout({
     }
 
     return (
-        <div className="flex h-screen bg-[#020617] text-slate-200 antialiased selection:bg-indigo-500/30 overflow-hidden">
+        <div className="dark flex h-screen bg-[#020617] text-slate-200 antialiased selection:bg-indigo-500/30 overflow-hidden">
             {/* Ambient background glow */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-indigo-500/5 blur-[120px]" />
@@ -73,15 +73,15 @@ export default function AdminLayout({
 
                         <div className="flex items-center space-x-2">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                            <span className="text-xs font-black text-slate-500 uppercase tracking-[0.2em] hidden sm:inline-block">Servidores Operacionais</span>
-                            <span className="text-xs font-black text-slate-500 uppercase tracking-[0.2em] sm:hidden text-[10px]">Online</span>
+                            <span className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] hidden sm:inline-block">Servidores Operacionais</span>
+                            <span className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] sm:hidden text-[10px]">Online</span>
                         </div>
                     </div>
 
                     <div className="flex items-center space-x-4">
                         <div className="text-right hidden sm:block">
-                            <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">Painel de Controle</p>
-                            <p className="text-xs font-mono text-slate-400">{new Date().toLocaleTimeString('pt-BR')}</p>
+                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Painel de Controle</p>
+                            <p className="text-xs font-mono text-slate-300">{new Date().toLocaleTimeString('pt-BR')}</p>
                         </div>
                         {/* Compact Brand for mobile header */}
                         <div className="lg:hidden p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">

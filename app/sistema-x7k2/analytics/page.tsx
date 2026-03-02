@@ -85,17 +85,18 @@ export default async function AdminAnalyticsPage() {
         redirect("/sistema-x7k2/login")
     }
 
-    // Fetch ALL views and ALL rifas since this is global admin
-    const views = await (prisma as any).linkView.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 1000 // Limit to avoid massive memory usage on global query
-    })
-
-    const totalViewsCount = await (prisma as any).linkView.count()
-    const rifasTotalCount = await prisma.rifa.count()
-    const allBuyersCount = await prisma.transaction.count({
-        where: { status: "PAID" }
-    })
+    // Fetch ALL data in parallel for maximum performance
+    const [views, totalViewsCount, rifasTotalCount, allBuyersCount] = await Promise.all([
+        (prisma as any).linkView.findMany({
+            orderBy: { createdAt: "desc" },
+            take: 1000 // Limit to avoid massive memory usage on global query
+        }),
+        (prisma as any).linkView.count(),
+        prisma.rifa.count(),
+        prisma.transaction.count({
+            where: { status: "PAID" }
+        })
+    ])
 
     const totalViews = views.length
     const uniqueSessions = new Set(views.map((v: any) => v.sessionId)).size

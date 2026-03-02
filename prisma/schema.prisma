@@ -34,6 +34,8 @@ model User {
   sessions               Session[]
   adminLogs              AdminLog[]
   loginAttempts          LoginAttempt[]
+
+  @@index([createdAt])
 }
 
 enum AdminRole {
@@ -199,6 +201,7 @@ model Buyer {
 
   @@index([rifaId])
   @@index([whatsapp])
+  @@index([createdAt])
 }
 
 model Transaction {

@@ -75,10 +75,10 @@ export default async function AdminDashboardPage() {
                         </div>
                     </div>
                     <h1 className="text-4xl font-extrabold tracking-tight text-white">Dashboard</h1>
-                    <p className="text-slate-400 text-sm max-w-md">Bem-vindo ao centro de comando. Aqui você monitora cada batida do sistema em tempo real.</p>
+                    <p className="text-slate-300 text-sm max-w-md">Bem-vindo ao centro de comando. Aqui você monitora cada batida do sistema em tempo real.</p>
                 </div>
                 <div className="flex items-center space-x-3">
-                    <div className="h-10 px-4 rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center text-sm font-medium text-slate-300">
+                    <div className="h-10 px-4 rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center text-sm font-medium text-slate-200">
                         <Calendar className="mr-2 h-4 w-4 text-indigo-400" />
                         {now.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </div>
@@ -98,12 +98,12 @@ export default async function AdminDashboardPage() {
                     <Card key={i} className="group relative overflow-hidden border-white/[0.05] bg-white/[0.02] backdrop-blur-sm transition-all hover:bg-white/[0.04] hover:border-white/[0.1]">
                         <div className={`absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 rounded-full bg-${stat.color}-500/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity`} />
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-500">{stat.title}</CardTitle>
+                            <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">{stat.title}</CardTitle>
                             <stat.icon className={`h-4 w-4 text-${stat.color}-400/80 group-hover:scale-110 transition-transform`} />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-black text-white tracking-tight leading-none mb-1">{stat.value}</div>
-                            <p className="text-xs font-medium text-slate-500">{stat.sub}</p>
+                            <p className="text-xs font-medium text-slate-400">{stat.sub}</p>
                         </CardContent>
                     </Card>
                 ))}

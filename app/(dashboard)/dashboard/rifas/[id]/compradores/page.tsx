@@ -25,32 +25,35 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
 
     const { id } = await params
 
-    const rifa = await prisma.rifa.findUnique({
-        where: {
-            id,
-            userId: session.user.id
-        },
-        include: {
-            buyers: {
-                include: {
-                    numbers: {
-                        where: { rifaId: id },
-                        select: { id: true, number: true, status: true }
-                    },
-                    transactions: {
-                        where: { rifaId: id, status: "PENDING" },
-                        select: { id: true, status: true }
-                    }
+    // Parallelize main data fetching and metric calculations
+    const [rifa, buyers, buyersCount, paidNumbersCount] = await Promise.all([
+        prisma.rifa.findUnique({
+            where: { id, userId: session.user.id },
+            select: { id: true, title: true, numberPrice: true, status: true }
+        }),
+        prisma.buyer.findMany({
+            where: { rifaId: id },
+            include: {
+                numbers: {
+                    where: { rifaId: id },
+                    select: { id: true, number: true, status: true }
                 },
-                orderBy: { createdAt: 'desc' }
-            }
-        }
-    })
+                transactions: {
+                    where: { rifaId: id, status: "PENDING" },
+                    select: { id: true, status: true }
+                }
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 100 // Optimized: limit to last 100 buyers for initial load
+        }),
+        prisma.buyer.count({ where: { rifaId: id } }),
+        prisma.rifaNumber.count({ where: { rifaId: id, status: "PAID" } })
+    ])
 
     if (!rifa || (rifa.status as string) === "DELETED") notFound()
 
-    const totalSoldNumbers = rifa.buyers.reduce((acc, buyer) => acc + buyer.numbers.length, 0)
-    const totalRevenue = rifa.buyers.reduce((acc, buyer) => acc + (buyer.numbers.filter(n => n.status === "PAID").length * Number(rifa.numberPrice)), 0)
+    const totalSoldNumbers = paidNumbersCount
+    const totalRevenue = paidNumbersCount * Number(rifa.numberPrice)
 
     return (
         <div className="min-h-screen bg-[#f7f6f8] dark:bg-[#171121] text-slate-900 dark:text-slate-100 pb-32 -m-4 md:-m-8 flex flex-col">
@@ -66,7 +69,7 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
                         <div className="flex items-center gap-3">
                             <h1 className="text-2xl font-black font-sans tracking-tight">Compradores</h1>
                             <span className="bg-primary/10 text-primary text-xs font-black px-3 py-1 rounded-full border border-primary/20">
-                                {rifa.buyers.length}
+                                {buyersCount}
                             </span>
                         </div>
                     </div>
@@ -99,7 +102,7 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <MetricCard
                         label="Compradores"
-                        value={rifa.buyers.length.toString()}
+                        value={buyersCount.toString()}
                         icon={<Users className="w-4 h-4" />}
                         color="text-blue-500"
                         bg="bg-blue-500/10"
@@ -123,13 +126,13 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
 
                 {/* Buyers List Container */}
                 <div className="space-y-4">
-                    {rifa.buyers.length === 0 ? (
+                    {buyers.length === 0 ? (
                         <div className="py-20 text-center opacity-40 flex flex-col items-center gap-3">
                             <Users className="h-12 w-12" />
                             <p className="text-sm font-black uppercase tracking-[0.2em]">Nenhum comprador</p>
                         </div>
                     ) : (
-                        rifa.buyers.map((buyer) => {
+                        buyers.map((buyer) => {
                             const paidNumbers = buyer.numbers.filter(n => n.status === "PAID")
                             const reservedNumbers = buyer.numbers.filter(n => n.status === "RESERVED")
                             const isFullyPaid = paidNumbers.length === buyer.numbers.length
