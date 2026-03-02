@@ -25,31 +25,61 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials) {
+            async authorize(credentials, req) {
                 if (!credentials?.email || !credentials?.password) return null
 
-                const user = await prisma.user.findUnique({
-                    where: { email: credentials.email as string }
+                const email = credentials.email as string
+                // @ts-ignore - Get IP from headers if available
+                const ip = req.headers?.["x-forwarded-for"] || "unknown"
+
+                // Check for lockout (5 failures in last 1 hour)
+                const hourAgo = new Date(Date.now() - 60 * 60 * 1000)
+                const recentFailures = await prisma.loginAttempt.count({
+                    where: {
+                        email,
+                        success: false,
+                        createdAt: { gte: hourAgo }
+                    }
                 })
 
-                if (!user || (!user.password && user.emailVerified)) return null
+                if (recentFailures >= 5) {
+                    console.log(`[Auth] Account locked for ${email} due to ${recentFailures} failures.`)
+                    throw new Error("Muitas tentativas falhas. Tente novamente em 1 hora.")
+                }
+
+                const user = await prisma.user.findUnique({
+                    where: { email }
+                })
+
+                if (!user || !user.password) {
+                    await prisma.loginAttempt.create({
+                        data: { email, ip, success: false }
+                    })
+                    return null
+                }
+
+                if (user.isBlocked) {
+                    console.log(`[Auth] Blocked user attempt: ${email}`)
+                    throw new Error("Sua conta foi suspensa. Entre em contato com o suporte.")
+                }
 
                 const passwordsMatch = await bcrypt.compare(
                     credentials.password as string,
-                    user.password!
+                    user.password
                 )
 
-                if (passwordsMatch) return user
+                if (passwordsMatch) {
+                    await prisma.loginAttempt.create({
+                        data: { email, ip, success: true }
+                    })
+                    return user
+                }
+
+                await prisma.loginAttempt.create({
+                    data: { email, ip, success: false }
+                })
                 return null
             }
         })
     ],
-    callbacks: {
-        session: async ({ session, token }) => {
-            if (token?.sub && session.user) {
-                session.user.id = token.sub
-            }
-            return session
-        },
-    },
 })

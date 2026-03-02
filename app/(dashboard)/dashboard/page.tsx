@@ -8,6 +8,8 @@ import { DashboardStats } from "@/components/dashboard/DashboardStats"
 import { DashboardCTA } from "@/components/dashboard/DashboardCTA"
 import { RecentSalesTable } from "@/components/dashboard/RecentSalesTable"
 
+export const dynamic = 'force-dynamic'
+
 export default async function DashboardPage() {
     const session = await auth()
     if (!session?.user?.id) redirect("/login")

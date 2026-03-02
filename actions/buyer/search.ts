@@ -42,18 +42,6 @@ export async function searchBuyerOrders(query: string) {
                         status: true,
                         drawDate: true,
                     }
-                },
-                // Fetch the numbers tied to this buyer and this specific rifa
-                buyer: {
-                    select: {
-                        id: true,
-                        numbers: {
-                            select: {
-                                number: true,
-                                status: true
-                            }
-                        }
-                    }
                 }
             }
         })

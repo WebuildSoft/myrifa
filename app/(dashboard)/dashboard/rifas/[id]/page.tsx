@@ -23,39 +23,37 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
 
     const { id } = await params
 
-    const rifa = await prisma.rifa.findUnique({
-        where: { id, userId: session.user.id },
-        include: {
-            _count: {
-                select: {
-                    numbers: { where: { status: "PAID" } },
-                    buyers: true
+    // Fetch main rifa data and specific counts in parallel for maximum speed
+    const [rifa, paidNumbers, reservedNumbers] = await Promise.all([
+        prisma.rifa.findUnique({
+            where: { id, userId: session.user.id },
+            include: {
+                _count: {
+                    select: {
+                        numbers: true,
+                        buyers: true,
+                    }
+                },
+                buyers: {
+                    take: 5,
+                    orderBy: { createdAt: "desc" }
+                },
+                transactions: {
+                    take: 10,
+                    orderBy: { createdAt: "desc" },
+                    include: { buyer: true }
+                },
+                prizes: {
+                    orderBy: { position: "asc" },
+                    include: { winner: true }
                 }
-            },
-            buyers: {
-                take: 5,
-                orderBy: { createdAt: "desc" }
-            },
-            numbers: {
-                where: { status: { in: ["RESERVED", "PAID"] } },
-                select: { status: true }
-            },
-            transactions: {
-                take: 10,
-                orderBy: { createdAt: "desc" },
-                include: { buyer: true }
-            },
-            prizes: {
-                orderBy: { position: "asc" },
-                include: { winner: true }
             }
-        }
-    })
+        }),
+        prisma.rifaNumber.count({ where: { rifaId: id, status: "PAID" } }),
+        prisma.rifaNumber.count({ where: { rifaId: id, status: "RESERVED" } })
+    ])
 
     if (!rifa || (rifa.status as string) === "DELETED") notFound()
-
-    const paidNumbers = rifa.numbers.filter(n => n.status === "PAID").length
-    const reservedNumbers = rifa.numbers.filter(n => n.status === "RESERVED").length
 
     const statusConfig: Record<string, { label: string, color: string }> = {
         ACTIVE: { label: "Ativa", color: "bg-emerald-500" },

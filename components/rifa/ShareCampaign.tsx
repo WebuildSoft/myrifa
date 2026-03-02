@@ -45,10 +45,12 @@ const SOCIAL_ICONS = {
 }
 
 export function ShareCampaign({ slug, title }: ShareCampaignProps) {
-    const url = typeof window !== "undefined" ? `${window.location.origin}/r/${slug}` : `/r/${slug}`
+    // Short ?u= param for invisible tracking — 1-2 chars only
+    const base = typeof window !== "undefined" ? `${window.location.origin}/r/${slug}` : `/r/${slug}`
+    const u = (src: string) => `${base}?u=${src}`
 
     const { copied, copyToClipboard, nativeShare } = useShare({
-        url,
+        url: u("l"),
         title: `Campanha Oficial MyRifa: ${title}`,
         text: `🚀 Participe da campanha oficial "${title}" e garanta sua chance de ganhar! É rápido, 100% seguro e as cotas estão acabando. Acesse o link oficial:`,
     })
@@ -56,25 +58,25 @@ export function ShareCampaign({ slug, title }: ShareCampaignProps) {
     const socialPlatforms = [
         {
             label: "WhatsApp",
-            href: `https://wa.me/?text=${encodeURIComponent(`🚀 Participe da campanha oficial *${title}* e garanta sua chance de ganhar!\n\n✅ 100% Seguro\n⚡ Sorteio Automático\n\n👉 Acesse o link oficial e garanta seus números antes que acabem: ${url}`)}`,
+            href: `https://wa.me/?text=${encodeURIComponent(`🚀 Participe da campanha oficial *${title}* e garanta sua chance de ganhar!\n\n🔒 100% Seguro\n🎯 Sorteio Automático\n\n📲 Acesse o link oficial e garanta seus números antes que acabem: ${u("w")}`)}`,
             bg: "bg-[#25D366] hover:bg-[#1db954]",
             icon: SOCIAL_ICONS.WHATSAPP,
         },
         {
             label: "Twitter / X",
-            href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Garanta agora sua chance na campanha oficial "${title}"! 🚀 Cotas limitadas. Participe com segurança pelo link:`)}&url=${encodeURIComponent(url)}`,
+            href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Garanta agora sua chance na campanha oficial "${title}"! 🚀 Cotas limitadas. Participe com segurança pelo link:`)}&url=${encodeURIComponent(u("x"))}`,
             bg: "bg-black hover:bg-slate-800",
             icon: SOCIAL_ICONS.TWITTER,
         },
         {
             label: "Facebook",
-            href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+            href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(u("f"))}`,
             bg: "bg-[#1877F2] hover:bg-[#0c65d8]",
             icon: SOCIAL_ICONS.FACEBOOK,
         },
         {
             label: "Telegram",
-            href: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(`🚀 Participe da campanha oficial *${title}*! Garanta seus números agora com total segurança. 🏆`)}`,
+            href: `https://t.me/share/url?url=${encodeURIComponent(u("t"))}&text=${encodeURIComponent(`🚀 Participe da campanha oficial *${title}*! Garanta seus números agora com total segurança. 🏆`)}`,
             bg: "bg-[#0088cc] hover:bg-[#006fa3]",
             icon: SOCIAL_ICONS.TELEGRAM,
         },
@@ -97,10 +99,11 @@ export function ShareCampaign({ slug, title }: ShareCampaignProps) {
                     </DialogDescription>
                 </DialogHeader>
 
+                {/* QR Code with ?u=qr */}
                 <div className="flex justify-center py-2">
                     <div className="bg-white p-3 rounded-2xl border-2 border-dashed border-slate-200 shadow-sm">
                         <Image
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}`}
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(u("qr"))}`}
                             alt="QR Code da Campanha"
                             width={180}
                             height={180}
@@ -109,11 +112,12 @@ export function ShareCampaign({ slug, title }: ShareCampaignProps) {
                     </div>
                 </div>
 
+                {/* Input shows clean URL, copy action uses tracked version */}
                 <div className="flex gap-2">
                     <input
                         type="text"
                         readOnly
-                        value={url}
+                        value={base}
                         className="flex-1 h-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 text-sm text-slate-700 dark:text-slate-300 focus:outline-none"
                     />
                     <Button

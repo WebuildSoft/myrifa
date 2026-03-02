@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button"
 import { RifaSearchNav } from "@/components/rifas/RifaSearchNav"
 import { RifaPublicCard } from "@/components/rifas/RifaPublicCard"
 
+export const dynamic = 'force-dynamic'
+
 export default async function PublicRifasPage() {
     const rifas = await prisma.rifa.findMany({
         where: {

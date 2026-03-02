@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Ticket, ChevronDown, ChevronUp, Copy, CheckCircle2, Clock, AlertCircle, TicketCheck } from "lucide-react"
+import { Ticket, ChevronDown, ChevronUp, Copy, CheckCircle2, Clock, AlertCircle, TicketCheck, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
@@ -27,6 +27,12 @@ export function OrderCard({ transaction }: OrderCardProps) {
                 description: "Boa sorte no sorteio."
             })
         })
+    }
+
+    const shareParticipation = () => {
+        const u = `${window.location.origin}/r/${rifa.slug}?u=wa`
+        const text = `✨ Acabei de garantir meus números da sorte na campanha *${rifa.title}*! 🍀\n\n🔒 100% Seguro\n🎯 Sorteio Automático\n\n📲 Participe você também e concorra: ${u}`
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
     }
 
     return (
@@ -106,17 +112,26 @@ export function OrderCard({ transaction }: OrderCardProps) {
                     )}
 
                     {isPaid && (
-                        <Button
-                            variant="ghost"
-                            onClick={() => setIsExpanded(!isExpanded)}
-                            className="w-full flex items-center justify-between mt-2 h-12 rounded-xl text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-50 dark:hover:bg-slate-700/50"
-                        >
-                            <span className="flex items-center gap-2">
-                                <TicketCheck className="h-5 w-5 text-emerald-500" />
-                                Meus Números da Sorte
-                            </span>
-                            {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-                        </Button>
+                        <div className="flex flex-col gap-2 mt-2">
+                            <Button
+                                onClick={shareParticipation}
+                                className="w-full bg-[#25D366] hover:bg-[#1db954] text-white font-bold rounded-xl h-12 shadow-sm flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
+                            >
+                                <Share2 className="h-5 w-5" />
+                                Compartilhar no WhatsApp
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                className="w-full flex items-center justify-between h-12 rounded-xl text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                            >
+                                <span className="flex items-center gap-2">
+                                    <TicketCheck className="h-5 w-5 text-emerald-500" />
+                                    Meus Números da Sorte
+                                </span>
+                                {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                            </Button>
+                        </div>
                     )}
 
                     {isPending && isFinished && (

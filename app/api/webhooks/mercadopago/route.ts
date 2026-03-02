@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { MercadoPagoConfig, Payment } from 'mercadopago'
 import { sendWhatsAppMessage, templates } from "@/lib/evolution"
+import { sendSystemAlert } from "@/lib/alert"
 import crypto from 'crypto'
 
 export async function POST(request: Request) {
@@ -117,7 +118,7 @@ export async function POST(request: Request) {
 
                     // Trigger WhatsApp confirmation
                     if (transaction.buyer.whatsapp) {
-                        const message = templates.paymentConfirmed(
+                        const message = await templates.paymentConfirmed(
                             transaction.buyer.name,
                             transaction.rifa.title,
                             transaction.numbers
@@ -165,6 +166,7 @@ export async function POST(request: Request) {
         return Response.json({ success: true })
     } catch (error) {
         console.error("Webhook Error:", error)
+        await sendSystemAlert("Webhook Mercado Pago - Falha crítica", error)
         return Response.json({ error: "Webhook Error" }, { status: 500 })
     }
 }

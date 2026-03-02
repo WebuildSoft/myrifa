@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { revalidatePath } from "next/cache"
 import { sendWhatsAppMessage, templates } from "@/lib/evolution"
+import { sendSystemAlert } from "@/lib/alert"
 
 export async function confirmPaymentAction(transactionId: string) {
     const session = await auth()
@@ -63,7 +64,7 @@ export async function confirmPaymentAction(transactionId: string) {
         // 4. Send WhatsApp confirmation (Async, don't block)
         if (transaction.buyer.whatsapp) {
             try {
-                const message = templates.paymentConfirmed(
+                const message = await templates.paymentConfirmed(
                     transaction.buyer.name,
                     transaction.rifa.title,
                     transaction.numbers
@@ -79,6 +80,7 @@ export async function confirmPaymentAction(transactionId: string) {
 
     } catch (error) {
         console.error("Manual confirm error:", error)
+        await sendSystemAlert("Confirmação Manual de Pagamento", error)
         return { error: "Erro ao confirmar pagamento" }
     }
 }

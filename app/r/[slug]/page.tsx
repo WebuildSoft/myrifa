@@ -17,6 +17,7 @@ import { CampaignHero } from "@/components/rifa/public/CampaignHero"
 import { CampaignStatsCard } from "@/components/rifa/public/CampaignStatsCard"
 import { CampaignRules } from "@/components/rifa/public/CampaignRules"
 import { getThemeConfig } from "@/lib/themes"
+import { RifaViewTracker } from "@/components/analytics/RifaViewTracker"
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params
@@ -105,6 +106,8 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
             themeConfig.text,
             themeConfig.selection
         )} style={customCssVars}>
+            {/* Track every visit invisibly */}
+            <RifaViewTracker rifaId={rifa.id} />
             <PublicHeader />
 
             <main className="max-w-[1400px] mx-auto pb-20">

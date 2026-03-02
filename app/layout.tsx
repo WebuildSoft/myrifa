@@ -9,6 +9,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 })
 
 import { Providers } from "@/components/Providers"
+import { VisitorTracker } from "@/components/VisitorTracker"
+import { ClientErrorReporter } from "@/components/ClientErrorReporter"
 
 export const metadata: Metadata = {
     title: "MyRifa - Gestão de Arrecadação Digital e Campanhas",
@@ -24,6 +26,8 @@ export default function RootLayout({
         <html lang="pt-BR">
             <body className={`${plusJakartaSans.variable} font-sans antialiased`}>
                 <Providers>
+                    <VisitorTracker />
+                    <ClientErrorReporter />
                     {children}
                     <Toaster position="top-right" richColors />
                 </Providers>
