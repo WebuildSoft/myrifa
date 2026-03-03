@@ -11,6 +11,9 @@ import type { NumberData, NumberStatus } from "./hooks/useNumberGrid"
 import { BalloonShape } from "@prisma/client"
 
 interface MobileNumberSheetProps {
+    isOpen: boolean
+    onOpen: () => void
+    onClose: () => void
     numbers: NumberData[]
     selectedNumbers: number[]
     onToggle: (n: number, status: NumberStatus) => void
@@ -24,6 +27,9 @@ interface MobileNumberSheetProps {
 }
 
 export function MobileNumberSheet({
+    isOpen: open,
+    onOpen: setOpen,
+    onClose: handleClose,
     numbers,
     selectedNumbers,
     onToggle,
@@ -35,7 +41,10 @@ export function MobileNumberSheet({
     balloonShape = "CIRCLE",
     rifaTitle,
 }: MobileNumberSheetProps) {
-    const [open, setOpen] = useState(false)
+    const handleSetOpen = (val: boolean) => {
+        if (val) setOpen()
+        else handleClose()
+    }
 
     const color = primaryColor || "var(--primary)"
     const totalPrice = selectedNumbers.length * price
@@ -54,7 +63,7 @@ export function MobileNumberSheet({
             {!open && (
                 <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-32px)] max-w-sm animate-in fade-in slide-in-from-bottom-8 duration-500">
                     <button
-                        onClick={() => setOpen(true)}
+                        onClick={() => handleSetOpen(true)}
                         style={{
                             backgroundColor: color,
                             boxShadow: `0 20px 40px -10px ${color}66, 0 0 20px ${color}33`
@@ -89,6 +98,17 @@ export function MobileNumberSheet({
             {/* Full-screen bottom sheet overlay (mobile only) */}
             {open && (
                 <div className="md:hidden fixed inset-0 z-50 flex flex-col bg-slate-50 dark:bg-slate-950 animate-in slide-in-from-bottom duration-300">
+                    {/* Floating Close Button in corner (High visibility) */}
+                    <button
+                        onClick={() => handleSetOpen(false)}
+                        className="fixed top-4 right-4 z-[60] w-12 h-12 rounded-full bg-slate-900/90 dark:bg-slate-100/90 text-white dark:text-slate-900 flex items-center justify-center shadow-2xl backdrop-blur-sm active:scale-95 transition-all border-2 border-white/20 dark:border-slate-900/20"
+                        aria-label="Fechar seletor"
+                    >
+                        <X className="w-6 h-6" strokeWidth={3} />
+                    </button>
+
+                    {/* Swipe handle / visual affordance */}
+                    <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto mt-3 mb-1 shrink-0 opacity-50" />
                     {/* Sheet header */}
                     <div className="flex items-center justify-between px-4 py-4 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-md shrink-0 ring-1 ring-slate-200/50 dark:ring-slate-700/50">
                         <div className="flex items-center gap-3">
@@ -107,7 +127,7 @@ export function MobileNumberSheet({
                             </div>
                         </div>
                         <button
-                            onClick={() => setOpen(false)}
+                            onClick={() => handleSetOpen(false)}
                             className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border border-transparent active:scale-95 transition-all shadow-lg shadow-slate-200 dark:shadow-none"
                         >
                             <span className="text-xs font-black uppercase tracking-wider">Fechar</span>
@@ -146,7 +166,7 @@ export function MobileNumberSheet({
                             <CheckoutFloatingBar
                                 selectedNumbers={selectedNumbers}
                                 totalPrice={totalPrice}
-                                onCheckout={() => { setOpen(false); onCheckout() }}
+                                onCheckout={() => { handleSetOpen(false); onCheckout() }}
                                 onRemove={onDeselect}
                                 primaryColor={primaryColor || undefined}
                             />

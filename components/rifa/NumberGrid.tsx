@@ -1,7 +1,8 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { Ticket } from "lucide-react"
+import { useState } from "react"
+import { Ticket, X } from "lucide-react"
 import { QuickSelect } from "./QuickSelect"
 import { StatusLegend } from "./StatusLegend"
 import { NumberButton } from "./NumberButton"
@@ -44,6 +45,8 @@ export function NumberGrid({
         initialNumbers: numbers,
         maxPerBuyer,
     })
+
+    const [isSheetOpen, setIsSheetOpen] = useState(false)
 
     const handleGoToCheckout = () => {
         try {
@@ -106,10 +109,7 @@ export function NumberGrid({
 
                 {/* Placeholder card to hint user */}
                 <button
-                    onClick={() => {
-                        const btn = document.querySelector('button[style*="background-color"]') as HTMLButtonElement;
-                        if (btn) btn.click();
-                    }}
+                    onClick={() => setIsSheetOpen(true)}
                     className="w-full text-left bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 p-6 flex flex-col items-center text-center gap-4 group active:scale-[0.98] transition-all relative overflow-hidden"
                 >
                     {/* Background glow */}
@@ -159,6 +159,9 @@ export function NumberGrid({
                 </button>
 
                 <MobileNumberSheet
+                    isOpen={isSheetOpen}
+                    onOpen={() => setIsSheetOpen(true)}
+                    onClose={() => setIsSheetOpen(false)}
                     numbers={gridNumbers}
                     selectedNumbers={selectedNumbers}
                     onToggle={toggleNumber}
