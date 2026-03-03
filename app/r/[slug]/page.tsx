@@ -188,6 +188,8 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                         primaryColor={rifa.primaryColor || themeConfig.primaryHex}
                                         rifaTitle={rifa.title}
                                         rifaCover={rifa.coverImage}
+                                        themeClasses={cn(themeConfig.body, themeConfig.text, themeConfig.selection)}
+                                        themeStyle={customCssVars}
                                     />
                                 )}
 

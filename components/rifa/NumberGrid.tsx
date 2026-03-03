@@ -21,6 +21,8 @@ interface NumberGridProps {
     primaryColor?: string | null
     rifaTitle?: string
     rifaCover?: string | null
+    themeClasses?: string
+    themeStyle?: React.CSSProperties
 }
 
 export function NumberGrid({
@@ -32,6 +34,8 @@ export function NumberGrid({
     primaryColor,
     rifaTitle,
     rifaCover,
+    themeClasses,
+    themeStyle,
 }: NumberGridProps) {
     const router = useRouter()
     const {
@@ -172,6 +176,8 @@ export function NumberGrid({
                     primaryColor={primaryColor}
                     balloonShape={balloonShape}
                     rifaTitle={rifaTitle}
+                    themeClasses={themeClasses}
+                    themeStyle={themeStyle}
                 />
             </div>
         </>

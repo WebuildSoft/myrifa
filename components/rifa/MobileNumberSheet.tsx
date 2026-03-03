@@ -25,6 +25,8 @@ interface MobileNumberSheetProps {
     primaryColor?: string | null
     balloonShape?: BalloonShape
     rifaTitle?: string
+    themeClasses?: string
+    themeStyle?: React.CSSProperties
 }
 
 export function MobileNumberSheet({
@@ -41,6 +43,8 @@ export function MobileNumberSheet({
     primaryColor,
     balloonShape = "CIRCLE",
     rifaTitle,
+    themeClasses,
+    themeStyle,
 }: MobileNumberSheetProps) {
     const [mounted, setMounted] = useState(false)
 
@@ -107,7 +111,13 @@ export function MobileNumberSheet({
 
             {/* Full-screen bottom sheet overlay (mobile only) */}
             {open && (
-                <div className="md:hidden fixed inset-0 z-[100] flex flex-col bg-slate-50 dark:bg-slate-950 animate-in slide-in-from-bottom duration-300">
+                <div
+                    className={cn(
+                        "md:hidden fixed inset-0 z-[100] flex flex-col animate-in slide-in-from-bottom duration-300",
+                        themeClasses || "bg-slate-50 dark:bg-slate-950"
+                    )}
+                    style={themeStyle}
+                >
 
                     {/* Swipe handle / visual affordance */}
                     <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto mt-3 mb-1 shrink-0 opacity-50" />
