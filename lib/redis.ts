@@ -7,7 +7,9 @@ const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379'
 export const redis =
     globalForRedis.redis ||
     new Redis(redisUrl, {
-        maxRetriesPerRequest: null,
+        connectTimeout: 5000,
+        commandTimeout: 2000,
+        maxRetriesPerRequest: 1, // Não fica tentando pra sempre e travando a app
         enableReadyCheck: false,
         tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined,
     })

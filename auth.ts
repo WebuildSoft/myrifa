@@ -12,37 +12,44 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     basePath: "/api/auth",
     trustHost: true,
     secret: process.env.AUTH_SECRET || "minhaApiKeyProtetoraTemporariaAteSetares",
+    debug: process.env.NODE_ENV === "development",
     adapter: PrismaAdapter(prisma),
     session: { strategy: "jwt" },
     callbacks: {
         ...authConfig.callbacks,
         async jwt({ token, user }) {
-            // Preserva lógica original de Role
+            // No login inicial, o "user" virá preenchido.
             if (user) {
                 token.role = (user as any).role
                 token.id = user.id
 
-                // Registra/Renova a autorização da Sessão Híbrida no Redis (TTL de 30 dias)
+                // Registra/Renova a autorização da Sessão no Redis
+                // Se o Redis falhar no login, o fallback em navegacao posterior vai permitir o acesso via JWT comum.
                 await redis.set(`session:${user.id}`, "valid", "EX", 30 * 24 * 60 * 60).catch(() => { })
             }
 
-            // Para requisições subsequentes, valida a integridade da Sessão remotamente no Redis.
-            if (token.id) {
+            // Valida integridade da Sessão no Redis.
+            const userId = token.id || token.sub
+            if (userId) {
                 try {
-                    const isValid = await redis.get(`session:${token.id}`)
-                    if (!isValid) {
-                        token.revoked = true
+                    // SÓ verificamos revogação se o Redis estiver conectado e pronto.
+                    if (redis.status === 'ready') {
+                        const isValid = await redis.get(`session:${userId}`)
+                        if (isValid === null) {
+                            token.revoked = true // FOI DELETADO via (Kick/Ban)
+                        }
                     }
                 } catch (error) {
-                    // Fallback: permite navegação se Redis falhar para resiliência.
-                    console.error("Redis connection failed on JWT callback:", error)
+                    // Fallback de segurança: permite login se Redis cair.
+                    console.error("Redis connection failed on JWT callback. Using JWT fallback.", error)
                 }
             }
 
             return token
         },
         async session({ session, token }: any) {
-            if (token.revoked) return {} as any
+            // Se o token foi revogado no Redis, retornamos null para o NextAuth tratar como deslogado
+            if (token.revoked) return null as any
 
             if (session.user) {
                 session.user.id = (token.id || token.sub) as string
