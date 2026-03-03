@@ -98,14 +98,6 @@ export function MobileNumberSheet({
             {/* Full-screen bottom sheet overlay (mobile only) */}
             {open && (
                 <div className="md:hidden fixed inset-0 z-[100] flex flex-col bg-slate-50 dark:bg-slate-950 animate-in slide-in-from-bottom duration-300">
-                    {/* Floating Close Button in corner (High visibility) */}
-                    <button
-                        onClick={() => handleSetOpen(false)}
-                        className="fixed top-20 right-4 z-[110] w-12 h-12 rounded-full bg-slate-900/90 dark:bg-slate-100/90 text-white dark:text-slate-900 flex items-center justify-center shadow-2xl backdrop-blur-sm active:scale-95 transition-all border-2 border-white/20 dark:border-slate-900/20"
-                        aria-label="Fechar seletor"
-                    >
-                        <X className="w-6 h-6" strokeWidth={3} />
-                    </button>
 
                     {/* Swipe handle / visual affordance */}
                     <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto mt-3 mb-1 shrink-0 opacity-50" />
