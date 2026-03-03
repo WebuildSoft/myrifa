@@ -6,24 +6,29 @@ const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379'
 
 // Log de diagnóstico mascarado para o container
 const maskedUrl = redisUrl.replace(/:[^:@]+@/, ':****@')
-console.log(`[REDIS] Prep connection to: ${maskedUrl} (Status: ${globalForRedis.redis ? 'reusing' : 'new'})`)
+console.log(`[REDIS] Initializing connection to: ${maskedUrl}`)
 
 export const redis =
     globalForRedis.redis ||
     new Redis(redisUrl, {
-        connectTimeout: 15000,
-        commandTimeout: 10000,
-        maxRetriesPerRequest: 3,
-        enableReadyCheck: false,
+        connectTimeout: 20000, // 20s para o handshake SSL inicial
+        commandTimeout: 15000,
+        maxRetriesPerRequest: 5, // Aumentado para 5 para dar tempo de estabilização
+        retryStrategy(times) {
+            const delay = Math.min(times * 50, 2000);
+            return delay;
+        },
+        enableReadyCheck: true,
         tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined,
     })
 
+redis.on('connect', () => console.log('[REDIS] Connected to server.'))
+redis.on('ready', () => console.log('[REDIS] Client is ready to relay commands.'))
+redis.on('reconnecting', (ms: number) => console.log(`[REDIS] Reconnecting in ${ms}ms...`))
+
 // Silencia erros de conexão para evitar que a app quebre nos logs quando o Redis estiver off
 redis.on('error', (err) => {
-    // Apenas logamos discretamente se não estiver em produção para não poluir
-    if (process.env.NODE_ENV !== 'production') {
-        console.warn('[REDIS] Offline:', err.message)
-    }
+    console.error('[REDIS] Connection Error Details:', err.message)
 })
 
 if (process.env.NODE_ENV !== 'production') globalForRedis.redis = redis
