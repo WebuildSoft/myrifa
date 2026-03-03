@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { createPortal } from "react-dom"
 import { X, Ticket, ChevronRight, Shuffle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { NumberButton } from "./NumberButton"
@@ -41,6 +42,12 @@ export function MobileNumberSheet({
     balloonShape = "CIRCLE",
     rifaTitle,
 }: MobileNumberSheetProps) {
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
     const handleSetOpen = (val: boolean) => {
         if (val) setOpen()
         else handleClose()
@@ -50,7 +57,7 @@ export function MobileNumberSheet({
     const totalPrice = selectedNumbers.length * price
     const formatted = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(price)
 
-    return (
+    const sheetContent = (
         <>
             <style jsx global>{`
                 @keyframes shine {
@@ -177,4 +184,8 @@ export function MobileNumberSheet({
             )}
         </>
     )
+
+    if (!mounted) return null
+
+    return createPortal(sheetContent, document.body)
 }
