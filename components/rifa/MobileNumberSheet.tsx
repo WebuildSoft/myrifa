@@ -59,7 +59,6 @@ export function MobileNumberSheet({
                 }
                 ${open ? `
                     body { overflow: hidden !important; }
-                    header { display: none !important; }
                 ` : ''}
             `}</style>
 
