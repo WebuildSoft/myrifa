@@ -11,6 +11,7 @@ import {
     Settings,
     LogOut,
     ShieldCheck,
+    Ticket,
     ChevronLeft,
     ChevronRight,
     Search,
@@ -93,19 +94,20 @@ export default function AdminSidebar({ user, isOpen, onClose }: AdminSidebarProp
                 {/* Logo Section */}
                 <div className={cn(
                     "flex h-24 items-center transition-all duration-300",
-                    isCollapsed ? "justify-center px-0" : "px-8"
+                    isCollapsed ? "justify-center px-0" : "px-6"
                 )}>
-                    <div className="flex items-center space-x-3 group cursor-default">
-                        <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300 shrink-0">
-                            <ShieldCheck className="h-6 w-6 text-white" />
-                        </div>
+                    <div className="flex items-center gap-3 group cursor-default">
+                        <Ticket className={cn(
+                            "text-primary rotate-12 transition-transform group-hover:scale-110",
+                            isCollapsed ? "h-7 w-7" : "h-8 w-8"
+                        )} />
                         {!isCollapsed && (
                             <div className="flex flex-col animate-in fade-in slide-in-from-left-2 duration-300">
-                                <span className="text-xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-                                    RifaAdmin
+                                <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
+                                    My<span className="text-primary">Rifa</span>
                                 </span>
-                                <span className="text-xs uppercase font-black tracking-[0.2em] text-slate-500">
-                                    Control v2.0
+                                <span className="text-[9px] uppercase font-black tracking-[0.2em] text-slate-400">
+                                    Admin Panel
                                 </span>
                             </div>
                         )}

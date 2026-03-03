@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Ticket, FilePlus, Settings, CreditCard, LogOut, Menu, Diamond, HelpCircle, BarChart3, User } from "lucide-react"
+import { LayoutDashboard, Ticket, FilePlus, Settings, CreditCard, LogOut, Menu, HelpCircle, BarChart3, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { signOut } from "next-auth/react"
@@ -30,11 +30,9 @@ export function Sidebar() {
         <>
             {/* Mobile top bar */}
             <div className="md:hidden fixed top-0 w-full h-16 border-b bg-white dark:bg-slate-900 z-50 flex items-center px-4 justify-between">
-                <Link href="/dashboard" className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
-                        <Diamond className="h-5 w-5" />
-                    </div>
-                    <span className="font-bold text-lg text-primary tracking-tight">MyRifa</span>
+                <Link href="/dashboard" className="flex items-center gap-2 group">
+                    <Ticket className="h-7 w-7 text-primary rotate-12 group-hover:scale-110 transition-transform" />
+                    <span className="font-black text-lg text-slate-900 dark:text-white tracking-tight">My<span className="text-primary">Rifa</span></span>
                 </Link>
                 <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                     <Menu className="h-6 w-6" />
@@ -49,11 +47,9 @@ export function Sidebar() {
                 )}
             >
                 <div className="h-20 flex items-center px-6 border-b border-primary/5 hidden md:flex gap-3">
-                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                        <Diamond className="h-6 w-6" />
-                    </div>
-                    <Link href="/dashboard" className="font-bold text-xl text-primary tracking-tight">
-                        MyRifa
+                    <Link href="/dashboard" className="flex items-center gap-3 group">
+                        <Ticket className="h-8 w-8 text-primary rotate-12 group-hover:scale-110 transition-transform" />
+                        <span className="font-black text-xl text-slate-900 dark:text-white tracking-tight">My<span className="text-primary">Rifa</span></span>
                     </Link>
                 </div>
 

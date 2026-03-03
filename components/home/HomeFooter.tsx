@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Star, Instagram, Twitter, Facebook, HelpingHand, ShieldCheck, CheckCircle2 } from "lucide-react"
+import { Ticket, Instagram, Twitter, Facebook, HelpingHand, ShieldCheck, CheckCircle2 } from "lucide-react"
 
 export function HomeFooter() {
     return (
@@ -8,9 +8,9 @@ export function HomeFooter() {
                 <div className="md:col-span-2 space-y-6">
                     <Link href="/" className="flex items-center gap-2">
                         <div className="size-8 bg-primary rounded-lg flex items-center justify-center text-white shadow-md">
-                            <Star className="h-5 w-5 fill-white" />
+                            <Ticket className="h-5 w-5" />
                         </div>
-                        <span className="text-lg font-black tracking-tighter uppercase italic dark:text-white">
+                        <span className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
                             My<span className="text-primary">Rifa</span>
                         </span>
                     </Link>

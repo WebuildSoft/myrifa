@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { Wallet } from "lucide-react"
+import { Ticket } from "lucide-react"
 import Link from "next/link"
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
@@ -15,7 +15,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
                     <div className="relative z-10 flex flex-col justify-end p-16 text-white h-full bg-gradient-to-t from-primary via-primary/40 to-transparent">
                         <div className="mb-8">
                             <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6">
-                                <Wallet className="h-7 w-7 text-white" />
+                                <Ticket className="h-7 w-7 text-white" />
                             </div>
                             <h1 className="text-5xl font-extrabold mb-6 leading-tight tracking-tight">
                                 Sua próxima grande conquista começa aqui.
@@ -48,10 +48,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
                 <div className="w-full lg:w-1/2 flex flex-col p-8 lg:p-16 overflow-y-auto bg-white dark:bg-slate-900">
                     <div className="flex justify-between items-center mb-12">
                         <Link href="/" className="flex items-center gap-2 group">
-                            <div className="bg-primary p-2 rounded-xl group-hover:scale-110 transition-transform">
-                                <Wallet className="h-5 w-5 text-white" />
-                            </div>
-                            <span className="font-bold text-2xl text-slate-900 dark:text-slate-100 tracking-tight">MyRifa</span>
+                            <Ticket className="h-7 w-7 text-primary rotate-12 group-hover:scale-110 transition-transform" />
+                            <span className="font-black text-2xl text-slate-900 dark:text-slate-100 tracking-tight">My<span className="text-primary">Rifa</span></span>
                         </Link>
                     </div>
 
