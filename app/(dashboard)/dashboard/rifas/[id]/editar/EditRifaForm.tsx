@@ -145,7 +145,6 @@ export default function EditRifaForm({ rifa, initialPrizes }: EditRifaFormProps)
                                                 newPrizes[index].title = e.target.value
                                                 setPrizes(newPrizes)
                                             }}
-                                            required
                                         />
                                     </div>
                                     {prizes.length > 1 && (
