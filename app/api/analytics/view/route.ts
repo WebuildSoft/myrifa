@@ -9,13 +9,33 @@ export async function POST(req: NextRequest) {
     if (!rl.success) return rateLimitResponse(rl.resetIn)
 
     try {
-        const { rifaId, sessionId, referrer, rawReferrer, device, os, browser, utmSource, utmMedium, utmCampaign } = await req.json()
+        const body = await req.json()
+
+        // --- PATCH WORKAROUND FOR sendBeacon ---
+        // navigator.sendBeacon ALWAYS sends a POST request.
+        // If the payload contains 'duration', it's actually an update ping, not a new view.
+        if (body.duration && body.sessionId && body.rifaId) {
+            const view = await (prisma as any).linkView.findFirst({
+                where: { sessionId: body.sessionId, rifaId: body.rifaId },
+                orderBy: { createdAt: "desc" }
+            })
+            if (view) {
+                await (prisma as any).linkView.update({
+                    where: { id: view.id },
+                    data: { duration: Math.round(body.duration) }
+                })
+            }
+            return NextResponse.json({ success: true, action: "updated" })
+        }
+        // ---------------------------------------
+
+        const { rifaId, sessionId, referrer, rawReferrer, device, os, browser, utmSource, utmMedium, utmCampaign } = body
 
         if (!rifaId || !sessionId) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
         }
 
-        const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || "Unknown"
+        const forwardedIp = req.headers.get("x-forwarded-for")?.split(",")[0] || "Unknown"
 
         // SECURITY: Validate that the rifa exists before recording a view
         // to prevent spoofing/injecting views for non-existent or malicious IDs.
@@ -40,11 +60,11 @@ export async function POST(req: NextRequest) {
                 utmSource,
                 utmMedium,
                 utmCampaign,
-                ip,
+                ip: forwardedIp,
             }
         })
 
-        return NextResponse.json({ success: true })
+        return NextResponse.json({ success: true, action: "created" })
     } catch (error) {
         return NextResponse.json({ error: "Failed to record view" }, { status: 500 })
     }
