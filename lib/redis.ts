@@ -8,6 +8,10 @@ const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379'
 const maskedUrl = redisUrl.replace(/:[^:@]+@/, ':****@')
 console.log(`[REDIS] Initializing connection to: ${maskedUrl}`)
 
+// Debug: listar chaves de ambiente disponíveis (apenas nomes para segurança)
+const redisEnvKeys = Object.keys(process.env).filter(k => k.startsWith('REDIS')).join(', ')
+console.log(`[REDIS] Environment keys available: ${redisEnvKeys || 'None found'}`)
+
 export const redis =
     globalForRedis.redis ||
     new Redis(redisUrl, {
