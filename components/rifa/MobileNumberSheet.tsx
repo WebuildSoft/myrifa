@@ -90,15 +90,17 @@ export function MobileNumberSheet({
             {open && (
                 <div className="md:hidden fixed inset-0 z-50 flex flex-col bg-slate-50 dark:bg-slate-950 animate-in slide-in-from-bottom duration-300">
                     {/* Sheet header */}
-                    <div className="flex items-center justify-between px-4 py-4 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm shrink-0">
-                        <div className="flex items-center gap-2">
-                            <Ticket className="w-5 h-5 shrink-0" style={{ color }} />
+                    <div className="flex items-center justify-between px-4 py-4 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-md shrink-0 ring-1 ring-slate-200/50 dark:ring-slate-700/50">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-slate-100 dark:bg-slate-800 p-2 rounded-xl">
+                                <Ticket className="w-5 h-5 shrink-0" style={{ color }} />
+                            </div>
                             <div>
-                                <h2 className="font-black text-slate-900 dark:text-white text-sm leading-none">
+                                <h2 className="font-black text-slate-900 dark:text-white text-base leading-none">
                                     Escolha suas cotas
                                 </h2>
                                 {rifaTitle && (
-                                    <p className="text-[10px] text-slate-400 font-medium mt-0.5 truncate max-w-[180px]">
+                                    <p className="text-xs text-slate-400 font-medium mt-1 truncate max-w-[200px]">
                                         {rifaTitle}
                                     </p>
                                 )}
@@ -106,9 +108,10 @@ export function MobileNumberSheet({
                         </div>
                         <button
                             onClick={() => setOpen(false)}
-                            className="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border border-transparent active:scale-95 transition-all shadow-lg shadow-slate-200 dark:shadow-none"
                         >
-                            <X className="w-5 h-5" />
+                            <span className="text-xs font-black uppercase tracking-wider">Fechar</span>
+                            <X className="w-4 h-4" strokeWidth={3} />
                         </button>
                     </div>
 
