@@ -13,6 +13,7 @@ import { VisitorTracker } from "@/components/VisitorTracker"
 import { ClientErrorReporter } from "@/components/ClientErrorReporter"
 
 export const metadata: Metadata = {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
     title: "MyRifa - Gestão de Arrecadação Digital e Campanhas",
     description: "Plataforma SaaS para criação e gerenciamento de campanhas de apoio, ações entre amigos e captação de recursos online.",
 }
