@@ -101,6 +101,7 @@ export async function updateRifaAction(rifaId: string, formData: FormData) {
         revalidatePath(`/dashboard/rifas/${rifaId}`)
         revalidatePath(`/dashboard/rifas/${rifaId}/editar`)
         revalidatePath("/dashboard/rifas")
+        revalidatePath("/r", "layout") // Revalidate all public campaign pages
         return { success: true }
     } catch (error) {
         console.error("Update error:", error)
