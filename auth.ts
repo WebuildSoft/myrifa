@@ -12,28 +12,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     basePath: "/api/auth",
     trustHost: true,
     secret: process.env.AUTH_SECRET || "minhaApiKeyProtetoraTemporariaAteSetares",
-    debug: process.env.NODE_ENV === "development",
     adapter: PrismaAdapter(prisma),
     session: { strategy: "jwt" },
     callbacks: {
+        ...authConfig.callbacks,
         async jwt({ token, user }) {
-            // No login inicial, o "user" virá preenchido.
-            if (user && user.id) {
+            // Preserva lógica original de Role
+            if (user) {
+                token.role = (user as any).role
                 token.id = user.id
+
                 // Registra/Renova a autorização da Sessão Híbrida no Redis (TTL de 30 dias)
                 await redis.set(`session:${user.id}`, "valid", "EX", 30 * 24 * 60 * 60).catch(() => { })
             }
 
-            // Para requisições subsequentes, valida a integridade da Sessão remotamente.
+            // Para requisições subsequentes, valida a integridade da Sessão remotamente no Redis.
             if (token.id) {
                 try {
                     const isValid = await redis.get(`session:${token.id}`)
                     if (!isValid) {
-                        // A chave não existe mais (foi deletada via Kick/Ban por admin ou expirou)
                         token.revoked = true
                     }
                 } catch (error) {
-                    // Fallback de segurança: se o Redis cair, permite a navegação baseado apenas no JWT.
+                    // Fallback: permite navegação se Redis falhar para resiliência.
                     console.error("Redis connection failed on JWT callback:", error)
                 }
             }
@@ -41,13 +42,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return token
         },
         async session({ session, token }: any) {
-            // Se o JWT foi sinalizado como revogado pela nossa checagem no Redis, destruimos a sessão pública.
-            if (token.revoked) {
-                return {} as any
-            }
-            // Repassa o ID para o front-end
-            if (token.id && session.user) {
-                session.user.id = token.id as string
+            if (token.revoked) return {} as any
+
+            if (session.user) {
+                session.user.id = (token.id || token.sub) as string
+                session.user.role = token.role as string
             }
             return session
         }
