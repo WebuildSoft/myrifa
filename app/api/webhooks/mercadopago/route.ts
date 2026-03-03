@@ -3,8 +3,14 @@ import { MercadoPagoConfig, Payment } from 'mercadopago'
 import { sendWhatsAppMessage, templates } from "@/lib/evolution"
 import { sendSystemAlert } from "@/lib/alert"
 import crypto from 'crypto'
+import { rateLimit, getIP, rateLimitResponse } from "@/lib/rate-limit"
 
 export async function POST(request: Request) {
+    // Rate limit: generous limit for webhooks (MP can send bursts), but protects against flood
+    const ip = getIP(request)
+    const rl = rateLimit(ip + ":mp_webhook", { limit: 100, windowMs: 60_000 })
+    if (!rl.success) return rateLimitResponse(rl.resetIn)
+
     try {
         const url = new URL(request.url)
         const signature = request.headers.get("x-signature")

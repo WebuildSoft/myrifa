@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
+import { rateLimit, getIP, rateLimitResponse } from "@/lib/rate-limit"
 
 export async function POST(req: NextRequest) {
+    // Rate limit: max 20 pings per IP per minute
+    const ip = getIP(req)
+    const rl = rateLimit(ip + ":visitor_ping", { limit: 20, windowMs: 60_000 })
+    if (!rl.success) return rateLimitResponse(rl.resetIn)
+
     try {
         const { visitorId, path } = await req.json()
 
