@@ -3,15 +3,30 @@ import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import {
-    Table, TableBody, TableCell, TableHead, TableHeader, TableRow
-} from "@/components/ui/table"
-import {
     BarChart2, Eye, Users, Clock, TrendingUp,
     Smartphone, Monitor, Tablet, Globe, Cpu,
     MousePointerClick, Search, ArrowUpRight
 } from "lucide-react"
+import { RecentVisitsTable, GroupedVisits, ViewItem } from "@/components/analytics/RecentVisitsTable"
+import { unstable_cache } from "next/cache"
+import { redis } from "@/lib/redis"
 
 export const dynamic = 'force-dynamic'
+
+const getStatsCounts = unstable_cache(
+    async () => {
+        const [totalViewsCount, rifasTotalCount, allBuyersCount] = await Promise.all([
+            (prisma as any).linkView.count(),
+            prisma.rifa.count(),
+            prisma.transaction.count({
+                where: { status: "PAID" }
+            })
+        ])
+        return { totalViewsCount, rifasTotalCount, allBuyersCount }
+    },
+    ['admin-analytics-global-counts-v2'],
+    { revalidate: 60 } // As contagens globais massivas atualizam a cada 60s em cache
+)
 
 const DEVICE_ICONS: Record<string, React.ReactNode> = {
     mobile: <Smartphone className="h-4 w-4" />,
@@ -86,24 +101,24 @@ export default async function AdminAnalyticsPage() {
     }
 
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
+    const fiveMinutesAgoTimestamp = Date.now() - 5 * 60 * 1000
 
-    // Fetch ALL data in parallel for maximum performance
-    const [views, totalViewsCount, rifasTotalCount, allBuyersCount, onlineUsersCount] = await Promise.all([
+    // Fetch data in parallel leveraging caching for massive global count tables
+    const [stats, views, onlineUsersRes] = await Promise.all([
+        getStatsCounts(),
         (prisma as any).linkView.findMany({
             orderBy: { createdAt: "desc" },
-            take: 1000 // Limit to avoid massive memory usage on global query
+            take: 500, // Reduced from 1000 to keep it lightning fast, sufficient for real-time breakdowns
+            include: { rifa: { select: { title: true } } }
         }),
-        (prisma as any).linkView.count(),
-        prisma.rifa.count(),
-        prisma.transaction.count({
-            where: { status: "PAID" }
-        }),
-        (prisma as any).linkView.findMany({
-            where: { createdAt: { gte: fiveMinutesAgo } },
-            select: { sessionId: true },
-            distinct: ['sessionId']
-        }).then((res: any[]) => res.length)
+        redis.zcount("online_users", fiveMinutesAgoTimestamp, "+inf").catch((e) => {
+            console.error("Redis Connection Failed (ZCOUNT). Fallback to 0.", e)
+            return 0
+        })
     ])
+
+    const { totalViewsCount, rifasTotalCount, allBuyersCount } = stats
+    const onlineUsersCount = onlineUsersRes
 
     const totalViews = views.length
     const uniqueSessions = new Set(views.map((v: any) => v.sessionId)).size
@@ -111,6 +126,29 @@ export default async function AdminAnalyticsPage() {
     const avgDuration = viewsWithDuration.length > 0
         ? Math.round(viewsWithDuration.reduce((acc: number, v: any) => acc + v.duration, 0) / viewsWithDuration.length)
         : 0
+
+    // Group Views by Rifa
+    const viewsByRifaUrl: Record<string, GroupedVisits> = {}
+    for (const v of views) {
+        if (!viewsByRifaUrl[v.rifaId]) {
+            viewsByRifaUrl[v.rifaId] = {
+                rifaId: v.rifaId,
+                rifaTitle: v.rifa?.title || "Rifa Desconhecida",
+                totalViews: 0,
+                uniqueVisitors: 0,
+                views: [],
+            }
+        }
+        viewsByRifaUrl[v.rifaId].views.push(v)
+        viewsByRifaUrl[v.rifaId].totalViews++
+    }
+
+    // Calculate Unique Visitors per Rifa
+    const groupedVisitsArray = Object.values(viewsByRifaUrl).map(group => {
+        const uniqueSet = new Set(group.views.map(v => v.sessionId))
+        group.uniqueVisitors = uniqueSet.size
+        return group
+    }).sort((a, b) => b.totalViews - a.totalViews)
 
     // Global conversion rate approx (Paid transactions / Total DB Views)
     const conversionRate = totalViewsCount > 0 ? ((allBuyersCount / totalViewsCount) * 100).toFixed(1) : "0"
@@ -272,74 +310,7 @@ export default async function AdminAnalyticsPage() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                    <div className="overflow-x-auto custom-scrollbar">
-                        <Table>
-                            <TableHeader className="bg-white/[0.01]">
-                                <TableRow className="border-white/[0.05] hover:bg-transparent">
-                                    <TableHead className="text-slate-500 font-bold uppercase tracking-widest text-[10px] py-4 px-6">Rifa ID</TableHead>
-                                    <TableHead className="text-slate-500 font-bold uppercase tracking-widest text-[10px] py-4 px-6">Data/Hora</TableHead>
-                                    <TableHead className="text-slate-500 font-bold uppercase tracking-widest text-[10px] py-4 px-6">Dispositivo / OS</TableHead>
-                                    <TableHead className="text-slate-500 font-bold uppercase tracking-widest text-[10px] py-4 px-6">Origem</TableHead>
-                                    <TableHead className="text-slate-500 font-bold uppercase tracking-widest text-[10px] py-4 px-6">UTM / IP</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {views.length === 0 ? (
-                                    <TableRow className="border-white/[0.03]">
-                                        <TableCell colSpan={5} className="h-40 text-center text-slate-600 text-sm font-medium">
-                                            Nenhuma visita registrada no banco local.
-                                        </TableCell>
-                                    </TableRow>
-                                ) : (
-                                    views.map((v: any) => (
-                                        <TableRow key={v.id} className="border-white/[0.03] hover:bg-white/[0.02] transition-colors group">
-                                            <TableCell className="py-3.5 px-6">
-                                                <span className="text-slate-400 font-mono text-xs max-w-[100px] truncate block" title={v.rifaId}>
-                                                    {v.rifaId}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell className="py-3.5 px-6 whitespace-nowrap">
-                                                <span className="text-slate-300 font-mono text-xs">
-                                                    {new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'medium', timeZone: 'America/Manaus' }).format(new Date(v.createdAt))}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell className="py-3.5 px-6">
-                                                <div className="flex flex-col gap-1">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className={`${DEVICE_COLORS[v.device] || "bg-slate-500"}/20 p-1 rounded`}>
-                                                            {DEVICE_ICONS[v.device] || <Monitor className="h-3.5 w-3.5" />}
-                                                        </span>
-                                                        <span className="text-slate-300 text-xs capitalize">{v.device}</span>
-                                                    </div>
-                                                    <span className="text-slate-500 text-[10px]">{v.os} / {v.browser}</span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="py-3.5 px-6">
-                                                <div className="flex flex-col gap-1">
-                                                    <span className={`text-xs font-bold ${SOURCE_COLORS[v.referrer] || "text-slate-400"}`}>
-                                                        {v.referrer || "Direto"}
-                                                    </span>
-                                                    <span className="text-slate-500 text-[10px] truncate max-w-[150px]" title={v.rawReferrer || ""}>
-                                                        {v.rawReferrer || "Sem href"}
-                                                    </span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="py-3.5 px-6">
-                                                <div className="flex flex-col gap-1">
-                                                    <span className="text-slate-400 text-[11px] font-mono">
-                                                        UTM: {v.utmSource || "—"}
-                                                    </span>
-                                                    <span className="text-slate-500 text-[10px] font-mono">
-                                                        IP: {v.ip || "—"}
-                                                    </span>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                )}
-                            </TableBody>
-                        </Table>
-                    </div>
+                    <RecentVisitsTable groupedVisits={groupedVisitsArray} totalViews={totalViews} />
                 </CardContent>
             </Card>
         </div>

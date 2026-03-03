@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { rateLimit, getIP, rateLimitResponse } from "@/lib/rate-limit"
+import { redis } from "@/lib/redis"
 
 export async function POST(req: NextRequest) {
     // Rate limit: max 30 requests per IP per minute
@@ -25,6 +26,10 @@ export async function POST(req: NextRequest) {
                     data: { duration: Math.round(body.duration) }
                 })
             }
+
+            // Ping Redis for Online Users tracking
+            await redis.zadd("online_users", Date.now(), body.sessionId).catch(() => { })
+
             return NextResponse.json({ success: true, action: "updated" })
         }
         // ---------------------------------------
@@ -64,6 +69,9 @@ export async function POST(req: NextRequest) {
             }
         })
 
+        // Ping Redis for Online Users tracking
+        await redis.zadd("online_users", Date.now(), sessionId).catch(() => { })
+
         return NextResponse.json({ success: true, action: "created" })
     } catch (error) {
         return NextResponse.json({ error: "Failed to record view" }, { status: 500 })
@@ -95,6 +103,9 @@ export async function PATCH(req: NextRequest) {
                 data: { duration: Math.round(duration) }
             })
         }
+
+        // Keep session alive in Redis
+        await redis.zadd("online_users", Date.now(), sessionId).catch(() => { })
 
         return NextResponse.json({ success: true })
     } catch (error) {
