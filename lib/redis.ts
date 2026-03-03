@@ -2,7 +2,7 @@ import Redis from 'ioredis'
 
 const globalForRedis = global as unknown as { redis: Redis }
 
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379'
+const redisUrl = "rediss://default:UgmUys691J0GG9dpJ7z58zCcmMYPBgQYd52JrRz56pqhb8D54iflRSrPWdVBb5tU@dw800wkg8ko0cks8k0ockos0:6380/0"
 
 // Log de diagnóstico mascarado para o container
 const maskedUrl = redisUrl.replace(/:[^:@]+@/, ':****@')
