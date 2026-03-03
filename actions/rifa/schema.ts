@@ -18,7 +18,7 @@ export const createRifaSchema = z.object({
         title: z.string().min(3).max(100),
         position: z.number().min(1)
     })).optional(),
-    theme: z.enum(['DEFAULT', 'OCEAN', 'SUNSET', 'MIDNIGHT']).default('DEFAULT'),
+    theme: z.enum(['DEFAULT', 'OCEAN', 'SUNSET', 'MIDNIGHT', 'ROYAL', 'NEON', 'GALAXY', 'LUXURY', 'FLOWER']).default('DEFAULT'),
     balloonShape: z.enum(['SQUARE', 'ROUNDED', 'CIRCLE', 'HEART', 'STAR', 'HEXAGON', 'DIAMOND', 'SHIELD', 'FLOWER']).default('ROUNDED'),
 })
 

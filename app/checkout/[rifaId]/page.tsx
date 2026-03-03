@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, use } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, ChevronRight, Ticket } from "lucide-react"
+import { BalloonShape } from "@prisma/client"
 
 import { processCheckoutAction, checkPaymentStatusAction } from "@/actions/checkout"
 import { CheckoutHeader } from "@/components/checkout/CheckoutHeader"
@@ -23,6 +24,8 @@ interface CheckoutData {
     rifaSlug: string
     numbers: number[]
     price: number
+    primaryColor: string | null
+    balloonShape?: BalloonShape
 }
 
 export default function CheckoutPage({ params }: { params: Promise<{ rifaId: string }> }) {
@@ -154,7 +157,14 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
     const secsLeft = String(secondsLeft % 60).padStart(2, "0")
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-20">
+        <div
+            className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-20"
+            style={{
+                '--primary': checkoutData.primaryColor || '#7c3aed',
+                '--color-primary': checkoutData.primaryColor || '#7c3aed',
+                '--ring': checkoutData.primaryColor || '#7c3aed',
+            } as React.CSSProperties}
+        >
             <CheckoutHeader />
 
             <main className="max-w-7xl mx-auto px-4 py-10 lg:px-8">
@@ -176,7 +186,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     <div className="lg:col-span-8 space-y-6">
-                        <CheckoutSteps currentStep={step} />
+                        <CheckoutSteps currentStep={step} primaryColor={checkoutData.primaryColor} />
 
                         {step === 1 && (
                             <StepBuyerInfo
@@ -185,6 +195,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                                 rifaSlug={checkoutData.rifaSlug}
                                 onNext={handleNextStep1}
                                 error={error}
+                                primaryColor={checkoutData.primaryColor}
                             />
                         )}
 
@@ -196,6 +207,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                                 onBack={() => setStep(1)}
                                 loading={loading}
                                 error={error}
+                                primaryColor={checkoutData.primaryColor}
                             />
                         )}
 
@@ -207,6 +219,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                                 secsLeft={secsLeft}
                                 copied={copied}
                                 onCopy={handleCopyPix}
+                                primaryColor={checkoutData.primaryColor}
                             />
                         )}
 
@@ -214,6 +227,8 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                             <StepSuccess
                                 numbers={checkoutData.numbers}
                                 rifaSlug={checkoutData.rifaSlug}
+                                primaryColor={checkoutData.primaryColor}
+                                balloonShape={checkoutData.balloonShape}
                             />
                         )}
                     </div>
@@ -225,6 +240,8 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                                 rifaCover={checkoutData.rifaCover}
                                 numbers={checkoutData.numbers}
                                 price={checkoutData.price}
+                                primaryColor={checkoutData.primaryColor}
+                                balloonShape={checkoutData.balloonShape}
                             />
                         )}
                     </div>

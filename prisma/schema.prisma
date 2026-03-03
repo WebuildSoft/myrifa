@@ -23,26 +23,17 @@ model User {
   updatedAt              DateTime       @updatedAt
   mercadoPagoAccessToken String?
   role                   AdminRole      @default(USER)
-  totpSecret             String?
   totpEnabled            Boolean        @default(false)
+  totpSecret             String?
   isBlocked              Boolean        @default(false)
   lastActiveAt           DateTime?
   accounts               Account[]
+  adminLogs              AdminLog[]
   feedbacks              Feedback[]
+  loginAttempts          LoginAttempt[]
   notifications          Notification[]
   rifas                  Rifa[]
   sessions               Session[]
-  adminLogs              AdminLog[]
-  loginAttempts          LoginAttempt[]
-
-  @@index([createdAt])
-}
-
-enum AdminRole {
-  SUPER_ADMIN
-  ADMIN
-  VIEWER
-  USER
 }
 
 model AdminLog {
@@ -65,7 +56,7 @@ model LoginAttempt {
   ip        String
   success   Boolean
   createdAt DateTime @default(now())
-  user      User?    @relation(fields: [email], references: [email])
+  user      User     @relation(fields: [email], references: [email])
 
   @@index([email])
   @@index([ip])
@@ -144,11 +135,11 @@ model Rifa {
   quotaCommissionPercent  Float?
   quotaCommissionReserved Decimal?      @default(0) @db.Decimal(10, 2)
   buyers                  Buyer[]
+  linkViews               LinkView[]
   prizes                  Prize[]
   user                    User          @relation(fields: [userId], references: [id])
   numbers                 RifaNumber[]
   transactions            Transaction[]
-  linkViews               LinkView[]
 
   @@index([userId])
   @@index([status])
@@ -201,7 +192,6 @@ model Buyer {
 
   @@index([rifaId])
   @@index([whatsapp])
-  @@index([createdAt])
 }
 
 model Transaction {
@@ -251,6 +241,74 @@ model WebhookEvent {
   createdAt DateTime        @default(now())
 
   @@index([id, provider])
+}
+
+model WhatsappConfig {
+  id               String   @id @default("default")
+  newReservation   String?
+  paymentConfirmed String?
+  winner           String?
+  updatedAt        DateTime @updatedAt
+}
+
+model Visitor {
+  id        String   @id @default(cuid())
+  visitorId String   @unique
+  lastSeen  DateTime @default(now())
+  path      String?
+  userAgent String?
+  ip        String?
+
+  @@index([lastSeen])
+}
+
+model SystemError {
+  id         String        @id @default(cuid())
+  createdAt  DateTime      @default(now())
+  context    String
+  message    String
+  stack      String?
+  severity   ErrorSeverity @default(HIGH)
+  source     String        @default("server")
+  url        String?
+  userAgent  String?
+  userId     String?
+  resolved   Boolean       @default(false)
+  resolvedAt DateTime?
+  notes      String?
+
+  @@index([createdAt])
+  @@index([severity])
+  @@index([resolved])
+}
+
+model LinkView {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  rifaId      String
+  sessionId   String
+  referrer    String?
+  rawReferrer String?
+  device      String   @default("desktop")
+  os          String?
+  browser     String?
+  duration    Int?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  ip          String?
+  rifa        Rifa     @relation(fields: [rifaId], references: [id], onDelete: Cascade)
+
+  @@index([rifaId])
+  @@index([createdAt])
+  @@index([rifaId, createdAt])
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  VIEWER
+  USER
 }
 
 enum FeedbackType {
@@ -354,70 +412,9 @@ enum PaymentDestination {
   ORGANIZER
 }
 
-model WhatsappConfig {
-  id               String   @id @default("default")
-  newReservation   String?  @db.Text
-  paymentConfirmed String?  @db.Text
-  winner           String?  @db.Text
-  updatedAt        DateTime @updatedAt
-}
-
-model Visitor {
-  id        String   @id @default(cuid())
-  visitorId String   @unique // Generated UUID on client
-  lastSeen  DateTime @default(now())
-  path      String?
-  userAgent String?
-  ip        String?
-
-  @@index([lastSeen])
-}
-
 enum ErrorSeverity {
   LOW
   MEDIUM
   HIGH
   CRITICAL
-}
-
-model SystemError {
-  id          String        @id @default(cuid())
-  createdAt   DateTime      @default(now())
-  context     String        // Where the error occurred (e.g. "Checkout - Criação de PIX")
-  message     String        @db.Text  // Error message
-  stack       String?       @db.Text  // Full stack trace if available
-  severity    ErrorSeverity @default(HIGH)
-  source      String        @default("server") // "server" | "client" | "webhook"
-  url         String?       // Page URL where error occurred
-  userAgent   String?       // Browser info
-  userId      String?       // User ID if logged in
-  resolved    Boolean       @default(false)
-  resolvedAt  DateTime?
-  notes       String?       @db.Text  // Admin notes
-
-  @@index([createdAt])
-  @@index([severity])
-  @@index([resolved])
-}
-
-model LinkView {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  rifaId     String
-  rifa       Rifa     @relation(fields: [rifaId], references: [id], onDelete: Cascade)
-  sessionId  String   // Anonymous session ID from client
-  referrer   String?  // document.referrer parsed (e.g. "WhatsApp", "Google", "direto")
-  rawReferrer String? @db.Text // Full raw referrer URL
-  device     String   @default("desktop") // desktop | mobile | tablet
-  os         String?  // Windows | Android | iOS | macOS | Linux
-  browser    String?  // Chrome | Safari | Firefox | etc
-  duration   Int?     // Seconds spent on page
-  utmSource  String?  // ?utm_source=
-  utmMedium  String?  // ?utm_medium=
-  utmCampaign String? // ?utm_campaign=
-  ip         String?
-
-  @@index([rifaId])
-  @@index([createdAt])
-  @@index([rifaId, createdAt])
 }

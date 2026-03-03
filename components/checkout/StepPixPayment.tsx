@@ -9,9 +9,10 @@ interface StepPixPaymentProps {
     secsLeft: string
     copied: boolean
     onCopy: () => void
+    primaryColor?: string | null
 }
 
-export function StepPixPayment({ pixData, secondsLeft, minutesLeft, secsLeft, copied, onCopy }: StepPixPaymentProps) {
+export function StepPixPayment({ pixData, secondsLeft, minutesLeft, secsLeft, copied, onCopy, primaryColor }: StepPixPaymentProps) {
     return (
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm p-8">
             <div className="flex flex-col items-center text-center">
@@ -20,7 +21,10 @@ export function StepPixPayment({ pixData, secondsLeft, minutesLeft, secsLeft, co
                     Escaneie o QR Code com o app do seu banco para confirmar a participação.
                 </p>
 
-                <div className="bg-white p-5 rounded-2xl shadow-xl ring-4 ring-primary/10 mb-6">
+                <div
+                    className="bg-white p-5 rounded-2xl shadow-xl mb-6"
+                    style={{ ringColor: `${primaryColor || '#7c3aed'}20`, ringWidth: '4px', border: `1px solid ${primaryColor || '#7c3aed'}10` } as any}
+                >
                     <div className="w-52 h-52 relative">
                         {pixData.qrCode ? (
                             <Image
@@ -41,16 +45,19 @@ export function StepPixPayment({ pixData, secondsLeft, minutesLeft, secsLeft, co
                     <code className="text-xs text-slate-600 dark:text-slate-400 flex-1 truncate font-mono">
                         {pixData.qrCodeCopy ?? "Gerando código..."}
                     </code>
-                    <button onClick={onCopy} className="text-primary hover:text-primary/80 shrink-0 ml-2">
+                    <button onClick={onCopy} className="hover:opacity-80 shrink-0 ml-2" style={{ color: primaryColor || 'var(--primary)' }}>
                         {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
                     </button>
                 </div>
                 {copied && <p className="text-xs text-emerald-600 font-bold mb-3 font-bold">Código copiado!</p>}
 
                 <div className="flex items-center gap-2 text-slate-500 text-sm mb-6">
-                    <Clock className="w-4 h-4 text-primary" />
+                    <Clock className="w-4 h-4" style={{ color: primaryColor || 'var(--primary)' }} />
                     Expira em{" "}
-                    <span className={cn("font-black tabular-nums ml-1", secondsLeft < 300 ? "text-red-500" : "text-primary")}>
+                    <span
+                        className={cn("font-black tabular-nums ml-1")}
+                        style={{ color: secondsLeft < 300 ? '#ef4444' : primaryColor || 'var(--primary)' }}
+                    >
                         {minutesLeft}:{secsLeft}
                     </span>
                 </div>

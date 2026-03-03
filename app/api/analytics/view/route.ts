@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { rateLimit, getIP, rateLimitResponse } from "@/lib/rate-limit"
 
 export async function POST(req: NextRequest) {
+    // Rate limit: max 30 requests per IP per minute
+    const ip = getIP(req)
+    const rl = rateLimit(ip + ":analytics_view", { limit: 30, windowMs: 60_000 })
+    if (!rl.success) return rateLimitResponse(rl.resetIn)
+
     try {
         const { rifaId, sessionId, referrer, rawReferrer, device, os, browser, utmSource, utmMedium, utmCampaign } = await req.json()
 
@@ -45,6 +51,11 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+    // Rate limit: max 10 PATCH per IP per minute
+    const ip = getIP(req)
+    const rl = rateLimit(ip + ":analytics_patch", { limit: 10, windowMs: 60_000 })
+    if (!rl.success) return rateLimitResponse(rl.resetIn)
+
     try {
         const { sessionId, rifaId, duration } = await req.json()
 
