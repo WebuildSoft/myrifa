@@ -13,12 +13,13 @@ export const redis =
     new Redis(redisUrl, {
         connectTimeout: 20000, // 20s para o handshake SSL inicial
         commandTimeout: 15000,
-        maxRetriesPerRequest: 5, // Aumentado para 5 para dar tempo de estabilização
+        maxRetriesPerRequest: null, // Evita o erro "Reached the max retries per request limit"
         retryStrategy(times) {
-            const delay = Math.min(times * 50, 2000);
+            const delay = Math.min(times * 200, 5000); // Tenta reconectar a cada max de 5s
             return delay;
         },
         enableReadyCheck: true,
+        keepAlive: 10000,
         tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined,
     })
 
