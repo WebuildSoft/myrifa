@@ -85,8 +85,10 @@ export default async function AdminAnalyticsPage() {
         redirect("/sistema-x7k2/login")
     }
 
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
+
     // Fetch ALL data in parallel for maximum performance
-    const [views, totalViewsCount, rifasTotalCount, allBuyersCount] = await Promise.all([
+    const [views, totalViewsCount, rifasTotalCount, allBuyersCount, onlineUsersCount] = await Promise.all([
         (prisma as any).linkView.findMany({
             orderBy: { createdAt: "desc" },
             take: 1000 // Limit to avoid massive memory usage on global query
@@ -95,7 +97,12 @@ export default async function AdminAnalyticsPage() {
         prisma.rifa.count(),
         prisma.transaction.count({
             where: { status: "PAID" }
-        })
+        }),
+        (prisma as any).linkView.findMany({
+            where: { createdAt: { gte: fiveMinutesAgo } },
+            select: { sessionId: true },
+            distinct: ['sessionId']
+        }).then((res: any[]) => res.length)
     ])
 
     const totalViews = views.length
@@ -147,8 +154,9 @@ export default async function AdminAnalyticsPage() {
             </div>
 
             {/* Global Summary Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
                 {[
+                    { icon: <Users className="h-5 w-5 text-pink-400 animate-pulse" />, label: "Usuários Online", value: onlineUsersCount.toString(), bg: "bg-pink-500/10 border-pink-500/30 ring-1 ring-pink-500/20" },
                     { icon: <Globe className="h-5 w-5 text-blue-400" />, label: "Total Platform Views", value: totalViewsCount.toLocaleString("pt-BR"), bg: "bg-blue-500/10 border-blue-500/20" },
                     { icon: <TrendingUp className="h-5 w-5 text-indigo-400" />, label: "Taxa de Conversão Global", value: `${conversionRate}%`, bg: "bg-indigo-500/10 border-indigo-500/20" },
                     { icon: <Clock className="h-5 w-5 text-violet-400" />, label: "Tempo Médio (Amostra)", value: formatDuration(avgDuration), bg: "bg-violet-500/10 border-violet-500/20" },
@@ -292,7 +300,7 @@ export default async function AdminAnalyticsPage() {
                                             </TableCell>
                                             <TableCell className="py-3.5 px-6 whitespace-nowrap">
                                                 <span className="text-slate-300 font-mono text-xs">
-                                                    {new Date(v.createdAt).toLocaleString("pt-BR")}
+                                                    {new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'medium', timeZone: 'America/Manaus' }).format(new Date(v.createdAt))}
                                                 </span>
                                             </TableCell>
                                             <TableCell className="py-3.5 px-6">
@@ -311,8 +319,8 @@ export default async function AdminAnalyticsPage() {
                                                     <span className={`text-xs font-bold ${SOURCE_COLORS[v.referrer] || "text-slate-400"}`}>
                                                         {v.referrer || "Direto"}
                                                     </span>
-                                                    <span className="text-slate-500 text-[10px] truncate max-w-[150px]" title={v.sessionRef || ""}>
-                                                        {v.sessionRef || "Sem ref"}
+                                                    <span className="text-slate-500 text-[10px] truncate max-w-[150px]" title={v.rawReferrer || ""}>
+                                                        {v.rawReferrer || "Sem href"}
                                                     </span>
                                                 </div>
                                             </TableCell>
@@ -322,7 +330,7 @@ export default async function AdminAnalyticsPage() {
                                                         UTM: {v.utmSource || "—"}
                                                     </span>
                                                     <span className="text-slate-500 text-[10px] font-mono">
-                                                        IP: {v.ipAddress || "—"}
+                                                        IP: {v.ip || "—"}
                                                     </span>
                                                 </div>
                                             </TableCell>
