@@ -30,7 +30,7 @@ export function OrderCard({ transaction }: OrderCardProps) {
     }
 
     const shareParticipation = () => {
-        const u = `${window.location.origin}/r/${rifa.slug}?u=wa`
+        const u = `${window.location.origin}/r/${rifa.slug}?u=w`
         const text = `✨ Acabei de garantir meus números da sorte na campanha *${rifa.title}*! 🍀\n\n🔒 100% Seguro\n🎯 Sorteio Automático\n\n📲 Participe você também e concorra: ${u}`
         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
     }
