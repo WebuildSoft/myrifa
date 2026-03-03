@@ -43,31 +43,45 @@ export function MobileNumberSheet({
 
     return (
         <>
+            <style jsx global>{`
+                @keyframes shine {
+                    0% { transform: translateX(-200%) skewX(-30deg); }
+                    20%, 100% { transform: translateX(200%) skewX(-30deg); }
+                }
+            `}</style>
+
             {/* Sticky CTA button at bottom (only on mobile, when sheet is closed) */}
             {!open && (
                 <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-32px)] max-w-sm animate-in fade-in slide-in-from-bottom-8 duration-500">
                     <button
                         onClick={() => setOpen(true)}
-                        style={{ backgroundColor: color }}
-                        className="w-full py-4 rounded-2xl font-black text-white text-lg flex items-center justify-center gap-3 shadow-[0_20px_40px_rgba(0,0,0,0.2)] active:scale-95 transition-all relative overflow-hidden group"
+                        style={{
+                            backgroundColor: color,
+                            boxShadow: `0 20px 40px -10px ${color}66, 0 0 20px ${color}33`
+                        }}
+                        className="w-full py-4.5 rounded-2xl font-black text-white text-lg flex items-center justify-center gap-3 active:scale-95 transition-all relative overflow-hidden group border-b-4 border-black/20"
                     >
                         {/* Pulse effect */}
                         <span className="absolute inset-0 bg-white/20 animate-ping opacity-0 group-hover:opacity-100 duration-1000" />
 
-                        <div className="bg-white/20 p-2 rounded-xl">
+                        {/* Shine effect */}
+                        <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-[30deg] pointer-events-none"
+                            style={{ animation: 'shine 3s infinite ease-in-out' }} />
+
+                        <div className="bg-white/20 p-2 rounded-xl shadow-inner">
                             <Ticket className="w-6 h-6" />
                         </div>
                         <div className="flex flex-col items-start leading-tight">
-                            <span>Escolher Cotas</span>
-                            <span className="text-xs font-medium opacity-80">Apenas {formatted} cada</span>
+                            <span className="text-shadow-sm font-black">ESCOLHER COTAS</span>
+                            <span className="text-[10px] font-bold opacity-90 tracking-wide uppercase">Toque para participar</span>
                         </div>
-                        <ChevronRight className="w-5 h-5 ml-2 opacity-50" />
+                        <ChevronRight className="w-5 h-5 ml-1 animate-bounce-x" />
                     </button>
 
-                    {/* Subtle pulse ring around the button */}
+                    {/* Intense pulse ring around the button */}
                     <div
-                        className="absolute inset-x-0 -inset-y-1 rounded-2xl border-4 opacity-30 animate-pulse pointer-events-none"
-                        style={{ borderColor: color }}
+                        className="absolute inset-x-0 -inset-y-1 rounded-2xl border-4 opacity-40 animate-pulse pointer-events-none"
+                        style={{ borderColor: color, filter: 'blur(2px)' }}
                     />
                 </div>
             )}

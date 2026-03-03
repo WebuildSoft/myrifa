@@ -97,35 +97,64 @@ export function NumberGrid({
 
             {/* ── MOBILE: fullscreen bottom sheet trigger ── */}
             <div className="md:hidden">
+                <style jsx global>{`
+                    @keyframes shine {
+                        0% { transform: translateX(-200%) skewX(-30deg); }
+                        20%, 100% { transform: translateX(200%) skewX(-30deg); }
+                    }
+                `}</style>
+
                 {/* Placeholder card to hint user */}
                 <button
-                    onClick={() => document.querySelector('button[onClick*="setOpen(true)"]')?.dispatchEvent(new MouseEvent('click', { bubbles: true }))}
-                    className="w-full text-left bg-white dark:bg-slate-800 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 p-6 flex flex-col items-center text-center gap-4 group active:scale-[0.98] transition-all"
+                    onClick={() => {
+                        const btn = document.querySelector('button[style*="background-color"]') as HTMLButtonElement;
+                        if (btn) btn.click();
+                    }}
+                    className="w-full text-left bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 p-6 flex flex-col items-center text-center gap-4 group active:scale-[0.98] transition-all relative overflow-hidden"
                 >
+                    {/* Background glow */}
                     <div
-                        className="w-16 h-16 rounded-3xl flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform"
+                        className="absolute inset-x-0 top-0 h-1/2 opacity-10 blur-3xl pointer-events-none"
                         style={{ backgroundColor: primaryColor || "var(--primary)" }}
+                    />
+
+                    <div
+                        className="w-20 h-20 rounded-[2.5rem] flex items-center justify-center shadow-2xl transform group-hover:rotate-6 transition-transform relative"
+                        style={{
+                            backgroundColor: primaryColor || "var(--primary)",
+                            boxShadow: `0 10px 30px -5px ${primaryColor || "var(--primary)"}88`
+                        }}
                     >
-                        <Ticket className="w-8 h-8 text-white" />
+                        <Ticket className="w-10 h-10 text-white" />
+
+                        {/* Shine effect on the icon box */}
+                        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-[30deg] pointer-events-none"
+                            style={{ animation: 'shine 4s infinite ease-in-out' }} />
                     </div>
+
                     <div>
-                        <h3 className="text-lg font-black text-slate-900 dark:text-white leading-tight">
+                        <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight uppercase tracking-tighter">
                             Toque para escolher seus números
                         </h3>
-                        <p className="text-sm text-slate-500 font-medium mt-1">
+                        <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-1">
                             {numbers.filter(n => n.status === "AVAILABLE").length} cotas disponíveis a partir de {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(price)}
                         </p>
                     </div>
 
-                    <div className="w-full h-px bg-slate-100 dark:bg-slate-700 my-1" />
+                    <div className="w-full h-px bg-slate-100 dark:bg-slate-800 my-1" />
 
                     <StatusLegend primaryColor={primaryColor} />
 
                     <div
-                        className="py-2.5 px-6 rounded-xl font-black text-xs uppercase tracking-widest text-white shadow-md"
+                        className="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-widest text-white shadow-xl flex items-center justify-center gap-2 relative overflow-hidden group-hover:scale-[1.02] transition-transform"
                         style={{ backgroundColor: primaryColor || "var(--primary)" }}
                     >
-                        Abrir Seletor de Cotas
+                        <Ticket className="w-4 h-4" />
+                        ABRIR SELETOR DE COTAS
+
+                        {/* Internal shine */}
+                        <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-[30deg] pointer-events-none"
+                            style={{ animation: 'shine 2.5s infinite ease-in-out' }} />
                     </div>
                 </button>
 
