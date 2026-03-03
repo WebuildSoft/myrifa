@@ -4,11 +4,15 @@ const globalForRedis = global as unknown as { redis: Redis }
 
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379'
 
+// Log de diagnóstico mascarado para o container
+const maskedUrl = redisUrl.replace(/:[^:@]+@/, ':****@')
+console.log(`[REDIS] Prep connection to: ${maskedUrl} (Status: ${globalForRedis.redis ? 'reusing' : 'new'})`)
+
 export const redis =
     globalForRedis.redis ||
     new Redis(redisUrl, {
-        connectTimeout: 10000,
-        commandTimeout: 5000,
+        connectTimeout: 15000,
+        commandTimeout: 10000,
         maxRetriesPerRequest: 3,
         enableReadyCheck: false,
         tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined,
