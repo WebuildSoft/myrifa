@@ -27,9 +27,14 @@ redis.on('connect', () => console.log('[REDIS] Connected to server.'))
 redis.on('ready', () => console.log('[REDIS] Client is ready to relay commands.'))
 redis.on('reconnecting', (ms: number) => console.log(`[REDIS] Reconnecting in ${ms}ms...`))
 
-// Silencia erros de conexão para evitar que a app quebre nos logs quando o Redis estiver off
+// Throttle error logging to avoid console spam during reconnect loops
+let lastErrorTime = 0
 redis.on('error', (err) => {
-    console.error('[REDIS] Connection Error Details:', err.message)
+    const now = Date.now()
+    if (now - lastErrorTime > 10000) { // Log at most once every 10 seconds
+        console.error('[REDIS] Connection Error:', err.message || err)
+        lastErrorTime = now
+    }
 })
 
 if (process.env.NODE_ENV !== 'production') globalForRedis.redis = redis
