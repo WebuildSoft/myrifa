@@ -8,7 +8,16 @@ import { NotificationService } from "@/services/notification"
 const checkoutSchema = z.object({
     rifaId: z.string(),
     name: z.string().min(3),
-    whatsapp: z.string().min(10),
+    whatsapp: z.string()
+        .transform(v => {
+            // Strip everything except digits
+            const digits = v.replace(/\D/g, "")
+            // Add country code 55 if not present
+            return digits.startsWith("55") ? digits : `55${digits}`
+        })
+        .refine(v => v.length >= 12 && v.length <= 13, {
+            message: "WhatsApp inválido. Informe DDD + número completo."
+        }),
     email: z.string().email().optional().or(z.literal("")),
     numbers: z.array(z.number()).min(1),
     paymentMethod: z.enum(["PIX", "CREDIT_CARD", "BOLETO"]),
