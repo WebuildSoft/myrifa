@@ -57,6 +57,10 @@ export function MobileNumberSheet({
                     0% { transform: translateX(-200%) skewX(-30deg); }
                     20%, 100% { transform: translateX(200%) skewX(-30deg); }
                 }
+                ${open ? `
+                    body { overflow: hidden !important; }
+                    header { display: none !important; }
+                ` : ''}
             `}</style>
 
             {/* Sticky CTA button at bottom (only on mobile, when sheet is closed) */}
