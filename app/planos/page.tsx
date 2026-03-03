@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Star } from "lucide-react"
+import { Star, Ticket } from "lucide-react"
 import { PricingSection } from "@/components/PricingSection"
 
 export default function PublicPlanosPage() {
@@ -10,10 +10,8 @@ export default function PublicPlanosPage() {
             <nav className="fixed top-0 w-full z-50 bg-white/70 dark:bg-[#0f0a19]/70 backdrop-blur-xl border-b border-primary/5 px-6 md:px-12 py-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2 group">
-                        <Button variant="ghost" size="icon" className="rounded-full mr-2">
-                            <ArrowLeft className="h-4 w-4" />
-                        </Button>
-                        <span className="text-xl font-black tracking-tighter uppercase italic">
+                        <Ticket className="text-primary h-7 w-7 rotate-12 group-hover:scale-110 transition-transform" />
+                        <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
                             My<span className="text-primary">Rifa</span>
                         </span>
                     </Link>
