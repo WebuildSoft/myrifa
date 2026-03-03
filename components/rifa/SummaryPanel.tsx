@@ -2,12 +2,29 @@
 
 import Image from "next/image"
 import { Sparkles, Ticket, Shield, Lock } from "lucide-react"
+import { cn } from "@/lib/utils"
+
+import { BalloonShape } from "@prisma/client"
+import { SHAPE_CONFIGS } from "@/lib/shapes"
 
 interface SummaryPanelProps {
     rifaTitle: string
     rifaCover?: string | null
     selectedNumbers: number[]
     totalPrice: number
+    primaryColor?: string | null
+    balloonShape?: BalloonShape
+}
+
+function polygonToPath(polygonStr?: string) {
+    if (!polygonStr) return ""
+    const content = polygonStr.match(/polygon\((.*)\)/)?.[1]
+    if (!content) return ""
+    const points = content.split(',').map(p => p.trim())
+    return points.map((p, i) => {
+        const [x, y] = p.split(/\s+/).map(v => v.replace('%', ''))
+        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
+    }).join(' ') + ' Z'
 }
 
 export function SummaryPanel({
@@ -15,7 +32,13 @@ export function SummaryPanel({
     rifaCover,
     selectedNumbers,
     totalPrice,
+    primaryColor,
+    balloonShape = "ROUNDED"
 }: SummaryPanelProps) {
+    const shapeConfig = SHAPE_CONFIGS[balloonShape] || SHAPE_CONFIGS["ROUNDED" as BalloonShape]
+    const svgPath = polygonToPath(shapeConfig.clipPathStyle)
+    const colorPrimary = primaryColor || '#7c3aed'
+
     const formattedTotal = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(totalPrice)
     const pricePerNumber = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
         selectedNumbers.length > 0 ? totalPrice / selectedNumbers.length : 0
@@ -36,7 +59,12 @@ export function SummaryPanel({
 
             <div className="p-6 flex flex-col flex-1">
                 {/* Title */}
-                <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">Você está concorrendo a</p>
+                <p
+                    className="text-[10px] font-black uppercase tracking-widest mb-1"
+                    style={{ color: primaryColor || 'var(--primary)' }}
+                >
+                    Você está concorrendo a
+                </p>
                 <h3 className="text-lg font-black text-slate-900 dark:text-white leading-tight mb-6">{rifaTitle}</h3>
 
                 {/* Numbers breakdown */}
@@ -57,12 +85,38 @@ export function SummaryPanel({
                         </p>
                         <div className="flex flex-wrap gap-1.5">
                             {selectedNumbers.slice(0, 12).map((n) => (
-                                <span key={n} className="bg-primary/10 text-primary px-2 py-0.5 rounded-full font-black text-xs">
-                                    {String(n).padStart(3, "0")}
+                                <span
+                                    key={n}
+                                    className="relative px-2 py-0.5 font-black text-xs min-w-[2.2rem] flex items-center justify-center transition-all"
+                                    style={{
+                                        backgroundColor: `${colorPrimary}15`,
+                                        color: colorPrimary,
+                                        clipPath: shapeConfig.clipPathStyle,
+                                    }}
+                                >
+                                    {/* SVG stroke for consistency */}
+                                    {shapeConfig.clipPathStyle ? (
+                                        <svg
+                                            viewBox="0 0 100 100"
+                                            preserveAspectRatio="none"
+                                            className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
+                                        >
+                                            <path
+                                                d={svgPath}
+                                                fill="none"
+                                                stroke={colorPrimary}
+                                                strokeWidth="12"
+                                                vectorEffect="non-scaling-stroke"
+                                            />
+                                        </svg>
+                                    ) : (
+                                        <div className={cn("absolute inset-0 border-2 pointer-events-none", shapeConfig.radiusClass)} style={{ borderColor: colorPrimary }} />
+                                    )}
+                                    {String(n).padStart(2, "0")}
                                 </span>
                             ))}
                             {selectedNumbers.length > 12 && (
-                                <span className="bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold text-xs">
+                                <span className="bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-0.5 rounded-full font-bold text-xs">
                                     +{selectedNumbers.length - 12} mais
                                 </span>
                             )}
@@ -86,11 +140,11 @@ export function SummaryPanel({
                     </div>
                     <div className="grid grid-cols-2 gap-2 mt-3">
                         <div className="flex flex-col items-center p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
-                            <Shield className="w-4 h-4 text-primary mb-1" />
+                            <Shield className="w-4 h-4 mb-1" style={{ color: primaryColor || 'var(--primary)' }} />
                             <span className="text-[10px] font-bold text-slate-400 uppercase text-center">Site Seguro</span>
                         </div>
                         <div className="flex flex-col items-center p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
-                            <Lock className="w-4 h-4 text-primary mb-1" />
+                            <Lock className="w-4 h-4 mb-1" style={{ color: primaryColor || 'var(--primary)' }} />
                             <span className="text-[10px] font-bold text-slate-400 uppercase text-center">Dados Seguros</span>
                         </div>
                     </div>

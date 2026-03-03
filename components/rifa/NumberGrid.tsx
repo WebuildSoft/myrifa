@@ -62,6 +62,7 @@ export function NumberGrid({
                 rifaSlug,
                 numbers: selectedNumbers,
                 price,
+                primaryColor: primaryColor ?? null,
             }
             sessionStorage.setItem(`checkout_${rifaId}`, JSON.stringify(data))
             router.push(`/checkout/${rifaId}`)
@@ -75,7 +76,7 @@ export function NumberGrid({
             {/* ── DESKTOP: inline grid with floating bar ── */}
             <div className="hidden md:block space-y-6">
                 <QuickSelect onSelectRandom={selectRandom} primaryColor={primaryColor} />
-                <StatusLegend primaryColor={primaryColor} />
+                <StatusLegend primaryColor={primaryColor} balloonShape={balloonShape} />
 
                 <div className="p-1 bg-slate-50/50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
                     <div className="grid grid-cols-8 lg:grid-cols-10 gap-2 max-h-[440px] overflow-y-auto p-1">
@@ -146,15 +147,14 @@ export function NumberGrid({
                     </div>
 
                     <div className="w-full h-px bg-slate-100 dark:bg-slate-800 my-1" />
-
-                    <StatusLegend primaryColor={primaryColor} />
+                    <StatusLegend primaryColor={primaryColor} balloonShape={balloonShape} />
 
                     <div
                         className="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-widest text-white shadow-xl flex items-center justify-center gap-2 relative overflow-hidden group-hover:scale-[1.02] transition-transform"
                         style={{ backgroundColor: primaryColor || "var(--primary)" }}
                     >
                         <Ticket className="w-4 h-4" />
-                        ABRIR SELETOR DE COTAS
+                        ESCOLHER NÚMEROS
 
                         {/* Internal shine */}
                         <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-[30deg] pointer-events-none"

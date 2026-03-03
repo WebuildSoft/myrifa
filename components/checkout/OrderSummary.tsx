@@ -1,17 +1,38 @@
 import Image from "next/image"
 import { Sparkles, Ticket, Shield, Lock } from "lucide-react"
 
+import { BalloonShape } from "@prisma/client"
+import { SHAPE_CONFIGS } from "@/lib/shapes"
+import { cn } from "@/lib/utils"
+
 interface OrderSummaryProps {
     rifaTitle: string
     rifaCover: string | null
     numbers: number[]
     price: number
+    primaryColor?: string | null
+    balloonShape?: BalloonShape
 }
 
-export function OrderSummary({ rifaTitle, rifaCover, numbers, price }: OrderSummaryProps) {
+function polygonToPath(polygonStr?: string) {
+    if (!polygonStr) return ""
+    const content = polygonStr.match(/polygon\((.*)\)/)?.[1]
+    if (!content) return ""
+    const points = content.split(',').map(p => p.trim())
+    return points.map((p, i) => {
+        const [x, y] = p.split(/\s+/).map(v => v.replace('%', ''))
+        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
+    }).join(' ') + ' Z'
+}
+
+export function OrderSummary({ rifaTitle, rifaCover, numbers, price, primaryColor, balloonShape = "ROUNDED" }: OrderSummaryProps) {
     const total = numbers.length * price
     const formattedTotal = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(total)
     const pricePerNumber = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(price)
+
+    const shapeConfig = SHAPE_CONFIGS[balloonShape] || SHAPE_CONFIGS["ROUNDED" as BalloonShape]
+    const svgPath = polygonToPath(shapeConfig.clipPathStyle)
+    const colorPrimary = primaryColor || '#7c3aed'
 
     return (
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
@@ -26,7 +47,12 @@ export function OrderSummary({ rifaTitle, rifaCover, numbers, price }: OrderSumm
             </div>
 
             <div className="p-6">
-                <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">Você está concorrendo a</p>
+                <p
+                    className="text-[10px] font-black uppercase tracking-widest mb-1"
+                    style={{ color: primaryColor || 'var(--primary)' }}
+                >
+                    Você está concorrendo a
+                </p>
                 <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight mb-6">{rifaTitle}</h3>
 
                 <div className="space-y-4 border-t border-slate-100 dark:border-slate-800 pt-6">
@@ -41,12 +67,38 @@ export function OrderSummary({ rifaTitle, rifaCover, numbers, price }: OrderSumm
                         </p>
                         <div className="flex flex-wrap gap-1.5">
                             {numbers.slice(0, 12).map(n => (
-                                <span key={n} className="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full font-black text-xs">
-                                    {String(n).padStart(3, "0")}
+                                <span
+                                    key={n}
+                                    className="relative px-2.5 py-0.5 font-black text-xs min-w-[2.5rem] flex items-center justify-center"
+                                    style={{
+                                        backgroundColor: `${colorPrimary}15`,
+                                        color: colorPrimary,
+                                        clipPath: shapeConfig.clipPathStyle
+                                    }}
+                                >
+                                    {/* SVG stroke for consistency */}
+                                    {shapeConfig.clipPathStyle ? (
+                                        <svg
+                                            viewBox="0 0 100 100"
+                                            preserveAspectRatio="none"
+                                            className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
+                                        >
+                                            <path
+                                                d={svgPath}
+                                                fill="none"
+                                                stroke={colorPrimary}
+                                                strokeWidth="12"
+                                                vectorEffect="non-scaling-stroke"
+                                            />
+                                        </svg>
+                                    ) : (
+                                        <div className={cn("absolute inset-0 border-2 pointer-events-none", shapeConfig.radiusClass)} style={{ borderColor: colorPrimary }} />
+                                    )}
+                                    {String(n).padStart(2, "0")}
                                 </span>
                             ))}
                             {numbers.length > 12 && (
-                                <span className="bg-slate-200 text-slate-500 px-2.5 py-0.5 rounded-full font-bold text-xs">
+                                <span className="bg-slate-200 dark:bg-slate-700 text-slate-500 px-2.5 py-0.5 rounded-full font-bold text-xs">
                                     +{numbers.length - 12}
                                 </span>
                             )}
@@ -73,11 +125,11 @@ export function OrderSummary({ rifaTitle, rifaCover, numbers, price }: OrderSumm
 
                 <div className="grid grid-cols-2 gap-3 mt-4">
                     <div className="flex flex-col items-center p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
-                        <Shield className="w-5 h-5 text-primary mb-1" />
+                        <Shield className="w-5 h-5 mb-1" style={{ color: primaryColor || 'var(--primary)' }} />
                         <span className="text-[10px] font-bold text-slate-400 uppercase">Site Seguro</span>
                     </div>
                     <div className="flex flex-col items-center p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
-                        <Lock className="w-5 h-5 text-primary mb-1" />
+                        <Lock className="w-5 h-5 mb-1" style={{ color: primaryColor || 'var(--primary)' }} />
                         <span className="text-[10px] font-bold text-slate-400 uppercase">Suporte 24/7</span>
                     </div>
                 </div>

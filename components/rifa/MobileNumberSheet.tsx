@@ -68,6 +68,13 @@ export function MobileNumberSheet({
                     0% { transform: translateX(-200%) skewX(-30deg); }
                     20%, 100% { transform: translateX(200%) skewX(-30deg); }
                 }
+                @keyframes bounce-slow {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-12px); }
+                }
+                .animate-bounce-slow {
+                    animation: bounce-slow 2.4s infinite ease-in-out;
+                }
                 ${open ? `
                     body { overflow: hidden !important; }
                 ` : ''}
@@ -75,37 +82,46 @@ export function MobileNumberSheet({
 
             {/* Sticky CTA button at bottom (only on mobile, when sheet is closed) */}
             {!open && (
-                <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-32px)] max-w-sm animate-in fade-in slide-in-from-bottom-8 duration-500">
-                    <button
-                        onClick={() => handleSetOpen(true)}
-                        style={{
-                            backgroundColor: color,
-                            boxShadow: `0 20px 40px -10px ${color}66, 0 0 20px ${color}33`
-                        }}
-                        className="w-full py-4.5 rounded-2xl font-black text-white text-lg flex items-center justify-center gap-3 active:scale-95 transition-all relative overflow-hidden group border-b-4 border-black/20"
-                    >
-                        {/* Pulse effect */}
-                        <span className="absolute inset-0 bg-white/20 animate-ping opacity-0 group-hover:opacity-100 duration-1000" />
+                <div className="md:hidden fixed bottom-8 left-0 right-0 z-40 px-6 flex justify-center pointer-events-none">
+                    <div className="w-full max-w-sm animate-in fade-in slide-in-from-bottom-8 duration-700 pointer-events-auto">
+                        <div className="animate-bounce-slow relative">
+                            {/* Floating Label for Urgency */}
+                            <div className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black px-4 py-1.5 rounded-full shadow-2xl z-50 animate-pulse border border-white/20 dark:border-slate-900/20">
+                                🔥 COMECE POR AQUI
+                            </div>
 
-                        {/* Shine effect */}
-                        <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-[30deg] pointer-events-none"
-                            style={{ animation: 'shine 3s infinite ease-in-out' }} />
+                            <button
+                                onClick={() => handleSetOpen(true)}
+                                style={{
+                                    backgroundColor: color,
+                                    boxShadow: `0 25px 50px -12px ${color}80, 0 0 30px ${color}40`
+                                }}
+                                className="w-full py-5 rounded-[2.5rem] font-black text-white text-xl flex items-center justify-center gap-4 active:scale-95 transition-all relative overflow-hidden group border-b-8 border-black/20 ring-4 ring-white/30"
+                            >
+                                {/* Pulse effect background */}
+                                <span className="absolute inset-0 bg-white/30 animate-pulse opacity-50" />
 
-                        <div className="bg-white/20 p-2 rounded-xl shadow-inner">
-                            <Ticket className="w-6 h-6" />
+                                {/* Shine effect */}
+                                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/60 to-transparent -skew-x-[30deg] pointer-events-none"
+                                    style={{ animation: 'shine 2s infinite ease-in-out' }} />
+
+                                <div className="bg-white/20 p-2.5 rounded-2xl shadow-inner">
+                                    <Ticket className="w-7 h-7" />
+                                </div>
+                                <div className="flex flex-col items-center leading-tight">
+                                    <span className="text-shadow-md font-black tracking-tight text-center">ESCOLHA SEU NÚMERO</span>
+                                    <span className="text-[11px] font-bold opacity-90 tracking-widest uppercase text-center">Toque para participar</span>
+                                </div>
+                                <ChevronRight className="w-6 h-6 animate-bounce-x" />
+                            </button>
+
+                            {/* Intense glow base */}
+                            <div
+                                className="absolute inset-x-8 -bottom-2 h-4 opacity-50 blur-2xl rounded-full animate-pulse pointer-events-none"
+                                style={{ backgroundColor: color }}
+                            />
                         </div>
-                        <div className="flex flex-col items-start leading-tight">
-                            <span className="text-shadow-sm font-black">ESCOLHER COTAS</span>
-                            <span className="text-[10px] font-bold opacity-90 tracking-wide uppercase">Toque para participar</span>
-                        </div>
-                        <ChevronRight className="w-5 h-5 ml-1 animate-bounce-x" />
-                    </button>
-
-                    {/* Intense pulse ring around the button */}
-                    <div
-                        className="absolute inset-x-0 -inset-y-1 rounded-2xl border-4 opacity-40 animate-pulse pointer-events-none"
-                        style={{ borderColor: color, filter: 'blur(2px)' }}
-                    />
+                    </div>
                 </div>
             )}
 
@@ -129,7 +145,7 @@ export function MobileNumberSheet({
                             </div>
                             <div>
                                 <h2 className="font-black text-slate-900 dark:text-white text-base leading-none">
-                                    Escolha suas cotas
+                                    Escolha seu número
                                 </h2>
                                 {rifaTitle && (
                                     <p className="text-xs text-slate-400 font-medium mt-1 truncate max-w-[200px]">
@@ -151,7 +167,7 @@ export function MobileNumberSheet({
                     <div className="px-4 py-3 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shrink-0">
                         <QuickSelect onSelectRandom={onSelectRandom} primaryColor={primaryColor} />
                         <div className="mt-2">
-                            <StatusLegend primaryColor={primaryColor} />
+                            <StatusLegend primaryColor={primaryColor} balloonShape={balloonShape} />
                         </div>
                     </div>
 

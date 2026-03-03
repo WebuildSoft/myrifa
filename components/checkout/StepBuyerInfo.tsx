@@ -13,6 +13,7 @@ interface StepBuyerInfoProps {
     rifaSlug: string
     onNext: (e: React.FormEvent) => void
     error?: string
+    primaryColor?: string | null
 }
 
 /**
@@ -49,7 +50,7 @@ export function normalizeWhatsApp(value: string): string {
     return `55${digits}`
 }
 
-export function StepBuyerInfo({ buyerInfo, setBuyerInfo, rifaSlug, onNext, error }: StepBuyerInfoProps) {
+export function StepBuyerInfo({ buyerInfo, setBuyerInfo, rifaSlug, onNext, error, primaryColor }: StepBuyerInfoProps) {
     const phoneValid = isValidPhone(buyerInfo.whatsapp)
     const phoneHasInput = buyerInfo.whatsapp.replace(/\D/g, "").length > 0
 
@@ -72,14 +73,18 @@ export function StepBuyerInfo({ buyerInfo, setBuyerInfo, rifaSlug, onNext, error
             {/* Top back button */}
             <Link
                 href={`/r/${rifaSlug}`}
-                className="inline-flex items-center gap-2 text-slate-500 hover:text-primary font-bold transition-colors text-sm mb-6"
+                className="inline-flex items-center gap-2 text-slate-500 font-bold transition-colors text-sm mb-6"
+                style={{ '--primary-hover': primaryColor || 'var(--primary)' } as any}
             >
                 <ArrowLeft className="w-4 h-4" />
                 Voltar ao sorteio
             </Link>
 
             <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center"
+                    style={{ backgroundColor: `${primaryColor || '#7c3aed'}15`, color: primaryColor || 'var(--primary)' }}
+                >
                     <User className="w-5 h-5" />
                 </div>
                 <div>
@@ -172,7 +177,8 @@ export function StepBuyerInfo({ buyerInfo, setBuyerInfo, rifaSlug, onNext, error
                         type="submit"
                         size="lg"
                         disabled={phoneHasInput && !phoneValid}
-                        className="h-12 px-8 rounded-xl font-bold gap-2"
+                        className="h-12 px-8 rounded-xl font-bold gap-2 shadow-lg"
+                        style={{ backgroundColor: primaryColor || 'var(--primary)', boxShadow: `0 10px 15px -3px ${primaryColor || '#7c3aed'}30` }}
                     >
                         Continuar <ChevronRight className="w-4 h-4" />
                     </Button>
