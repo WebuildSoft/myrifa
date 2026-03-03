@@ -43,6 +43,7 @@ export function NumberGrid({
         gridNumbers,
         selectedNumbers,
         toggleNumber,
+        deselectNumber,
         selectRandom
     } = useNumberGrid({
         rifaId,
@@ -94,9 +95,10 @@ export function NumberGrid({
             </div>
 
             <CheckoutFloatingBar
-                selectedCount={selectedNumbers.length}
+                selectedNumbers={selectedNumbers}
                 totalPrice={selectedNumbers.length * price}
                 onCheckout={handleGoToCheckout}
+                onRemove={deselectNumber}
                 primaryColor={primaryColor || undefined}
             />
         </div>

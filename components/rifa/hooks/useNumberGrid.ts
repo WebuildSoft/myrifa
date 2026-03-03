@@ -99,10 +99,15 @@ export function useNumberGrid({
         setSelectedNumbers(prev => [...prev, ...toSelect])
     }, [gridNumbers, selectedNumbers, maxPerBuyer])
 
+    const deselectNumber = useCallback((num: number) => {
+        setSelectedNumbers((prev) => prev.filter(n => n !== num))
+    }, [])
+
     return {
         gridNumbers,
         selectedNumbers,
         toggleNumber,
+        deselectNumber,
         selectRandom,
         setSelectedNumbers,
     }
