@@ -42,6 +42,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  env: {
+    REDIS_URL: process.env.REDIS_URL || "",
+  },
 };
 
 export default nextConfig;
