@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma"
 import { MercadoPagoConfig, Payment } from 'mercadopago'
 import { sendWhatsAppMessage, templates } from "@/lib/evolution"
 import { sendSystemAlert } from "@/lib/alert"
+import { pushSaleToCache } from "@/lib/analytics-cache"
 import crypto from 'crypto'
 import { rateLimit, getIP, rateLimitResponse } from "@/lib/rate-limit"
 
@@ -108,6 +109,16 @@ export async function POST(request: Request) {
                             where: { id: transaction.id },
                             data: { status: "PAID", paidAt: new Date() }
                         })
+
+                        // --- REDIS DASHBOARD CACHE ---
+                        await pushSaleToCache({
+                            id: transaction.id,
+                            amount: Number(transaction.amount),
+                            paidAt: new Date().toISOString(),
+                            buyer: { name: transaction.buyer.name },
+                            rifa: { title: transaction.rifa.title }
+                        })
+                        // -----------------------------
 
                         // Update numbers
                         await tx.rifaNumber.updateMany({

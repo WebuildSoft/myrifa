@@ -16,18 +16,42 @@ export async function GET(req: NextRequest) {
     try {
         const fiveMinutesAgoTimestamp = Date.now() - 5 * 60 * 1000
 
-        const [onlineUsers, totalRevenue, recentSales, recentViews] = await Promise.all([
-            // 1. Online Users from Redis
-            redis.zcount("online_users", fiveMinutesAgoTimestamp, "+inf").catch(() => 0),
+        // 1. ONLINE USERS (Redis Only)
+        const onlineUsers = await redis.zcount("online_users", fiveMinutesAgoTimestamp, "+inf").catch(() => 0)
 
-            // 2. Total Lifetime Revenue (Paid)
-            prisma.transaction.aggregate({
+        // 2. RECENT VIEWS (Redis-first with Warmup)
+        const recentViews = await redis.lrange("recent_views", 0, 9).then(async (cached) => {
+            if (cached && cached.length > 0) return cached.map(item => JSON.parse(item))
+            const fresh = await (prisma as any).linkView.findMany({
+                orderBy: { createdAt: "desc" },
+                take: 10,
+                include: { rifa: { select: { title: true } } }
+            })
+            if (fresh.length > 0) {
+                const pipe = redis.pipeline()
+                const reversed = [...fresh].reverse()
+                for (const i of reversed) pipe.lpush("recent_views", JSON.stringify(i))
+                pipe.ltrim("recent_views", 0, 19).exec().catch(() => { })
+            }
+            return fresh
+        }).catch(() => [])
+
+        // 3. REVENUE (Redis-first with Warmup)
+        let totalRevenue: number | null = await redis.get("dashboard:total_revenue").then(v => v ? parseFloat(v) : null).catch(() => null)
+        if (totalRevenue === null) {
+            const revenueAgg = await prisma.transaction.aggregate({
                 where: { status: "PAID" },
                 _sum: { amount: true }
-            }),
+            })
+            totalRevenue = Number(revenueAgg._sum.amount || 0)
+            // Warmup revenue in Redis
+            await redis.set("dashboard:total_revenue", totalRevenue.toString()).catch(() => { })
+        }
 
-            // 3. Recent 5 Sales (Live Notifications)
-            prisma.transaction.findMany({
+        // 4. RECENT SALES (Redis-first with Warmup)
+        const recentSales = await redis.lrange("dashboard:recent_sales", 0, 4).then(async (cached) => {
+            if (cached && cached.length > 0) return cached.map(item => JSON.parse(item))
+            const fresh = await prisma.transaction.findMany({
                 where: { status: "PAID" },
                 orderBy: { paidAt: "desc" },
                 take: 5,
@@ -38,44 +62,19 @@ export async function GET(req: NextRequest) {
                     buyer: { select: { name: true } },
                     rifa: { select: { title: true } }
                 }
-            }),
-
-            // 4. Recent 10 Views (Activity Ticker) - Redis-first with Warmup Fallback
-            redis.lrange("recent_views", 0, 9).then(async (cached) => {
-                if (cached && cached.length > 0) {
-                    try {
-                        return cached.map(item => JSON.parse(item))
-                    } catch (e) {
-                        console.error("[REDIS] Parse Error (Recent Views Cache):", e)
-                    }
-                }
-
-                // Fallback & Warmup
-                const fresh = await (prisma as any).linkView.findMany({
-                    orderBy: { createdAt: "desc" },
-                    take: 10,
-                    include: { rifa: { select: { title: true } } }
-                })
-
-                // Background warmup
-                if (fresh.length > 0) {
-                    const pipeline = redis.pipeline()
-                    // Push in reverse order so that most recent stays at index 0
-                    const reversed = [...fresh].reverse()
-                    for (const item of reversed) {
-                        pipeline.lpush("recent_views", JSON.stringify(item))
-                    }
-                    pipeline.ltrim("recent_views", 0, 19)
-                    pipeline.exec().catch(() => { })
-                }
-
-                return fresh
             })
-        ])
+            if (fresh.length > 0) {
+                const pipe = redis.pipeline()
+                const reversed = [...fresh].reverse()
+                for (const i of reversed) pipe.lpush("dashboard:recent_sales", JSON.stringify(i))
+                pipe.ltrim("dashboard:recent_sales", 0, 9).exec().catch(() => { })
+            }
+            return fresh
+        }).catch(() => [])
 
         return NextResponse.json({
             onlineUsers,
-            totalRevenue: totalRevenue._sum.amount || 0,
+            totalRevenue: totalRevenue || 0,
             recentSales,
             recentViews,
             timestamp: new Date().toISOString()
