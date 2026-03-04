@@ -29,6 +29,16 @@ export default function AdminLayout({
 
             setSession(data)
             setIsLoading(false)
+
+            // Start Heartbeat for Online Admins if logged in
+            if (data?.user) {
+                const sendHeartbeat = () => {
+                    fetch("/api/admin/heartbeat", { method: "POST" }).catch(() => { })
+                }
+                sendHeartbeat() // Initial
+                const interval = setInterval(sendHeartbeat, 60000) // Every 1 min
+                return () => clearInterval(interval)
+            }
         }
         checkAuth()
     }, [])

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
+import { redis, withTimeout } from "@/lib/redis"
 import { redirect } from "next/navigation"
 import {
     Table,
@@ -46,8 +47,8 @@ export default async function UsuariosPage({
 
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
 
-    // Fetch users with active sessions counts + Visitors
-    const [users, totalCount, blockedCount, onlineCount, visitorCount] = await Promise.all([
+    // 1. Fetch Basic User Stats from Prisma
+    const [users, totalCount, blockedCount] = await Promise.all([
         prisma.user.findMany({
             where: {
                 OR: [
@@ -59,13 +60,26 @@ export default async function UsuariosPage({
             take: 50
         }),
         prisma.user.count(),
-        prisma.user.count({ where: { isBlocked: true } }),
-        // Online = lastActiveAt within the last 5 minutes (heartbeat-based)
-        (prisma as any).user.count({ where: { lastActiveAt: { gte: fiveMinutesAgo } } }),
-        (prisma as any).visitor.count({
-            where: { lastSeen: { gte: fiveMinutesAgo } }
-        })
+        prisma.user.count({ where: { isBlocked: true } })
     ])
+
+    // 2. Fetch Real-time Online Stats from Redis (1s timeout)
+    const [onlineAdminsSet, visitorCount] = await Promise.all([
+        // Get IDs of all online admins to check in the list
+        withTimeout(
+            redis.zrangebyscore("online_admins", fiveMinutesAgo.getTime(), "+inf"),
+            1000,
+            []
+        ),
+        // Count active visitors
+        withTimeout(
+            redis.zcount("online_users", fiveMinutesAgo.getTime(), "+inf"),
+            1000,
+            0
+        )
+    ])
+
+    const onlineCount = onlineAdminsSet.length
 
     const isSuperAdmin = session?.user.role === "SUPER_ADMIN"
 
@@ -183,7 +197,7 @@ export default async function UsuariosPage({
                                     </TableRow>
                                 ) : (
                                     users.map((user) => {
-                                        const isOnline = (user as any).lastActiveAt != null && (user as any).lastActiveAt >= fiveMinutesAgo
+                                        const isOnline = onlineAdminsSet.includes(user.id)
                                         return (
                                             <TableRow key={user.id} className="border-white/[0.03] hover:bg-white/[0.01] group transition-colors">
                                                 <TableCell className="py-4 px-6">
