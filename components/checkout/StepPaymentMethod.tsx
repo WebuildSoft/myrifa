@@ -1,58 +1,36 @@
-import { CreditCard, QrCode, FileText, CheckCircle2, ArrowLeft, Lock, Zap } from "lucide-react"
+"use client"
+
+import { CreditCard, QrCode, FileText, CheckCircle2, ArrowLeft, Lock, Zap, AlertTriangle, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 interface StepPaymentMethodProps {
-    paymentMethod: "PIX" | "CREDIT_CARD" | "BOLETO" | null
+    paymentMethod: "PIX" | "PIX_MANUAL" | "CREDIT_CARD" | "BOLETO" | null
     setPaymentMethod: (method: any) => void
     onProcess: () => void
     onBack: () => void
     loading: boolean
     error?: string
     primaryColor?: string | null
+    hasManualPix: boolean // organizador configurou PIX direto?
+    hasMercadoPago: boolean // organizador tem MP configurado?
 }
 
-const METHODS = [
-    {
-        key: "PIX",
-        label: "PIX",
-        subtitle: "Aprovação imediata",
-        icon: QrCode,
-        badge: "Instantâneo",
-        badgeColor: "bg-emerald-500",
-    },
-    {
-        key: "CREDIT_CARD",
-        label: "Cartão",
-        subtitle: "Em até 12x",
-        icon: CreditCard,
-        badge: null,
-        badgeColor: "",
-    },
-    {
-        key: "BOLETO",
-        label: "Boleto",
-        subtitle: "Vence em 3 dias",
-        icon: FileText,
-        badge: null,
-        badgeColor: "",
-    },
-] as const
+export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, onBack, loading, error, primaryColor, hasManualPix, hasMercadoPago }: StepPaymentMethodProps) {
+    const color = primaryColor || '#7c3aed'
 
-const METHOD_LABELS: Record<string, string> = {
-    PIX: "Gerar QR Code PIX",
-    CREDIT_CARD: "Pagar com Cartão",
-    BOLETO: "Gerar Boleto",
-}
+    const BUTTON_LABEL: Record<string, string> = {
+        PIX_MANUAL: "Ver QR Code e Pagar",
+        PIX: "Gerar QR Code PIX",
+        CREDIT_CARD: "Pagar com Cartão",
+        BOLETO: "Gerar Boleto",
+    }
 
-export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, onBack, loading, error, primaryColor }: StepPaymentMethodProps) {
     return (
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm p-8">
-            {/* Top back button */}
             <button
                 onClick={onBack}
                 className="inline-flex items-center gap-2 text-slate-500 font-bold transition-colors text-sm mb-6"
-                style={{ '--primary-hover': primaryColor || 'var(--primary)' } as any}
             >
                 <ArrowLeft className="w-4 h-4" />
                 Voltar
@@ -61,7 +39,7 @@ export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, 
             <div className="flex items-center gap-3 mb-8">
                 <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: `${primaryColor || '#7c3aed'}15`, color: primaryColor || 'var(--primary)' }}
+                    style={{ backgroundColor: `${color}15`, color }}
                 >
                     <CreditCard className="w-5 h-5" />
                 </div>
@@ -71,115 +49,165 @@ export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, 
                 </div>
             </div>
 
-            {/* Payment method selection */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                {METHODS.map(({ key, label, subtitle, icon: Icon, badge, badgeColor }) => (
+            {/* PIX MANUAL (direto ao organizador) - destaque principal */}
+            {hasManualPix && (
+                <div className="mb-4">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-2 flex items-center gap-1">
+                        <ShieldCheck className="w-3.5 h-3.5" /> Recomendado
+                    </p>
                     <button
-                        key={key}
-                        onClick={() => setPaymentMethod(key)}
+                        onClick={() => setPaymentMethod("PIX_MANUAL")}
                         className={cn(
-                            "relative border-2 p-6 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center text-center gap-3 group",
-                            paymentMethod === key
-                                ? "shadow-md scale-[1.03]"
-                                : "border-slate-100 dark:border-slate-800 hover:bg-primary/3"
+                            "w-full relative border-2 p-5 rounded-2xl cursor-pointer transition-all duration-200 flex items-center gap-4 text-left group",
+                            paymentMethod === "PIX_MANUAL"
+                                ? "shadow-md"
+                                : "border-slate-100 dark:border-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/10"
                         )}
-                        style={paymentMethod === key ? {
-                            borderColor: primaryColor || 'var(--primary)',
-                            backgroundColor: `${primaryColor || '#7c3aed'}10`,
-                            boxShadow: `0 10px 15px -3px ${primaryColor || '#7c3aed'}20`
+                        style={paymentMethod === "PIX_MANUAL" ? {
+                            borderColor: '#10b981',
+                            backgroundColor: '#10b98110',
+                            boxShadow: '0 10px 15px -3px #10b98120'
                         } : {}}
                     >
-                        {badge && (
-                            <div className={cn("absolute -top-3 right-4 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wide", badgeColor)}>
-                                {badge}
+                        <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0", paymentMethod === "PIX_MANUAL" ? "bg-emerald-500/20" : "bg-slate-100 dark:bg-slate-800")}>
+                            <QrCode className={cn("w-6 h-6", paymentMethod === "PIX_MANUAL" ? "text-emerald-500" : "text-slate-400")} />
+                        </div>
+                        <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                                <p className="font-black text-base text-slate-900 dark:text-white">PIX Direto</p>
+                                <span className="text-[10px] font-black bg-emerald-500 text-white px-2 py-0.5 rounded-full uppercase tracking-wide">Instantâneo</span>
                             </div>
-                        )}
-                        {paymentMethod === key && (
-                            <CheckCircle2 className="absolute top-3 left-3 w-4 h-4" style={{ color: primaryColor || 'var(--primary)' }} />
-                        )}
-                        <div
-                            className={cn(
-                                "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors",
-                                paymentMethod === key ? "" : "bg-slate-100 dark:bg-slate-800"
-                            )}
-                            style={paymentMethod === key ? { backgroundColor: `${primaryColor || '#7c3aed'}20` } : {}}
-                        >
-                            <Icon
-                                className={cn("w-6 h-6 transition-colors", paymentMethod === key ? "" : "text-slate-400 group-hover:text-primary/60")}
-                                style={paymentMethod === key ? { color: primaryColor || 'var(--primary)' } : {}}
-                            />
+                            <p className="text-xs text-slate-400 mt-0.5">Pague direto para o organizador via PIX. Zero taxas.</p>
                         </div>
-                        <div>
-                            <p className={cn("font-black text-base")} style={paymentMethod === key ? { color: primaryColor || 'var(--primary)' } : {}}>{label}</p>
-                            <p className="text-[11px] text-slate-400 font-medium mt-0.5">{subtitle}</p>
-                        </div>
+                        {paymentMethod === "PIX_MANUAL" && (
+                            <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                        )}
                     </button>
-                ))}
-            </div>
-
-            {/* Info & confirmation block — only shows after selecting */}
-            {paymentMethod && (
-                <div
-                    className="animate-in fade-in slide-in-from-bottom-2 duration-300 rounded-2xl p-6 mb-6 flex flex-col items-center text-center gap-4"
-                    style={{ backgroundColor: `${primaryColor || '#7c3aed'}10`, border: `1px solid ${primaryColor || '#7c3aed'}30` }}
-                >
-                    {paymentMethod === "PIX" && (
-                        <>
-                            <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center">
-                                <Zap className="w-6 h-6 text-emerald-500" />
-                            </div>
-                            <div>
-                                <p className="font-black text-slate-900 dark:text-white">Pagamento via PIX</p>
-                                <p className="text-sm text-slate-500 mt-1 max-w-xs">
-                                    Ao clicar em <strong>"Gerar QR Code PIX"</strong>, seu QR Code exclusivo será gerado. Escaneie com o app do seu banco para confirmar.
-                                </p>
-                            </div>
-                        </>
-                    )}
-                    {paymentMethod === "CREDIT_CARD" && (
-                        <>
-                            <div
-                                className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                                style={{ backgroundColor: `${primaryColor || '#7c3aed'}15`, color: primaryColor || 'var(--primary)' }}
-                            >
-                                <CreditCard className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <p className="font-black text-slate-900 dark:text-white">Pagamento com Cartão</p>
-                                <p className="text-sm text-slate-500 mt-1 max-w-xs">Parcelamento em até 12x. Processamento seguro via Mercado Pago.</p>
-                            </div>
-                        </>
-                    )}
-                    {paymentMethod === "BOLETO" && (
-                        <>
-                            <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center">
-                                <FileText className="w-6 h-6 text-amber-500" />
-                            </div>
-                            <div>
-                                <p className="font-black text-slate-900 dark:text-white">Pagamento por Boleto</p>
-                                <p className="text-sm text-slate-500 mt-1 max-w-xs">O boleto vence em 3 dias úteis. As cotas serão reservadas após a confirmação.</p>
-                            </div>
-                        </>
-                    )}
                 </div>
             )}
 
-            {error && <p className="text-sm text-red-500 mb-4 font-bold text-center">{error}</p>}
+            {/* Separador */}
+            {hasManualPix && hasMercadoPago && (
+                <div className="flex items-center gap-3 my-4">
+                    <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ou outras formas</span>
+                    <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
+                </div>
+            )}
 
-            {/* Confirm button — only shows after method is selected */}
+            {/* MP + Cartão + Boleto */}
+            {hasMercadoPago && (
+                <div className="space-y-3">
+                    {/* Aviso MP */}
+                    <div className="flex items-start gap-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200/70 dark:border-amber-700/30 rounded-xl px-4 py-3">
+                        <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                        <p className="text-xs text-amber-700 dark:text-amber-300">
+                            <strong>Atenção:</strong> Os métodos abaixo usam o Mercado Pago, que pode bloquear contas de rifas. O pagamento é confirmado automaticamente.
+                        </p>
+                    </div>
+
+                    {/* PIX via MP */}
+                    <button
+                        onClick={() => setPaymentMethod("PIX")}
+                        className={cn(
+                            "w-full relative border-2 p-4 rounded-2xl cursor-pointer transition-all duration-200 flex items-center gap-4 text-left group",
+                            paymentMethod === "PIX"
+                                ? "shadow-md"
+                                : "border-slate-100 dark:border-slate-800 hover:bg-primary/5"
+                        )}
+                        style={paymentMethod === "PIX" ? {
+                            borderColor: color,
+                            backgroundColor: `${color}10`,
+                        } : {}}
+                    >
+                        <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0", paymentMethod === "PIX" ? "" : "bg-slate-100 dark:bg-slate-800")} style={paymentMethod === "PIX" ? { backgroundColor: `${color}20` } : {}}>
+                            <Zap className={cn("w-5 h-5", paymentMethod === "PIX" ? "" : "text-slate-400")} style={paymentMethod === "PIX" ? { color } : {}} />
+                        </div>
+                        <div className="flex-1">
+                            <p className="font-bold text-sm text-slate-900 dark:text-white">PIX via Mercado Pago</p>
+                            <p className="text-xs text-slate-400">Confirmação automática</p>
+                        </div>
+                        {paymentMethod === "PIX" && <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color }} />}
+                    </button>
+
+                    {/* Cartão */}
+                    <button
+                        onClick={() => setPaymentMethod("CREDIT_CARD")}
+                        className={cn(
+                            "w-full relative border-2 p-4 rounded-2xl cursor-pointer transition-all duration-200 flex items-center gap-4 text-left group",
+                            paymentMethod === "CREDIT_CARD"
+                                ? "shadow-md"
+                                : "border-slate-100 dark:border-slate-800 hover:bg-primary/5"
+                        )}
+                        style={paymentMethod === "CREDIT_CARD" ? {
+                            borderColor: color,
+                            backgroundColor: `${color}10`,
+                        } : {}}
+                    >
+                        <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0", paymentMethod === "CREDIT_CARD" ? "" : "bg-slate-100 dark:bg-slate-800")} style={paymentMethod === "CREDIT_CARD" ? { backgroundColor: `${color}20` } : {}}>
+                            <CreditCard className={cn("w-5 h-5", paymentMethod === "CREDIT_CARD" ? "" : "text-slate-400")} style={paymentMethod === "CREDIT_CARD" ? { color } : {}} />
+                        </div>
+                        <div className="flex-1">
+                            <p className="font-bold text-sm text-slate-900 dark:text-white">Cartão de Crédito</p>
+                            <p className="text-xs text-slate-400">Em até 12x</p>
+                        </div>
+                        {paymentMethod === "CREDIT_CARD" && <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color }} />}
+                    </button>
+
+                    {/* Boleto */}
+                    <button
+                        onClick={() => setPaymentMethod("BOLETO")}
+                        className={cn(
+                            "w-full relative border-2 p-4 rounded-2xl cursor-pointer transition-all duration-200 flex items-center gap-4 text-left group",
+                            paymentMethod === "BOLETO"
+                                ? "shadow-md"
+                                : "border-slate-100 dark:border-slate-800 hover:bg-primary/5"
+                        )}
+                        style={paymentMethod === "BOLETO" ? {
+                            borderColor: color,
+                            backgroundColor: `${color}10`,
+                        } : {}}
+                    >
+                        <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0", paymentMethod === "BOLETO" ? "" : "bg-slate-100 dark:bg-slate-800")} style={paymentMethod === "BOLETO" ? { backgroundColor: `${color}20` } : {}}>
+                            <FileText className={cn("w-5 h-5", paymentMethod === "BOLETO" ? "" : "text-slate-400")} style={paymentMethod === "BOLETO" ? { color } : {}} />
+                        </div>
+                        <div className="flex-1">
+                            <p className="font-bold text-sm text-slate-900 dark:text-white">Boleto Bancário</p>
+                            <p className="text-xs text-slate-400">Vence em 3 dias úteis</p>
+                        </div>
+                        {paymentMethod === "BOLETO" && <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color }} />}
+                    </button>
+                </div>
+            )}
+
+            {/* Nenhuma opção disponível */}
+            {!hasManualPix && !hasMercadoPago && (
+                <div className="text-center py-10 text-slate-400">
+                    <AlertTriangle className="w-10 h-10 mx-auto mb-3 text-amber-400" />
+                    <p className="font-bold">Nenhuma forma de pagamento disponível</p>
+                    <p className="text-sm mt-1">O organizador ainda não configurou o recebimento deste produto.</p>
+                </div>
+            )}
+
+            {error && <p className="text-sm text-red-500 mb-4 font-bold text-center mt-4">{error}</p>}
+
+            {/* Botão confirmar */}
             {paymentMethod && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 mt-6">
                     <Button
                         onClick={onProcess}
                         disabled={loading}
                         size="lg"
                         className="w-full h-14 rounded-xl font-black gap-2 text-base shadow-lg active:scale-95 transition-all"
-                        style={{ backgroundColor: primaryColor || 'var(--primary)', boxShadow: `0 10px 15px -3px ${primaryColor || '#7c3aed'}30` }}
+                        style={paymentMethod === "PIX_MANUAL"
+                            ? { backgroundColor: '#10b981', boxShadow: '0 10px 15px -3px #10b98130' }
+                            : { backgroundColor: color, boxShadow: `0 10px 15px -3px ${color}30` }
+                        }
                     >
                         {loading ? (
-                            <><span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" /> Gerando pagamento...</>
+                            <><span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" /> Processando...</>
                         ) : (
-                            <>{METHOD_LABELS[paymentMethod]}</>
+                            BUTTON_LABEL[paymentMethod]
                         )}
                     </Button>
                 </div>

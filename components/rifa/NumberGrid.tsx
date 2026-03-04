@@ -23,6 +23,10 @@ interface NumberGridProps {
     rifaCover?: string | null
     themeClasses?: string
     themeStyle?: React.CSSProperties
+    // Dados de PIX do organizador
+    pixKey?: string | null
+    pixQrCodeImage?: string | null
+    hasMercadoPago?: boolean
 }
 
 export function NumberGrid({
@@ -36,6 +40,9 @@ export function NumberGrid({
     rifaCover,
     themeClasses,
     themeStyle,
+    pixKey,
+    pixQrCodeImage,
+    hasMercadoPago = false,
 }: NumberGridProps) {
     const router = useRouter()
     const {
@@ -63,6 +70,9 @@ export function NumberGrid({
                 numbers: selectedNumbers,
                 price,
                 primaryColor: primaryColor ?? null,
+                pixKey: pixKey ?? null,
+                pixQrCodeImage: pixQrCodeImage ?? null,
+                hasMercadoPago,
             }
             sessionStorage.setItem(`checkout_${rifaId}`, JSON.stringify(data))
             router.push(`/checkout/${rifaId}`)

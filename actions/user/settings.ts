@@ -42,3 +42,28 @@ export async function saveMercadoPagoToken(token: string) {
         return { error: "Ocorreu um erro ao salvar o token. Tente novamente." }
     }
 }
+
+export async function saveManualPixSettings({ pixKey, pixQrCodeImage }: { pixKey?: string; pixQrCodeImage?: string }) {
+    try {
+        const session = await auth()
+
+        if (!session?.user?.id) {
+            return { error: "Não autorizado." }
+        }
+
+        await prisma.user.update({
+            where: { id: session.user.id },
+            data: {
+                pixKey: pixKey ?? null,
+                pixQrCodeImage: pixQrCodeImage ?? null
+            }
+        })
+
+        revalidatePath('/conta')
+        return { success: true, message: "Configurações de PIX manual salvas!" }
+
+    } catch (error) {
+        console.error("Error saving Manual PIX settings:", error)
+        return { error: "Erro ao salvar configurações de PIX." }
+    }
+}

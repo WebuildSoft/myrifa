@@ -61,7 +61,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                 orderBy: { number: "asc" },
                 select: { id: true, number: true, status: true }
             },
-            user: { select: { name: true, image: true } },
+            user: { select: { name: true, image: true, pixKey: true, pixQrCodeImage: true, mercadoPagoAccessToken: true } },
             prizes: {
                 orderBy: { position: "asc" },
                 include: { winner: true }
@@ -190,6 +190,9 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                         rifaCover={rifa.coverImage}
                                         themeClasses={cn(themeConfig.body, themeConfig.text, themeConfig.selection)}
                                         themeStyle={customCssVars}
+                                        pixKey={(rifa.user as any)?.pixKey ?? null}
+                                        pixQrCodeImage={(rifa.user as any)?.pixQrCodeImage ?? null}
+                                        hasMercadoPago={!!((rifa.user as any)?.mercadoPagoAccessToken)}
                                     />
                                 )}
 

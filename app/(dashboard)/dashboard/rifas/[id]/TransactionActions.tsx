@@ -2,16 +2,17 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Check, X, Loader2 } from "lucide-react"
+import { Check, X, Loader2, QrCode } from "lucide-react"
 import { confirmPaymentAction, cancelTransactionAction } from "@/actions/transactions"
 import { toast } from "sonner"
 
 interface TransactionActionsProps {
     transactionId: string
     status: string
+    provider?: string
 }
 
-export function TransactionActions({ transactionId, status }: TransactionActionsProps) {
+export function TransactionActions({ transactionId, status, provider }: TransactionActionsProps) {
     const [loading, setLoading] = useState<"confirm" | "cancel" | null>(null)
 
     if (status !== "PENDING") return null
@@ -46,6 +47,12 @@ export function TransactionActions({ transactionId, status }: TransactionActions
 
     return (
         <div className="flex items-center justify-end gap-2">
+            {provider === "MANUAL" && (
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[9px] font-black uppercase tracking-widest mr-1 animate-pulse" title="Pagamento via PIX Direto">
+                    <QrCode className="size-3" />
+                    Manual
+                </div>
+            )}
             <Button
                 size="sm"
                 variant="outline"
