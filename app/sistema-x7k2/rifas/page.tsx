@@ -32,7 +32,8 @@ export default async function AdminRifasPage() {
             user: { select: { name: true, email: true, isBlocked: true } },
             _count: { select: { numbers: { where: { status: "PAID" } } } }
         },
-        orderBy: { createdAt: "desc" }
+        orderBy: { createdAt: "desc" },
+        take: 50 // Paginação simples para evitar gargalos
     })
 
     return (
