@@ -104,10 +104,28 @@ export function StepBuyerInfo({ buyerInfo, setBuyerInfo, rifaSlug, onNext, error
                                 value={buyerInfo.name}
                                 onChange={e => setBuyerInfo({ ...buyerInfo, name: e.target.value })}
                                 placeholder="João da Silva Santos"
-                                className="pl-10 h-13 rounded-xl"
+                                className={cn(
+                                    "pl-10 h-13 rounded-xl transition-all",
+                                    buyerInfo.name.length > 0 && buyerInfo.name.length < 3 && "border-red-400 focus-visible:ring-red-400/30",
+                                    buyerInfo.name.length >= 3 && "border-emerald-400 focus-visible:ring-emerald-400/30"
+                                )}
                                 required
                             />
+                            {buyerInfo.name.length > 0 && (
+                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
+                                    {buyerInfo.name.length >= 3
+                                        ? <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                        : <AlertCircle className="h-4 w-4 text-red-400" />
+                                    }
+                                </div>
+                            )}
                         </div>
+                        {buyerInfo.name.length > 0 && buyerInfo.name.length < 3 && (
+                            <p className="text-xs text-red-500 font-semibold flex items-center gap-1 mt-1">
+                                <AlertCircle className="h-3 w-3" />
+                                O nome deve ter pelo menos 3 caracteres
+                            </p>
+                        )}
                     </div>
 
                     {/* WhatsApp */}

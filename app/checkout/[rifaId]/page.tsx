@@ -6,7 +6,7 @@ import Link from "next/link"
 import { ArrowLeft, ChevronRight, Ticket } from "lucide-react"
 import { BalloonShape } from "@prisma/client"
 
-import { processCheckoutAction, checkPaymentStatusAction } from "@/actions/checkout"
+import { processCheckoutAction, checkPaymentStatusAction, getAvailablePaymentMethodsAction } from "@/actions/checkout"
 import { CheckoutHeader } from "@/components/checkout/CheckoutHeader"
 import { CheckoutSteps } from "@/components/checkout/CheckoutSteps"
 import { OrderSummary } from "@/components/checkout/OrderSummary"
@@ -48,6 +48,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
     const [manualPixData, setManualPixData] = useState<{ txId: string; pixKey: string | null; pixQrCodeImage: string | null } | null>(null)
     const [copied, setCopied] = useState(false)
     const [secondsLeft, setSecondsLeft] = useState(PAYMENT_EXPIRY_SECONDS)
+    const [availableMethods, setAvailableMethods] = useState<{ hasManualPix: boolean; hasMercadoPago: boolean; destination: string; methods: string[] } | null>(null)
 
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -59,7 +60,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
             return
         }
         try {
-            setCheckoutData(JSON.parse(raw))
+            const data = JSON.parse(raw)
+            setCheckoutData(data)
+
+            // Buscar métodos disponíveis via split dinâmico
+            getAvailablePaymentMethodsAction(routeRifaId).then(res => {
+                if ('methods' in res) {
+                    setAvailableMethods(res as any)
+                }
+            })
         } catch {
             router.replace('/')
         }
@@ -225,8 +234,9 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                                 loading={loading}
                                 error={error}
                                 primaryColor={checkoutData.primaryColor}
-                                hasManualPix={!!(checkoutData.pixKey || checkoutData.pixQrCodeImage)}
-                                hasMercadoPago={checkoutData.hasMercadoPago}
+                                hasManualPix={availableMethods?.hasManualPix ?? false}
+                                hasMercadoPago={availableMethods?.hasMercadoPago ?? false}
+                                isPlatformDestination={availableMethods?.destination === 'PLATFORM'}
                             />
                         )}
 

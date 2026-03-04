@@ -59,8 +59,8 @@ export function QuotaCommissionCard({ paid, goal, percent }: QuotaCommissionCard
                     <Info className="w-4 w-4 text-slate-400 shrink-0 mt-0.5" />
                     <p className="text-[10px] leading-relaxed text-slate-500 font-medium">
                         {isCompleted
-                            ? "A meta de comissão foi atingida! A partir de agora, 100% das vendas serão destinadas diretamente à sua conta do Mercado Pago."
-                            : `O sistema redireciona aleatoriamente ~${(percent * 100).toFixed(0)}% das vendas para a plataforma via Stripe até atingir a meta. O restante (${(100 - percent * 100).toFixed(0)}%) cai na sua conta.`
+                            ? "A meta de comissão foi atingida! A partir de agora, 100% das vendas serão destinadas diretamente à sua conta."
+                            : `Através do **Split Inteligente**, o sistema redireciona aleatoriamente ~${(percent * 100).toFixed(0)}% das vendas para a plataforma via Stripe até atingir a meta. O restante (${(100 - percent * 100).toFixed(0)}%) cai diretamente na sua conta.`
                         }
                     </p>
                 </div>

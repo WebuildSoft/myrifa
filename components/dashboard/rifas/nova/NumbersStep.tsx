@@ -99,6 +99,22 @@ export function NumbersStep({
                 </div>
             </section>
 
+            <section className="p-6 rounded-[2rem] bg-amber-50 dark:bg-amber-900/10 border-2 border-amber-100 dark:border-amber-900/30">
+                <div className="flex gap-4">
+                    <div className="p-3 rounded-2xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 shrink-0 h-fit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 14 4-4" /><path d="m3.34 19 8.66-16.66a1 1 0 0 1 1.66 0L22.34 19a1 1 0 0 1-.83 1.5H4.17a1 1 0 0 1-.83-1.5z" /><path d="M12 17h.01" /></svg>
+                    </div>
+                    <div className="space-y-1">
+                        <h4 className="font-black text-amber-900 dark:text-amber-100 uppercase tracking-tight text-sm">Transparência nas Taxas</h4>
+                        <p className="text-xs text-amber-700 dark:text-amber-300 font-medium leading-relaxed">
+                            Para manter o sistema e oferecer o **PIX Manual** sem taxas extras, nossa plataforma utiliza um **Split Inteligente**.
+                            Cerca de 5% das vendas (sorteadas aleatoriamente) serão processadas pela plataforma via Stripe até atingir a meta de manutenção.
+                            **As demais vendas (95%) caem integralmente na sua conta configurada.**
+                        </p>
+                    </div>
+                </div>
+            </section>
+
             <section className="space-y-6">
                 <div className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
                     <div className="flex items-center justify-between transition-all duration-300">

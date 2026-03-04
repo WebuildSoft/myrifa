@@ -12,11 +12,12 @@ interface StepPaymentMethodProps {
     loading: boolean
     error?: string
     primaryColor?: string | null
-    hasManualPix: boolean // organizador configurou PIX direto?
-    hasMercadoPago: boolean // organizador tem MP configurado?
+    hasManualPix: boolean
+    hasMercadoPago: boolean
+    isPlatformDestination?: boolean // Novo: indica que a venda é para a plataforma
 }
 
-export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, onBack, loading, error, primaryColor, hasManualPix, hasMercadoPago }: StepPaymentMethodProps) {
+export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, onBack, loading, error, primaryColor, hasManualPix, hasMercadoPago, isPlatformDestination }: StepPaymentMethodProps) {
     const color = primaryColor || '#7c3aed'
 
     const BUTTON_LABEL: Record<string, string> = {
@@ -49,8 +50,39 @@ export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, 
                 </div>
             </div>
 
+            {/* PLATAFORMA (Sorteado para o sistema) */}
+            {isPlatformDestination && (
+                <div className="space-y-4">
+                    <button
+                        onClick={() => setPaymentMethod("PIX")}
+                        className={cn(
+                            "w-full relative border-2 p-5 rounded-2xl cursor-pointer transition-all duration-200 flex items-center gap-4 text-left group",
+                            paymentMethod === "PIX"
+                                ? "shadow-md"
+                                : "border-slate-100 dark:border-slate-800 hover:bg-primary/5"
+                        )}
+                        style={paymentMethod === "PIX" ? {
+                            borderColor: color,
+                            backgroundColor: `${color}10`,
+                        } : {}}
+                    >
+                        <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0", paymentMethod === "PIX" ? "" : "bg-slate-100 dark:bg-slate-800")} style={paymentMethod === "PIX" ? { backgroundColor: `${color}20` } : {}}>
+                            <Zap className={cn("w-6 h-6", paymentMethod === "PIX" ? "" : "text-slate-400")} style={paymentMethod === "PIX" ? { color } : {}} />
+                        </div>
+                        <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                                <p className="font-black text-base text-slate-900 dark:text-white">Pagamento via PIX</p>
+                                <span className="text-[10px] font-black bg-primary text-white px-2 py-0.5 rounded-full uppercase tracking-wide">Instantâneo</span>
+                            </div>
+                            <p className="text-xs text-slate-400 mt-0.5">Confirmação automática e segurança garantida.</p>
+                        </div>
+                        {paymentMethod === "PIX" && <CheckCircle2 className="w-5 h-5 shrink-0" style={{ color }} />}
+                    </button>
+                </div>
+            )}
+
             {/* PIX MANUAL (direto ao organizador) - destaque principal */}
-            {hasManualPix && (
+            {!isPlatformDestination && hasManualPix && (
                 <div className="mb-4">
                     <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-2 flex items-center gap-1">
                         <ShieldCheck className="w-3.5 h-3.5" /> Recomendado
@@ -87,7 +119,7 @@ export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, 
             )}
 
             {/* Separador */}
-            {hasManualPix && hasMercadoPago && (
+            {!isPlatformDestination && hasManualPix && hasMercadoPago && (
                 <div className="flex items-center gap-3 my-4">
                     <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ou outras formas</span>
@@ -96,7 +128,7 @@ export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, 
             )}
 
             {/* MP + Cartão + Boleto */}
-            {hasMercadoPago && (
+            {!isPlatformDestination && hasMercadoPago && (
                 <div className="space-y-3">
                     {/* Aviso MP */}
 

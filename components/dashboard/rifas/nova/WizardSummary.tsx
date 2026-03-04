@@ -105,6 +105,9 @@ export function WizardSummary({ totalNumbers, numberPrice, currentStep, userPlan
                                 <span className="opacity-70">Manutenção do Sistema ({feePercentage * 100}%)</span>
                                 <span className="text-red-200">- {formatCurrency(platformFee)}</span>
                             </div>
+                            <p className="text-[10px] text-primary-foreground/60 leading-tight italic bg-black/10 p-2 rounded-lg border border-white/5">
+                                * Cobrada via "Split Inteligente": O sistema redireciona aleatoriamente ~{feePercentage * 100}% das vendas para a plataforma até quitar a taxa.
+                            </p>
                         </div>
 
                         <div className="pt-2">
