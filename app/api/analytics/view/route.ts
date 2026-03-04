@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { rateLimit, getIP, rateLimitResponse } from "@/lib/rate-limit"
 import { redis } from "@/lib/redis"
+import { sendWhatsAppMessage } from "@/lib/evolution"
 
 export async function POST(req: NextRequest) {
     // Rate limit: max 30 requests per IP per minute
@@ -87,6 +88,31 @@ export async function POST(req: NextRequest) {
             console.error("[REDIS] Cache Push Error:", e)
         }
         // ---------------------------------------------------------
+
+        // --- WHATSAPP ADMIN ALERT (Throttled via Redis) ---
+        (async () => {
+            try {
+                const cooldownKey = "wa_alert_cooldown"
+                const hasCooldown = await redis.get(cooldownKey)
+
+                if (!hasCooldown) {
+                    const adminPhone = process.env.ADMIN_ALERT_PHONE
+                    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://myrifa.com.br"
+
+                    if (adminPhone && adminPhone !== "[YOUR_PHONE]") {
+                        await sendWhatsAppMessage(
+                            adminPhone,
+                            `🔔 *MyRifa: Novo Movimento!* 🚀\n\nHá novos visitantes ativos no seu site agora!\n\nConfira o painel:\n🔗 ${appUrl}/sistema-x7k2/analytics`
+                        )
+                        // Cooldown logic: Notify only once every 30 minutes (1800s)
+                        await redis.set(cooldownKey, "active", "EX", 1800)
+                    }
+                }
+            } catch (e) {
+                console.error("[REDIS] WhatsApp Alert Async Error:", e)
+            }
+        })()
+        // --------------------------------------------------
 
         // Ping Redis for Online Users tracking
         await redis.zadd("online_users", Date.now(), sessionId).catch(() => { })
