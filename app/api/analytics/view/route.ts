@@ -46,28 +46,47 @@ export async function POST(req: NextRequest) {
         // to prevent spoofing/injecting views for non-existent or malicious IDs.
         const rifaExists = await prisma.rifa.findUnique({
             where: { id: rifaId },
-            select: { id: true }
+            select: { id: true, title: true } // Need title for Redis cache
         })
 
         if (!rifaExists) {
             return NextResponse.json({ error: "Invalid rifaId" }, { status: 404 })
         }
 
+        const viewData = {
+            rifaId,
+            sessionId,
+            referrer,
+            rawReferrer,
+            device,
+            os,
+            browser,
+            utmSource,
+            utmMedium,
+            utmCampaign,
+            ip: forwardedIp,
+        }
+
         await (prisma as any).linkView.create({
-            data: {
-                rifaId,
-                sessionId,
-                referrer,
-                rawReferrer,
-                device,
-                os,
-                browser,
-                utmSource,
-                utmMedium,
-                utmCampaign,
-                ip: forwardedIp,
-            }
+            data: viewData
         })
+
+        // --- REDIS HOT-PATH CACHE (LIST for UI Activity Ticker) ---
+        try {
+            const cacheItem = JSON.stringify({
+                ...viewData,
+                createdAt: new Date().toISOString(),
+                rifa: { title: rifaExists.title }
+            })
+            // Atomic push and trim to keeping list light (last 20 items)
+            await redis.pipeline()
+                .lpush("recent_views", cacheItem)
+                .ltrim("recent_views", 0, 19)
+                .exec()
+        } catch (e) {
+            console.error("[REDIS] Cache Push Error:", e)
+        }
+        // ---------------------------------------------------------
 
         // Ping Redis for Online Users tracking
         await redis.zadd("online_users", Date.now(), sessionId).catch(() => { })

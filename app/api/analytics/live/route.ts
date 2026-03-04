@@ -40,11 +40,36 @@ export async function GET(req: NextRequest) {
                 }
             }),
 
-            // 4. Recent 10 Views (Activity Ticker)
-            (prisma as any).linkView.findMany({
-                orderBy: { createdAt: "desc" },
-                take: 10,
-                include: { rifa: { select: { title: true } } }
+            // 4. Recent 10 Views (Activity Ticker) - Redis-first with Warmup Fallback
+            redis.lrange("recent_views", 0, 9).then(async (cached) => {
+                if (cached && cached.length > 0) {
+                    try {
+                        return cached.map(item => JSON.parse(item))
+                    } catch (e) {
+                        console.error("[REDIS] Parse Error (Recent Views Cache):", e)
+                    }
+                }
+
+                // Fallback & Warmup
+                const fresh = await (prisma as any).linkView.findMany({
+                    orderBy: { createdAt: "desc" },
+                    take: 10,
+                    include: { rifa: { select: { title: true } } }
+                })
+
+                // Background warmup
+                if (fresh.length > 0) {
+                    const pipeline = redis.pipeline()
+                    // Push in reverse order so that most recent stays at index 0
+                    const reversed = [...fresh].reverse()
+                    for (const item of reversed) {
+                        pipeline.lpush("recent_views", JSON.stringify(item))
+                    }
+                    pipeline.ltrim("recent_views", 0, 19)
+                    pipeline.exec().catch(() => { })
+                }
+
+                return fresh
             })
         ])
 
