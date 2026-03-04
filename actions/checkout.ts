@@ -20,7 +20,7 @@ const checkoutSchema = z.object({
         }),
     email: z.string().email().optional().or(z.literal("")),
     numbers: z.array(z.number()).min(1),
-    paymentMethod: z.enum(["PIX", "CREDIT_CARD", "BOLETO"]),
+    paymentMethod: z.enum(["PIX", "PIX_MANUAL", "CREDIT_CARD", "BOLETO"]),
 })
 
 export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>) {
@@ -47,11 +47,15 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
         }
 
         const ownerAccessToken = rifa.user?.mercadoPagoAccessToken
-        console.log(`[Checkout] Rifa found: ${rifa.id}, Owner: ${rifa.userId}, Token exists: ${!!ownerAccessToken}`)
+        const ownerPixKey = (rifa.user as any)?.pixKey
+        const ownerPixQrCodeImage = (rifa.user as any)?.pixQrCodeImage
 
-        if (!ownerAccessToken) {
-            console.log(`[Checkout] Error: Owner ${rifa.userId} has no MP token.`)
-            return { error: "O organizador da campanha ainda não configurou os recebimentos. Tente novamente mais tarde." }
+        // PIX_MANUAL não precisa de token do MP
+        if (validated.paymentMethod !== "PIX_MANUAL") {
+            if (!ownerAccessToken) {
+                console.log(`[Checkout] Error: Owner ${rifa.userId} has no MP token.`)
+                return { error: "O organizador da campanha ainda não configurou os recebimentos. Tente novamente mais tarde." }
+            }
         }
 
         // 1. Transaction to reserve numbers, create buyer and determine destination
@@ -109,6 +113,24 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
             })
 
             const amount = Number(rifaTx.numberPrice) * validated.numbers.length
+
+            // PIX_MANUAL: destino sempre ORGANIZER, sem provider de gateway
+            if (validated.paymentMethod === "PIX_MANUAL") {
+                const transactionRecord = await tx.transaction.create({
+                    data: {
+                        amount,
+                        status: "PENDING",
+                        method: "PIX",
+                        buyerId: buyer.id,
+                        rifaId: rifaTx.id,
+                        numbers: validated.numbers,
+                        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24h para PIX manual
+                        provider: "MANUAL" as any,
+                        destination: "ORGANIZER"
+                    }
+                })
+                return { transactionRecord, buyer, amount, provider: "ORGANIZER" as any, destination: "ORGANIZER" as any, isManualPix: true }
+            }
 
             // --- Atomic Destination Logic ---
             let destination: 'PLATFORM' | 'ORGANIZER' = 'ORGANIZER'
@@ -192,7 +214,6 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
             // 3. Send WhatsApp notification via NotificationService
             const appUrl = process.env.NEXT_PUBLIC_APP_URL || ''
             const checkoutUrl = `${appUrl}/checkout/pedido/${checkoutResult.transactionRecord.id}`
-
             await NotificationService.sendReservationConfirm({
                 whatsapp: validated.whatsapp,
                 buyerName: validated.name,
@@ -202,6 +223,18 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 checkoutUrl
             })
 
+            // 4. Optionally notify organizer
+            if ((rifa as any).notifyOrganizer && (rifa as any).organizerWhatsapp) {
+                NotificationService.sendOrganizerAlert({
+                    whatsapp: (rifa as any).organizerWhatsapp,
+                    buyerName: validated.name,
+                    rifaTitle: rifa.title,
+                    numbers: validated.numbers,
+                    amount: checkoutResult.amount,
+                    type: 'RESERVATION'
+                }).catch(err => console.error("[Organizer-Alert] Error:", err))
+            }
+
             console.log(`[Checkout] Success! QR Code exists: ${!!paymentResult.qrCode}, Copy text exists: ${!!paymentResult.qrCodeCopy}`)
 
             return {
@@ -209,6 +242,39 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 qrCode: paymentResult.qrCode,
                 qrCodeCopy: paymentResult.qrCodeCopy,
                 transactionId: checkoutResult.transactionRecord.id
+            }
+        }
+
+        // PIX_MANUAL: retornar dados PIX do organizador
+        if (validated.paymentMethod === "PIX_MANUAL") {
+            const appUrl = process.env.NEXT_PUBLIC_APP_URL || ''
+            const checkoutUrl = `${appUrl}/checkout/pedido/${checkoutResult.transactionRecord.id}`
+            await NotificationService.sendReservationConfirm({
+                whatsapp: validated.whatsapp,
+                buyerName: validated.name,
+                rifaTitle: rifa.title,
+                numbers: validated.numbers,
+                amount: checkoutResult.amount,
+                checkoutUrl
+            }).catch(() => { })
+
+            if ((rifa as any).notifyOrganizer && (rifa as any).organizerWhatsapp) {
+                NotificationService.sendOrganizerAlert({
+                    whatsapp: (rifa as any).organizerWhatsapp,
+                    buyerName: validated.name,
+                    rifaTitle: rifa.title,
+                    numbers: validated.numbers,
+                    amount: checkoutResult.amount,
+                    type: 'RESERVATION'
+                }).catch(() => { })
+            }
+
+            return {
+                success: true,
+                type: 'PIX_MANUAL' as const,
+                transactionId: checkoutResult.transactionRecord.id,
+                pixKey: ownerPixKey || null,
+                pixQrCodeImage: ownerPixQrCodeImage || null,
             }
         }
 

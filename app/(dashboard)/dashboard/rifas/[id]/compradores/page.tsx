@@ -40,7 +40,7 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
                 },
                 transactions: {
                     where: { rifaId: id, status: "PENDING" },
-                    select: { id: true, status: true }
+                    select: { id: true, status: true, provider: true }
                 }
             },
             orderBy: { createdAt: 'desc' },
@@ -158,6 +158,7 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
                                                         <TransactionActions
                                                             transactionId={buyer.transactions[0].id}
                                                             status={buyer.transactions[0].status}
+                                                            provider={(buyer.transactions[0] as any).provider}
                                                         />
                                                     </div>
                                                 )}

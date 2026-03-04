@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label"
 import { User, Mail, Smartphone } from "lucide-react"
 import { MercadoPagoSettings } from "@/components/dashboard/conta/MercadoPagoSettings"
 
+import { ManualPixSettings } from "@/components/dashboard/conta/ManualPixSettings"
+
 export default async function ContaPage() {
     const session = await auth()
     if (!session?.user?.id) redirect("/login")
@@ -59,6 +61,11 @@ export default async function ContaPage() {
                     <Button>Salvar Alterações</Button>
                 </CardContent>
             </Card>
+
+            <ManualPixSettings
+                initialPixKey={(user as any).pixKey}
+                initialPixQrCodeImage={(user as any).pixQrCodeImage}
+            />
 
             <MercadoPagoSettings initialToken={user.mercadoPagoAccessToken} />
 

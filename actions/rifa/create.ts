@@ -42,6 +42,8 @@ export async function createRifaAction(formData: FormData) {
         prizes: prizes.length > 0 ? prizes : undefined,
         theme: formData.get("theme") as any || 'DEFAULT',
         balloonShape: formData.get("balloonShape") as any || 'ROUNDED',
+        notifyOrganizer: formData.get("notifyOrganizer") === "true",
+        organizerWhatsapp: formData.get("organizerWhatsapp") as string || undefined,
     }
 
     const result = createRifaSchema.safeParse(data)

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { MercadoPagoConfig, Payment } from 'mercadopago'
 import { sendWhatsAppMessage, templates } from "@/lib/evolution"
+import { NotificationService } from "@/services/notification"
 import { sendSystemAlert } from "@/lib/alert"
 import { pushSaleToCache } from "@/lib/analytics-cache"
 import crypto from 'crypto'
@@ -157,6 +158,18 @@ export async function POST(request: Request) {
                             read: false
                         }
                     })
+
+                    // Organizer WhatsApp Alert
+                    if ((transaction.rifa as any).notifyOrganizer && (transaction.rifa as any).organizerWhatsapp) {
+                        NotificationService.sendOrganizerAlert({
+                            whatsapp: (transaction.rifa as any).organizerWhatsapp,
+                            buyerName: transaction.buyer.name,
+                            rifaTitle: transaction.rifa.title,
+                            numbers: transaction.numbers,
+                            amount: Number(transaction.amount),
+                            type: 'PAYMENT'
+                        }).catch(err => console.error("[Organizer-Alert] Error:", err))
+                    }
 
                     console.log(`Payment confirmed for transaction ${transaction.id}, numbers secured and owner notified!`)
                 }

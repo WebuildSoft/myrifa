@@ -13,6 +13,7 @@ import { OrderSummary } from "@/components/checkout/OrderSummary"
 import { StepBuyerInfo } from "@/components/checkout/StepBuyerInfo"
 import { StepPaymentMethod } from "@/components/checkout/StepPaymentMethod"
 import { StepPixPayment } from "@/components/checkout/StepPixPayment"
+import { StepManualPix } from "@/components/checkout/StepManualPix"
 import { StepSuccess } from "@/components/checkout/StepSuccess"
 
 const PAYMENT_EXPIRY_SECONDS = 30 * 60
@@ -26,6 +27,10 @@ interface CheckoutData {
     price: number
     primaryColor: string | null
     balloonShape?: BalloonShape
+    // Dados PIX do organizador
+    pixKey: string | null
+    pixQrCodeImage: string | null
+    hasMercadoPago: boolean
 }
 
 export default function CheckoutPage({ params }: { params: Promise<{ rifaId: string }> }) {
@@ -36,10 +41,11 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
     const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null)
     const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
     const [buyerInfo, setBuyerInfo] = useState({ name: "", whatsapp: "", email: "" })
-    const [paymentMethod, setPaymentMethod] = useState<"PIX" | "CREDIT_CARD" | "BOLETO" | null>(null)
+    const [paymentMethod, setPaymentMethod] = useState<"PIX" | "PIX_MANUAL" | "CREDIT_CARD" | "BOLETO" | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [pixData, setPixData] = useState<{ qrCode?: string; qrCodeCopy?: string; txId?: string }>({})
+    const [manualPixData, setManualPixData] = useState<{ txId: string; pixKey: string | null; pixQrCodeImage: string | null } | null>(null)
     const [copied, setCopied] = useState(false)
     const [secondsLeft, setSecondsLeft] = useState(PAYMENT_EXPIRY_SECONDS)
 
@@ -131,11 +137,22 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                 setLoading(false)
                 return
             }
+            // PIX Manual: mostrar QR do organizador
+            if (paymentMethod === "PIX_MANUAL" && (result as any).type === 'PIX_MANUAL') {
+                const r = result as any
+                setManualPixData({
+                    txId: r.transactionId,
+                    pixKey: r.pixKey,
+                    pixQrCodeImage: r.pixQrCodeImage,
+                })
+                setStep(3)
+            }
+            // PIX via Mercado Pago: mostrar QR gerado
             if (paymentMethod === "PIX" && result.success) {
                 setPixData({
-                    qrCode: result.qrCode,
-                    qrCodeCopy: result.qrCodeCopy,
-                    txId: result.transactionId
+                    qrCode: (result as any).qrCode,
+                    qrCodeCopy: (result as any).qrCodeCopy,
+                    txId: (result as any).transactionId
                 })
                 setStep(3)
             }
@@ -208,10 +225,22 @@ export default function CheckoutPage({ params }: { params: Promise<{ rifaId: str
                                 loading={loading}
                                 error={error}
                                 primaryColor={checkoutData.primaryColor}
+                                hasManualPix={!!(checkoutData.pixKey || checkoutData.pixQrCodeImage)}
+                                hasMercadoPago={checkoutData.hasMercadoPago}
                             />
                         )}
 
-                        {step === 3 && (
+                        {step === 3 && manualPixData && (
+                            <StepManualPix
+                                transactionId={manualPixData.txId}
+                                pixKey={manualPixData.pixKey}
+                                pixQrCodeImage={manualPixData.pixQrCodeImage}
+                                primaryColor={checkoutData.primaryColor}
+                                onConfirmed={() => setStep(4)}
+                            />
+                        )}
+
+                        {step === 3 && !manualPixData && (
                             <StepPixPayment
                                 pixData={pixData}
                                 secondsLeft={secondsLeft}

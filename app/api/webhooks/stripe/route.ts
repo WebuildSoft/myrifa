@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import Stripe from "stripe"
 import { pushSaleToCache } from "@/lib/analytics-cache"
+import { NotificationService } from "@/services/notification"
+import { sendWhatsAppMessage, templates } from "@/lib/evolution"
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -151,6 +153,18 @@ export async function POST(req: Request) {
                                 read: false
                             }
                         });
+
+                        // Organizer WhatsApp Alert
+                        if ((transaction.rifa as any).notifyOrganizer && (transaction.rifa as any).organizerWhatsapp) {
+                            NotificationService.sendOrganizerAlert({
+                                whatsapp: (transaction.rifa as any).organizerWhatsapp,
+                                buyerName: transaction.buyer.name,
+                                rifaTitle: transaction.rifa.title,
+                                numbers: transaction.numbers,
+                                amount: Number(transaction.amount),
+                                type: 'PAYMENT'
+                            }).catch(err => console.error("[Organizer-Alert] Error:", err))
+                        }
                     })
 
                     console.log(`Raffle payment (commission) confirmed for transaction ${transactionId}`)

@@ -25,6 +25,8 @@ interface EditRifaFormProps {
         rules: string | null
         coverImage: string | null
         images: string[]
+        notifyOrganizer: boolean
+        organizerWhatsapp: string | null
     }
     initialPrizes: {
         id?: string
@@ -38,12 +40,16 @@ export default function EditRifaForm({ rifa, initialPrizes }: EditRifaFormProps)
     const [loading, setLoading] = useState(false)
     const [coverImage, setCoverImage] = useState(rifa.coverImage || "") // Added state for coverImage
     const [galleryImages, setGalleryImages] = useState<string[]>(rifa.images || []) // Added state for galleryImages
+    const [notifyOrganizer, setNotifyOrganizer] = useState(rifa.notifyOrganizer || false)
+    const [organizerWhatsapp, setOrganizerWhatsapp] = useState(rifa.organizerWhatsapp || "")
     const [prizes, setPrizes] = useState((initialPrizes && initialPrizes.length > 0) ? initialPrizes : [{ title: "", position: 1 }])
 
     async function handleSubmit(formData: FormData) {
         setLoading(true)
         formData.set("coverImage", coverImage) // Added coverImage to formData
         formData.set("images", galleryImages.join(",")) // Added images to formData
+        formData.set("notifyOrganizer", notifyOrganizer.toString())
+        formData.set("organizerWhatsapp", organizerWhatsapp)
         formData.set("prizes", JSON.stringify(prizes.filter(p => p.title.trim() !== "")))
 
         try {
@@ -55,7 +61,7 @@ export default function EditRifaForm({ rifa, initialPrizes }: EditRifaFormProps)
             } else {
                 toast.error(res.error || "Erro ao atualizar rifa")
             }
-        } catch (error) {
+        } catch {
             toast.error("Erro inesperado ao atualizar campanha")
         } finally {
             setLoading(false)
@@ -203,6 +209,45 @@ export default function EditRifaForm({ rifa, initialPrizes }: EditRifaFormProps)
                             <p className="text-[10px] text-slate-400 font-medium ml-1">Máximo 5 imagens na galeria.</p>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-primary/5 shadow-sm space-y-8">
+                <div className="flex items-center gap-3 border-l-2 border-primary pl-4">
+                    <h3 className="font-black text-slate-900 dark:text-white text-[10px] uppercase tracking-widest">Notificações e Alertas</h3>
+                </div>
+
+                <div className="space-y-6">
+                    <div className="flex items-center justify-between p-6 rounded-3xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                        <div className="space-y-1">
+                            <Label className="font-bold text-slate-900 dark:text-white">Alertas para o Organizador</Label>
+                            <p className="text-xs text-slate-500">Receba notificações no WhatsApp para cada reserva ou pagamento.</p>
+                        </div>
+                        <div
+                            className={`w-12 h-6 rounded-full p-1 cursor-pointer transition-colors duration-200 ${notifyOrganizer ? 'bg-primary' : 'bg-slate-300'}`}
+                            onClick={() => setNotifyOrganizer(!notifyOrganizer)}
+                        >
+                            <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-200 ${notifyOrganizer ? 'translate-x-6' : 'translate-x-0'}`} />
+                        </div>
+                    </div>
+
+                    {notifyOrganizer && (
+                        <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <div className="space-y-2">
+                                <Label htmlFor="organizerWhatsapp" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Seu WhatsApp para Alertas</Label>
+                                <div className="relative group">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors font-bold">+55</span>
+                                    <Input
+                                        id="organizerWhatsapp"
+                                        placeholder="(00) 00000-0000"
+                                        className="h-14 bg-slate-50 dark:bg-slate-900 border-none rounded-2xl pl-12 font-bold focus-visible:ring-2 focus-visible:ring-primary/30 transition-all placeholder:text-slate-300"
+                                        value={organizerWhatsapp}
+                                        onChange={(e) => setOrganizerWhatsapp(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 

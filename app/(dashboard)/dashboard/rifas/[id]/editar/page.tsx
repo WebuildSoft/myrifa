@@ -1,16 +1,12 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { notFound, redirect } from "next/navigation"
-import { RifaStatus } from "@prisma/client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
     ArrowLeft,
     Settings,
-    Info,
-    Layout
+    Info
 } from "lucide-react"
 import EditRifaForm from "./EditRifaForm"
 
@@ -81,9 +77,11 @@ export default async function EditarRifaPage({ params }: { params: Promise<{ id:
                         description: rifa.description,
                         rules: rifa.rules,
                         coverImage: rifa.coverImage,
-                        images: rifa.images
+                        images: rifa.images,
+                        notifyOrganizer: rifa.notifyOrganizer,
+                        organizerWhatsapp: rifa.organizerWhatsapp
                     }}
-                    initialPrizes={(rifa as any).prizes.map((p: any) => ({
+                    initialPrizes={rifa.prizes.map((p) => ({
                         id: p.id,
                         title: p.title,
                         position: p.position

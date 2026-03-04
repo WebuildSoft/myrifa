@@ -22,6 +22,7 @@ model User {
   createdAt              DateTime       @default(now())
   updatedAt              DateTime       @updatedAt
   mercadoPagoAccessToken String?
+  pixQrCodeImage         String?
   role                   AdminRole      @default(USER)
   totpEnabled            Boolean        @default(false)
   totpSecret             String?
@@ -130,6 +131,9 @@ model Rifa {
   updatedAt               DateTime      @updatedAt
   rules                   String?
   theme                   RifaTheme     @default(DEFAULT)
+  enableManualPix         Boolean       @default(true)
+  enableMercadoPago       Boolean       @default(true)
+  enableStripe           Boolean       @default(true)
   quotaCommissionGoal     Decimal?      @db.Decimal(10, 2)
   quotaCommissionPaid     Decimal?      @default(0) @db.Decimal(10, 2)
   quotaCommissionPercent  Float?
@@ -138,6 +142,8 @@ model Rifa {
   linkViews               LinkView[]
   dailyAnalytics          DailyAnalytics[]
   prizes                  Prize[]
+  notifyOrganizer         Boolean       @default(false)
+  organizerWhatsapp       String?
   user                    User          @relation(fields: [userId], references: [id])
   numbers                 RifaNumber[]
   transactions            Transaction[]
@@ -422,6 +428,7 @@ enum RifaTheme {
 enum PaymentProvider {
   STRIPE
   MERCADO_PAGO
+  MANUAL
 }
 
 enum PaymentDestination {
