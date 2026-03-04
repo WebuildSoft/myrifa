@@ -2,15 +2,11 @@ import Redis from 'ioredis'
 
 const globalForRedis = global as unknown as { redis: Redis }
 
-const redisUrl = "redis://default:UgmUys691J0GG9dpJ7z58zCcmMYPBgQYd52JrRz56pqhb8D54iflRSrPWdVBb5tU@dw800wkg8ko0cks8k0ockos0:6379/0"
+const redisUrl = process.env.REDIS_URL || "redis://localhost:6379"
 
 // Log de diagnóstico mascarado para o container
 const maskedUrl = redisUrl.replace(/:[^:@]+@/, ':****@')
 console.log(`[REDIS] Initializing connection to: ${maskedUrl}`)
-
-// Debug: listar chaves de ambiente disponíveis (apenas nomes para segurança)
-const redisEnvKeys = Object.keys(process.env).filter(k => k.startsWith('REDIS')).join(', ')
-console.log(`[REDIS] Environment keys available: ${redisEnvKeys || 'None found'}`)
 
 export const redis =
     globalForRedis.redis ||
