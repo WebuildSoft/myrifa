@@ -90,7 +90,12 @@ export async function deleteUserAction(targetUserId: string) {
     }
 
     try {
-        // Here we could implement soft delete, but for now we follow the 'remover' requirement
+        // Primeiro deletamos as rifas (isso lida com FK no nível do BD ou manual se necessário)
+        // No nosso schema, precisamos garantir que as rifas sejam removidas primeiro
+        await prisma.rifa.deleteMany({
+            where: { userId: targetUserId }
+        })
+
         await prisma.user.delete({
             where: { id: targetUserId }
         })
@@ -100,6 +105,7 @@ export async function deleteUserAction(targetUserId: string) {
         revalidatePath("/sistema-x7k2/usuarios")
         return { success: true }
     } catch (error) {
-        return { error: "Erro ao remover usuário. Verifique se ele possui rifas vinculadas." }
+        console.error("[DeleteUserError]", error)
+        return { error: "Erro ao remover usuário. Certifique-se de que todas as dependências foram tratadas." }
     }
 }
