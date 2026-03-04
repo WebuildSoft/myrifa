@@ -2,10 +2,19 @@ import Redis from 'ioredis'
 
 const globalForRedis = global as unknown as { redis: Redis }
 
-const redisUrl = process.env.REDIS_URL || "redis://localhost:6379"
+const rawUrl = process.env.REDIS_URL || ""
+const isLiteral = rawUrl.startsWith('$') || rawUrl === "undefined" || rawUrl === "null"
 
-// Log de diagnóstico mascarado para o container
+// Use fallback if missing or literal string (common in misconfigured CI/CD)
+const redisUrl = (!rawUrl || isLiteral) ? "redis://localhost:6379" : rawUrl
+
+// Diagnostic log with masked credentials
 const maskedUrl = redisUrl.replace(/:[^:@]+@/, ':****@')
+
+if (rawUrl && isLiteral) {
+    console.warn(`[REDIS] WARNING: REDIS_URL seems to be a literal string "${rawUrl}". Falling back to localhost.`)
+}
+
 console.log(`[REDIS] Initializing connection to: ${maskedUrl}`)
 
 export const redis =
