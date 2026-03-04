@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { NotificationService } from "@/services/notification"
+import { sendWhatsAppMessage, templates } from "@/lib/evolution"
 
 /**
  * Comprador clica em "Já Paguei" — muda transaction para PENDING_CONFIRMATION
@@ -43,7 +44,8 @@ export async function buyerConfirmPaymentAction(transactionId: string) {
                 rifaTitle: rifa.title,
                 numbers: transaction.numbers as number[],
                 amount: Number(transaction.amount),
-                type: 'PAYMENT'
+                type: 'REPORTED',
+                dashUrl
             }).catch(console.error)
         }
 
@@ -101,16 +103,15 @@ export async function organizerConfirmPaymentAction(transactionId: string) {
         })
 
         // Notificar comprador via WhatsApp
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || ''
-        const checkoutUrl = `${appUrl}/checkout/pedido/${transactionId}`
-        await NotificationService.sendReservationConfirm({
-            whatsapp: (transaction.buyer as any).whatsapp,
-            buyerName: (transaction.buyer as any).name,
-            rifaTitle: transaction.rifa.title,
-            numbers: transaction.numbers as number[],
-            amount: Number(transaction.amount),
-            checkoutUrl
-        }).catch(console.error)
+        const buyerWhatsapp = (transaction.buyer as any).whatsapp
+        if (buyerWhatsapp) {
+            const message = await templates.paymentConfirmed(
+                (transaction.buyer as any).name,
+                transaction.rifa.title,
+                transaction.numbers as number[]
+            )
+            await sendWhatsAppMessage(buyerWhatsapp, message).catch(console.error)
+        }
 
         return { success: true }
     } catch (error: any) {
