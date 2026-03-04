@@ -21,7 +21,10 @@ export default async function DashboardPage() {
     const [user, activeRifasCount, totalRaisedResult, ticketsSold, recentTransactions] = await Promise.all([
         prisma.user.findUnique({
             where: { id: userId },
-            select: { mercadoPagoAccessToken: true }
+            select: {
+                pixKey: true,
+                pixQrCodeImage: true
+            }
         }),
         prisma.rifa.count({
             where: { userId, status: "ACTIVE" as any }
@@ -69,16 +72,16 @@ export default async function DashboardPage() {
                 </p>
             </div>
 
-            {!user?.mercadoPagoAccessToken && (
+            {(!user?.pixKey || !user?.pixQrCodeImage) && (
                 <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                     <div className="flex gap-3 items-start">
                         <div className="p-2 bg-amber-100 dark:bg-amber-900/40 rounded-lg shrink-0">
                             <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-500" />
                         </div>
                         <div>
-                            <h3 className="font-semibold text-amber-800 dark:text-amber-500">Configuração Pendente!</h3>
+                            <h3 className="font-semibold text-amber-800 dark:text-amber-500">Configuração de Recebimento Pendente!</h3>
                             <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
-                                Você precisa configurar seu Token do Mercado Pago para conseguir receber os pagamentos das suas campanhas via PIX automático.
+                                Para receber pagamentos via PIX direto, você precisa configurar sua <strong>Chave PIX</strong> e o <strong>QR Code (Imagem)</strong> no seu perfil.
                             </p>
                         </div>
                     </div>

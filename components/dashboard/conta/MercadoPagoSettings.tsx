@@ -30,8 +30,22 @@ export function MercadoPagoSettings({ initialToken }: { initialToken?: string | 
     }
 
     return (
-        <Card className="border-primary/20 bg-primary/5">
-            <CardHeader>
+        <Card className="border-slate-200 bg-slate-50/50 dark:bg-slate-900/20 relative overflow-hidden">
+            {/* Overlay de Desativado */}
+            <div className="absolute inset-0 z-50 bg-slate-50/60 dark:bg-slate-950/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-6 text-center">
+                <div className="size-12 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center text-amber-600 mb-4 shadow-sm border border-amber-200 dark:border-amber-800/50">
+                    <Loader2 className="size-6 animate-pulse" />
+                </div>
+                <h3 className="text-lg font-black text-slate-900 dark:text-white mb-1 uppercase tracking-tight">Módulo em Manutenção</h3>
+                <p className="text-sm text-slate-500 max-w-[280px] font-medium leading-relaxed">
+                    A integração direta com Mercado Pago está temporariamente desativada para atualizações de segurança.
+                </p>
+                <div className="mt-4 px-4 py-1.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full text-[10px] font-black uppercase tracking-widest">
+                    Previsão: Em Breve
+                </div>
+            </div>
+
+            <CardHeader className="opacity-40 grayscale pointer-events-none">
                 <CardTitle className="flex items-center gap-2">
                     <div className="size-8 bg-blue-500 rounded-lg flex items-center justify-center">
                         <span className="text-white font-black text-sm">MP</span>
@@ -42,7 +56,7 @@ export function MercadoPagoSettings({ initialToken }: { initialToken?: string | 
                     Conecte sua conta do Mercado Pago para receber os pagamentos via PIX diretamente na sua conta. Sem taxas de intermediação da plataforma.
                 </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 opacity-40 grayscale pointer-events-none">
                 <div className="space-y-2">
                     <Label htmlFor="mpToken">Production Access Token (Token de Produção)</Label>
                     <div className="relative">
@@ -54,6 +68,7 @@ export function MercadoPagoSettings({ initialToken }: { initialToken?: string | 
                             onChange={(e) => setToken(e.target.value)}
                             className="pl-10 font-mono text-sm"
                             placeholder="APP_USR-00000000000-000000-00000000000"
+                            disabled
                         />
                     </div>
                     <div className="flex items-start justify-between mt-1">
@@ -101,8 +116,7 @@ export function MercadoPagoSettings({ initialToken }: { initialToken?: string | 
                         </div>
                     )}
 
-                    <Button onClick={handleSave} disabled={isLoading || (token === initialToken)}>
-                        {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                    <Button onClick={handleSave} disabled>
                         {token === "" ? "Remover Integração" : "Salvar Token"}
                     </Button>
                 </div>
