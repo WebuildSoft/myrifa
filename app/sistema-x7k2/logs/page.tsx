@@ -23,7 +23,8 @@ import {
     Globe,
     Monitor,
     CheckCircle2,
-    XCircle
+    XCircle,
+    ShieldAlert
 } from "lucide-react"
 
 const SEVERITY_STYLES: Record<string, { badge: string; dot: string; label: string }> = {
@@ -84,6 +85,29 @@ export default async function LogsPage({
         take: 200
     })
 
+    // Brute force / login attempt logs
+    const loginAttempts = await prisma.loginAttempt.findMany({
+        where: {
+            OR: [
+                { email: { contains: query, mode: 'insensitive' } },
+                { ip: { contains: query } },
+            ]
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 200
+    })
+
+    // Count IPs with 5+ failures in last hour (brute force suspects)
+    const hourAgo = new Date(Date.now() - 60 * 60 * 1000)
+    const suspiciousAttempts = await prisma.loginAttempt.groupBy({
+        by: ['ip'],
+        where: { success: false, createdAt: { gte: hourAgo } },
+        _count: { ip: true },
+        having: { ip: { _count: { gte: 5 } } }
+    })
+    const bruteForceCount = suspiciousAttempts.length
+    const totalFailures = loginAttempts.filter((a) => !a.success).length
+
     const unresolvedCount = systemErrors.filter((e: any) => !e.resolved).length
     const criticalCount = systemErrors.filter((e: any) => e.severity === "CRITICAL" && !e.resolved).length
 
@@ -114,9 +138,9 @@ export default async function LogsPage({
             </div>
 
             {/* Tab Navigation */}
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
                 <a href={`/sistema-x7k2/logs?tab=errors${query ? `&q=${query}` : ""}`}>
-                    <div className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer border ${tab !== "admin" ? "bg-red-500/10 border-red-500/20 text-red-400" : "bg-white/[0.02] border-white/[0.05] text-slate-500 hover:text-white"}`}>
+                    <div className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer border ${tab === "errors" || (!tab || tab === "errors") ? "bg-red-500/10 border-red-500/20 text-red-400" : "bg-white/[0.02] border-white/[0.05] text-slate-500 hover:text-white"}`}>
                         <AlertTriangle className="h-3.5 w-3.5" />
                         Erros do Sistema
                         {unresolvedCount > 0 && (
@@ -133,6 +157,17 @@ export default async function LogsPage({
                         <span className="w-5 h-5 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[9px] font-black">
                             {adminLogs.length}
                         </span>
+                    </div>
+                </a>
+                <a href={`/sistema-x7k2/logs?tab=bruteforce${query ? `&q=${query}` : ""}`}>
+                    <div className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer border ${tab === "bruteforce" ? "bg-orange-500/10 border-orange-500/20 text-orange-400" : "bg-white/[0.02] border-white/[0.05] text-slate-500 hover:text-white"}`}>
+                        <ShieldAlert className="h-3.5 w-3.5" />
+                        Brute Force
+                        {bruteForceCount > 0 && (
+                            <span className="w-5 h-5 rounded-full bg-orange-500 text-white flex items-center justify-center text-[9px] font-black animate-pulse">
+                                {bruteForceCount}
+                            </span>
+                        )}
                     </div>
                 </a>
             </div>
@@ -152,7 +187,7 @@ export default async function LogsPage({
             </div>
 
             {/* ERRORS TAB */}
-            {tab !== "admin" && (
+            {(tab === "errors" || tab === "") && (
                 <Card className="border-white/[0.05] bg-white/[0.02] backdrop-blur-md shadow-2xl overflow-hidden">
                     <CardHeader className="border-b border-white/[0.05] bg-white/[0.01] p-6">
                         <div className="flex items-center justify-between">
@@ -377,6 +412,103 @@ export default async function LogsPage({
                                                 </TableCell>
                                             </TableRow>
                                         ))
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* BRUTE FORCE TAB */}
+            {tab === "bruteforce" && (
+                <Card className="border-white/[0.05] bg-white/[0.02] backdrop-blur-md shadow-2xl overflow-hidden">
+                    <CardHeader className="border-b border-white/[0.05] bg-white/[0.01] p-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-orange-500/10 border border-orange-500/20">
+                                    <ShieldAlert className="h-5 w-5 text-orange-400" />
+                                </div>
+                                <div>
+                                    <h2 className="text-white font-black text-sm uppercase tracking-widest">Tentativas de Brute Force</h2>
+                                    <p className="text-slate-500 text-[10px] font-medium mt-0.5">
+                                        {loginAttempts.length} registros · {totalFailures} falhas · <span className="text-orange-400 font-bold">{bruteForceCount} IPs suspeitos (última hora)</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader className="bg-white/[0.01]">
+                                    <TableRow className="border-white/[0.05] hover:bg-transparent">
+                                        <TableHead className="text-slate-500 font-bold uppercase tracking-widest text-[10px] py-4 px-6 whitespace-nowrap">Data/Hora</TableHead>
+                                        <TableHead className="text-slate-500 font-bold uppercase tracking-widest text-[10px] py-4 px-6">E-mail</TableHead>
+                                        <TableHead className="text-slate-500 font-bold uppercase tracking-widest text-[10px] py-4 px-6">IP</TableHead>
+                                        <TableHead className="text-slate-500 font-bold uppercase tracking-widest text-[10px] py-4 px-6">Resultado</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {loginAttempts.length === 0 ? (
+                                        <TableRow className="border-white/[0.03]">
+                                            <TableCell colSpan={4} className="h-40 text-center">
+                                                <div className="flex flex-col items-center gap-3 text-slate-600">
+                                                    <CheckCircle2 className="h-10 w-10 text-emerald-500/30" />
+                                                    <span className="font-bold text-sm">Nenhuma tentativa registrada</span>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        loginAttempts.map((attempt) => {
+                                            const isSuspiciousIp = suspiciousAttempts.some((s) => s.ip === attempt.ip)
+                                            return (
+                                                <TableRow
+                                                    key={attempt.id}
+                                                    className={`border-white/[0.03] hover:bg-white/[0.01] transition-colors ${isSuspiciousIp && !attempt.success ? "bg-orange-500/[0.04]" : ""
+                                                        }`}
+                                                >
+                                                    <TableCell className="py-4 px-6 whitespace-nowrap">
+                                                        <span className="text-slate-300 font-mono text-xs">
+                                                            {new Date(attempt.createdAt).toLocaleString('pt-BR')}
+                                                        </span>
+                                                    </TableCell>
+                                                    <TableCell className="py-4 px-6">
+                                                        <div className="flex items-center gap-2">
+                                                            <User className="h-3.5 w-3.5 text-slate-500" />
+                                                            <span className="text-slate-300 text-xs font-mono">{attempt.email}</span>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="py-4 px-6">
+                                                        <div className="flex items-center gap-2">
+                                                            <Globe className="h-3.5 w-3.5 text-slate-500" />
+                                                            <span className={`font-mono text-xs py-0.5 px-2 rounded ${isSuspiciousIp
+                                                                ? "bg-orange-500/20 text-orange-300 border border-orange-500/30"
+                                                                : "text-slate-400"
+                                                                }`}>
+                                                                {attempt.ip || "—"}
+                                                                {isSuspiciousIp && (
+                                                                    <span className="ml-1.5 text-[9px] font-black uppercase tracking-widest text-orange-400">⚠ Suspeito</span>
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="py-4 px-6">
+                                                        {attempt.success ? (
+                                                            <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black uppercase tracking-widest">
+                                                                <CheckCircle2 className="h-3 w-3" />
+                                                                Sucesso
+                                                            </div>
+                                                        ) : (
+                                                            <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-black uppercase tracking-widest">
+                                                                <XCircle className="h-3 w-3" />
+                                                                Falha
+                                                            </div>
+                                                        )}
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        })
                                     )}
                                 </TableBody>
                             </Table>
