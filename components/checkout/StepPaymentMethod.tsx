@@ -53,9 +53,6 @@ export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, 
             {/* PLATAFORMA (Sorteado para o sistema) */}
             {isPlatformDestination && (
                 <div className="space-y-4">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-2 flex items-center gap-1">
-                        <ShieldCheck className="w-3.5 h-3.5" /> Oficial da Plataforma
-                    </p>
                     <button
                         onClick={() => setPaymentMethod("PIX")}
                         className={cn(
@@ -74,17 +71,13 @@ export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, 
                         </div>
                         <div className="flex-1">
                             <div className="flex items-center gap-2">
-                                <p className="font-black text-base text-slate-900 dark:text-white">PIX via Plataforma</p>
-                                <span className="text-[10px] font-black bg-primary text-white px-2 py-0.5 rounded-full uppercase tracking-wide">Seguro</span>
+                                <p className="font-black text-base text-slate-900 dark:text-white">Pagamento via PIX</p>
+                                <span className="text-[10px] font-black bg-primary text-white px-2 py-0.5 rounded-full uppercase tracking-wide">Instantâneo</span>
                             </div>
-                            <p className="text-xs text-slate-400 mt-0.5">Pagamento intermediado pela nossa plataforma oficial. Confirmação instantânea.</p>
+                            <p className="text-xs text-slate-400 mt-0.5">Confirmação automática e segurança garantida.</p>
                         </div>
                         {paymentMethod === "PIX" && <CheckCircle2 className="w-5 h-5 shrink-0" style={{ color }} />}
                     </button>
-
-                    <p className="text-[10px] text-center text-slate-400 font-bold uppercase tracking-tighter px-4">
-                        O organizador desta campanha atingiu o limite de vendas manuais. Para sua segurança, esta transação será processada pela plataforma.
-                    </p>
                 </div>
             )}
 
