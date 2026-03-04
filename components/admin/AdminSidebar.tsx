@@ -50,6 +50,7 @@ export default function AdminSidebar({ user, isOpen, onClose }: AdminSidebarProp
     const navigation = [
         { name: "Dashboard", href: "/sistema-x7k2/dashboard", icon: LayoutDashboard },
         { name: "Usuários", href: "/sistema-x7k2/usuarios", icon: Users },
+        { name: "Rifas", href: "/sistema-x7k2/rifas", icon: Ticket },
         { name: "WhatsApp", href: "/sistema-x7k2/whatsapp", icon: MessageSquare },
         { name: "Analytics", href: "/sistema-x7k2/analytics", icon: BarChart3 },
         { name: "Logs", href: "/sistema-x7k2/logs", icon: Server },
