@@ -1,13 +1,13 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { z } from "zod"
+import { z, ZodError } from "zod"
 import { PaymentService } from "@/services/payment"
 import { NotificationService } from "@/services/notification"
 
 const checkoutSchema = z.object({
     rifaId: z.string(),
-    name: z.string().min(3),
+    name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
     whatsapp: z.string()
         .transform(v => {
             // Strip everything except digits
@@ -18,8 +18,8 @@ const checkoutSchema = z.object({
         .refine(v => v.length >= 12 && v.length <= 13, {
             message: "WhatsApp inválido. Informe DDD + número completo."
         }),
-    email: z.string().email().optional().or(z.literal("")),
-    numbers: z.array(z.number()).min(1),
+    email: z.string().email("E-mail inválido").optional().or(z.literal("")),
+    numbers: z.array(z.number()).min(1, "Selecione pelo menos um número"),
     paymentMethod: z.enum(["PIX", "PIX_MANUAL", "CREDIT_CARD", "BOLETO"]),
 })
 
@@ -118,8 +118,38 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
 
             const amount = Number(rifaTx.numberPrice) * validated.numbers.length
 
-            // PIX_MANUAL: destino sempre ORGANIZER, sem provider de gateway
+            // --- Atomic Destination Logic ---
+            let destination: 'PLATFORM' | 'ORGANIZER' = 'ORGANIZER'
+            let provider: 'STRIPE' | 'MERCADO_PAGO' = 'MERCADO_PAGO'
+
+            const goal = Number(rifaTx.quotaCommissionGoal || 0)
+            const reserved = Number(rifaTx.quotaCommissionReserved || 0)
+            const percent = Number(rifaTx.quotaCommissionPercent || 0.05)
+
+            // Se ainda não reservamos o suficiente para atingir a meta
+            if (reserved < goal) {
+                const raffleChance = Math.random()
+                if (raffleChance <= percent) {
+                    destination = 'PLATFORM'
+                    provider = 'STRIPE'
+
+                    // Incrementamos o reserved
+                    await (tx.rifa as any).update({
+                        where: { id: (rifaTx as any).id },
+                        data: {
+                            quotaCommissionReserved: { increment: amount }
+                        }
+                    })
+                }
+            }
+
+            // PIX_MANUAL: só permitido se o destino for ORGANIZER
             if (validated.paymentMethod === "PIX_MANUAL") {
+                if (destination === 'PLATFORM') {
+                    // Se o sistema decidiu que esta venda é para a plataforma, bloqueamos o manual
+                    throw new Error("Este método de pagamento não está disponível para esta transação. Por favor, escolha outra opção.")
+                }
+
                 const transactionRecord = await tx.transaction.create({
                     data: {
                         amount,
@@ -133,45 +163,10 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                         destination: "ORGANIZER"
                     }
                 })
-                return { transactionRecord, buyer, amount, provider: "ORGANIZER" as any, destination: "ORGANIZER" as any, isManualPix: true }
+                return { transactionRecord, buyer, amount, provider: "MANUAL" as any, destination: "ORGANIZER" as any, isManualPix: true }
             }
 
-            // --- Atomic Destination Logic ---
-            let destination: 'PLATFORM' | 'ORGANIZER' = 'ORGANIZER'
-            let provider: 'STRIPE' | 'MERCADO_PAGO' = 'MERCADO_PAGO'
-
-            const goal = Number(rifaTx.quotaCommissionGoal || 0)
-            const reserved = Number(rifaTx.quotaCommissionReserved || 0)
-            const percent = Number(rifaTx.quotaCommissionPercent || 0.05)
-
-            console.log(`[Commission] Goal: ${goal}, Reserved: ${reserved}, Percent: ${percent}`)
-
-            // Se ainda não reservamos o suficiente para atingir a meta
-            if (reserved < goal) {
-                const raffleChance = Math.random()
-                console.log(`[Commission] Raffle Chance: ${raffleChance.toFixed(4)} vs ${percent}`)
-
-                if (raffleChance <= percent) {
-                    destination = 'PLATFORM'
-                    provider = 'STRIPE'
-
-                    console.log(`[Commission] SELECTED: PLATFORM (STRIPE) for amount ${amount}`)
-
-                    // Incrementamos o reserved para "bloquear" essa parte da meta para outros checkouts
-                    await (tx.rifa as any).update({
-                        where: { id: (rifaTx as any).id },
-                        data: {
-                            quotaCommissionReserved: { increment: amount }
-                        }
-                    })
-                } else {
-                    console.log(`[Commission] SELECTED: ORGANIZER (MERCADO_PAGO)`)
-                }
-            } else {
-                console.log(`[Commission] Goal already reached or no goal set. Selecting ORGANIZER.`)
-            }
-
-            // Create Transaction record
+            // Create Transaction record for automated methods
             const transactionRecord = await tx.transaction.create({
                 data: {
                     amount,
@@ -286,6 +281,11 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
 
     } catch (error: any) {
         console.error("Checkout error:", error)
+
+        if (error instanceof ZodError) {
+            return { error: error.issues[0].message }
+        }
+
         return { error: error.message || "Erro ao processar checkout" }
     }
 }
@@ -386,5 +386,50 @@ export async function getTransactionDetailsAction(transactionId: string) {
     } catch (error) {
         console.error("Error fetching transaction details:", error)
         return { error: "Erro ao carregar detalhes do pedido" }
+    }
+}
+
+export async function getAvailablePaymentMethodsAction(rifaId: string) {
+    try {
+        const rifa = await prisma.rifa.findUnique({
+            where: { id: rifaId },
+            include: { user: true }
+        })
+
+        if (!rifa) throw new Error("Campanha não encontrada")
+
+        const goal = Number((rifa as any).quotaCommissionGoal || 0)
+        const reserved = Number((rifa as any).quotaCommissionReserved || 0)
+        const percent = Number((rifa as any).quotaCommissionPercent || 0.05)
+
+        console.log(`[Method-Selector] Goal: ${goal}, Reserved: ${reserved}, Percent: ${percent}`)
+
+        // Se ainda não atingiu a meta, sorteia se esta venda vai para a PLATAFORMA
+        if (reserved < goal) {
+            const raffleChance = Math.random()
+            console.log(`[Method-Selector] Raffle Chance: ${raffleChance.toFixed(4)} vs ${percent}`)
+
+            if (raffleChance <= percent) {
+                console.log(`[Method-Selector] SELECTED: PLATFORM (Stripe forced)`)
+                return {
+                    destination: 'PLATFORM',
+                    methods: ["STRIPE" as const],
+                    hasManualPix: false,
+                    hasMercadoPago: false,
+                }
+            }
+        }
+
+        console.log(`[Method-Selector] SELECTED: ORGANIZER (All options)`)
+        return {
+            destination: 'ORGANIZER',
+            methods: ["PIX", "PIX_MANUAL", "CREDIT_CARD", "BOLETO"] as const,
+            hasManualPix: !!((rifa.user as any)?.pixKey || (rifa.user as any)?.pixQrCodeImage),
+            hasMercadoPago: !!(rifa.user?.mercadoPagoAccessToken),
+        }
+
+    } catch (error) {
+        console.error("Error getting payment methods:", error)
+        return { error: "Erro ao carregar métodos de pagamento" }
     }
 }
