@@ -61,7 +61,7 @@ export default function EditRifaForm({ rifa, initialPrizes }: EditRifaFormProps)
             } else {
                 toast.error(res.error || "Erro ao atualizar rifa")
             }
-        } catch (error) {
+        } catch {
             toast.error("Erro inesperado ao atualizar campanha")
         } finally {
             setLoading(false)
