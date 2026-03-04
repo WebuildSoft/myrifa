@@ -99,12 +99,6 @@ export function StepPaymentMethod({ paymentMethod, setPaymentMethod, onProcess, 
             {hasMercadoPago && (
                 <div className="space-y-3">
                     {/* Aviso MP */}
-                    <div className="flex items-start gap-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200/70 dark:border-amber-700/30 rounded-xl px-4 py-3">
-                        <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                        <p className="text-xs text-amber-700 dark:text-amber-300">
-                            <strong>Atenção:</strong> Os métodos abaixo usam o Mercado Pago, que pode bloquear contas de rifas. O pagamento é confirmado automaticamente.
-                        </p>
-                    </div>
 
                     {/* PIX via MP */}
                     <button
