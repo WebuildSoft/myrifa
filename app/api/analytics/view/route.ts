@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { rateLimit, getIP, rateLimitResponse } from "@/lib/rate-limit"
+import { redis } from "@/lib/redis"
+import { sendWhatsAppMessage } from "@/lib/evolution"
 
 export async function POST(req: NextRequest) {
     // Rate limit: max 30 requests per IP per minute
@@ -25,6 +27,10 @@ export async function POST(req: NextRequest) {
                     data: { duration: Math.round(body.duration) }
                 })
             }
+
+            // Ping Redis for Online Users tracking
+            await redis.zadd("online_users", Date.now(), body.sessionId).catch(() => { })
+
             return NextResponse.json({ success: true, action: "updated" })
         }
         // ---------------------------------------
@@ -41,28 +47,75 @@ export async function POST(req: NextRequest) {
         // to prevent spoofing/injecting views for non-existent or malicious IDs.
         const rifaExists = await prisma.rifa.findUnique({
             where: { id: rifaId },
-            select: { id: true }
+            select: { id: true, title: true } // Need title for Redis cache
         })
 
         if (!rifaExists) {
             return NextResponse.json({ error: "Invalid rifaId" }, { status: 404 })
         }
 
+        const viewData = {
+            rifaId,
+            sessionId,
+            referrer,
+            rawReferrer,
+            device,
+            os,
+            browser,
+            utmSource,
+            utmMedium,
+            utmCampaign,
+            ip: forwardedIp,
+        }
+
         await (prisma as any).linkView.create({
-            data: {
-                rifaId,
-                sessionId,
-                referrer,
-                rawReferrer,
-                device,
-                os,
-                browser,
-                utmSource,
-                utmMedium,
-                utmCampaign,
-                ip: forwardedIp,
-            }
+            data: viewData
         })
+
+        // --- REDIS HOT-PATH CACHE (LIST for UI Activity Ticker) ---
+        try {
+            const cacheItem = JSON.stringify({
+                ...viewData,
+                createdAt: new Date().toISOString(),
+                rifa: { title: rifaExists.title }
+            })
+            // Atomic push and trim to keeping list light (last 20 items)
+            await redis.pipeline()
+                .lpush("recent_views", cacheItem)
+                .ltrim("recent_views", 0, 19)
+                .exec()
+        } catch (e) {
+            console.error("[REDIS] Cache Push Error:", e)
+        }
+        // ---------------------------------------------------------
+
+        // --- WHATSAPP ADMIN ALERT (Throttled via Redis) ---
+        (async () => {
+            try {
+                const cooldownKey = "wa_alert_cooldown"
+                const hasCooldown = await redis.get(cooldownKey)
+
+                if (!hasCooldown) {
+                    const adminPhone = process.env.ADMIN_ALERT_PHONE
+                    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://myrifa.com.br"
+
+                    if (adminPhone && adminPhone !== "[YOUR_PHONE]") {
+                        await sendWhatsAppMessage(
+                            adminPhone,
+                            `🔔 *MyRifa: Novo Movimento!* 🚀\n\nHá novos visitantes ativos no seu site agora!\n\nConfira o painel:\n🔗 ${appUrl}/sistema-x7k2/analytics`
+                        )
+                        // Cooldown logic: Notify only once every 30 minutes (1800s)
+                        await redis.set(cooldownKey, "active", "EX", 1800)
+                    }
+                }
+            } catch (e) {
+                console.error("[REDIS] WhatsApp Alert Async Error:", e)
+            }
+        })()
+        // --------------------------------------------------
+
+        // Ping Redis for Online Users tracking
+        await redis.zadd("online_users", Date.now(), sessionId).catch(() => { })
 
         return NextResponse.json({ success: true, action: "created" })
     } catch (error) {
@@ -95,6 +148,9 @@ export async function PATCH(req: NextRequest) {
                 data: { duration: Math.round(duration) }
             })
         }
+
+        // Keep session alive in Redis
+        await redis.zadd("online_users", Date.now(), sessionId).catch(() => { })
 
         return NextResponse.json({ success: true })
     } catch (error) {

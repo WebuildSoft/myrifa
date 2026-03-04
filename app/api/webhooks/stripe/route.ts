@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import Stripe from "stripe"
+import { pushSaleToCache } from "@/lib/analytics-cache"
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -114,6 +115,16 @@ export async function POST(req: Request) {
                             where: { id: transaction.id },
                             data: { status: "PAID", paidAt: new Date() }
                         })
+
+                        // --- REDIS DASHBOARD CACHE ---
+                        await pushSaleToCache({
+                            id: transaction.id,
+                            amount: Number(transaction.amount),
+                            paidAt: new Date().toISOString(),
+                            buyer: { name: transaction.buyer.name },
+                            rifa: { title: transaction.rifa.title }
+                        })
+                        // -----------------------------
 
                         // Update numbers
                         await tx.rifaNumber.updateMany({

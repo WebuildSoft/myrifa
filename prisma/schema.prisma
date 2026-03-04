@@ -136,6 +136,7 @@ model Rifa {
   quotaCommissionReserved Decimal?      @default(0) @db.Decimal(10, 2)
   buyers                  Buyer[]
   linkViews               LinkView[]
+  dailyAnalytics          DailyAnalytics[]
   prizes                  Prize[]
   user                    User          @relation(fields: [userId], references: [id])
   numbers                 RifaNumber[]
@@ -282,6 +283,21 @@ model SystemError {
   @@index([resolved])
 }
 
+model DailyAnalytics {
+  id             String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  date           DateTime @db.Date
+  rifaId         String
+  totalViews     Int      @default(0)
+  uniqueVisitors Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  rifa           Rifa     @relation(fields: [rifaId], references: [id], onDelete: Cascade)
+
+  @@unique([date, rifaId])
+  @@index([rifaId, date(sort: Desc)])
+}
+
 model LinkView {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
@@ -300,8 +316,9 @@ model LinkView {
   rifa        Rifa     @relation(fields: [rifaId], references: [id], onDelete: Cascade)
 
   @@index([rifaId])
-  @@index([createdAt])
-  @@index([rifaId, createdAt])
+  @@index([createdAt(sort: Desc)])
+  @@index([rifaId, createdAt(sort: Desc)])
+  @@index([createdAt, sessionId])
 }
 
 enum AdminRole {
