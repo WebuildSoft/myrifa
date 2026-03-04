@@ -35,6 +35,10 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
         if (!rifa) throw new Error("Campanha não encontrada")
         if (rifa.status === ("DELETED" as any)) throw new Error("Esta rifa não está mais disponível.")
 
+        if (rifa.user?.isBlocked) {
+            return { error: "Esta campanha está temporariamente indisponível. Entre em contato com o suporte." }
+        }
+
         // Validar limites por comprador
         if (rifa.maxPerBuyer && validated.numbers.length > rifa.maxPerBuyer) {
             return { error: `Você só pode comprar no máximo ${rifa.maxPerBuyer} cotas nesta campanha.` }

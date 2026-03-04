@@ -61,7 +61,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                 orderBy: { number: "asc" },
                 select: { id: true, number: true, status: true }
             },
-            user: { select: { name: true, image: true, pixKey: true, pixQrCodeImage: true, mercadoPagoAccessToken: true } },
+            user: { select: { name: true, image: true, pixKey: true, pixQrCodeImage: true, mercadoPagoAccessToken: true, isBlocked: true } },
             prizes: {
                 orderBy: { position: "asc" },
                 include: { winner: true }
@@ -72,7 +72,7 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
         }
     })
 
-    if (!rifa || rifa.isPrivate || rifa.status === RifaStatus.CANCELLED || rifa.status === RifaStatus.DELETED) {
+    if (!rifa || rifa.isPrivate || rifa.status === RifaStatus.CANCELLED || rifa.status === RifaStatus.DELETED || (rifa.user as any).isBlocked) {
         notFound()
     }
 

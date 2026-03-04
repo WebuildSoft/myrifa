@@ -46,18 +46,33 @@ export async function cancelarRifaAction(rifaId: string) {
 
     try {
         const rifa = await prisma.rifa.findUnique({
-            where: { id: rifaId, userId: session.user.id }
+            where: { id: rifaId }
         })
         if (!rifa) return { error: "Campanha não encontrada" }
+
+        const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(session.user.role)
+        const isOwner = rifa.userId === session.user.id
+
+        if (!isOwner && !isAdmin) {
+            return { error: "Não autorizado" }
+        }
+
         if (rifa.status === "DRAWN") return { error: "Campanhas sorteadas não podem ser canceladas" }
 
         await prisma.rifa.update({
             where: { id: rifaId },
             data: { status: RifaStatus.CANCELLED }
         })
+
+        // Log se for admin agindo em rifa alheia
+        if (isAdmin && !isOwner) {
+            console.log(`[AdminAction] Rifa ${rifaId} cancelada pelo admin ${session.user.id}`)
+        }
+
         revalidatePath("/dashboard")
         revalidatePath("/dashboard/rifas")
         revalidatePath(`/dashboard/rifas/${rifaId}`)
+        revalidatePath(`/r/${rifa.slug}`)
         return { success: true }
     } catch (error) {
         return { error: "Não foi possível cancelar a campanha" }
@@ -70,12 +85,26 @@ export async function deleteRifaAction(rifaId: string) {
 
     try {
         const rifa = await prisma.rifa.findUnique({
-            where: { id: rifaId, userId: session.user.id }
+            where: { id: rifaId }
         })
         if (!rifa) return { error: "Campanha não encontrada" }
+
+        const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(session.user.role)
+        const isOwner = rifa.userId === session.user.id
+
+        if (!isOwner && !isAdmin) {
+            return { error: "Não autorizado" }
+        }
+
         if (rifa.status === "DRAWN") return { error: "Não é possível excluir uma campanha que já foi sorteada." }
 
         await prisma.$executeRaw`UPDATE "Rifa" SET status = 'DELETED' WHERE id = ${rifaId}`
+
+        // Log se for admin agindo em rifa alheia
+        if (isAdmin && !isOwner) {
+            console.log(`[AdminAction] Rifa ${rifaId} deletada (soft) pelo admin ${session.user.id}`)
+        }
+
         revalidatePath("/dashboard")
         revalidatePath("/dashboard/rifas")
         return { success: true }
