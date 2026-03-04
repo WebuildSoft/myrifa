@@ -1,0 +1,2 @@
+[variables]
+  REDIS_URL = "$REDIS_URL"
