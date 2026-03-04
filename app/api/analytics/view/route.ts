@@ -4,8 +4,22 @@ import { rateLimit, getIP, rateLimitResponse } from "@/lib/rate-limit"
 import { redis } from "@/lib/redis"
 import { sendWhatsAppMessage } from "@/lib/evolution"
 
+/**
+ * Helper to race a promise against a timeout
+ */
+async function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+    try {
+        return await Promise.race([
+            promise,
+            new Promise<T>((_, reject) => setTimeout(() => reject(new Error("Timeout")), ms))
+        ]);
+    } catch (e) {
+        console.warn(`[REDIS_TIMEOUT] Operation timed out after ${ms}ms. Returning fallback.`);
+        return fallback;
+    }
+}
+
 export async function POST(req: NextRequest) {
-    // Rate limit: max 30 requests per IP per minute
     const ip = getIP(req)
     const rl = rateLimit(ip + ":analytics_view", { limit: 30, windowMs: 60_000 })
     if (!rl.success) return rateLimitResponse(rl.resetIn)
@@ -14,8 +28,6 @@ export async function POST(req: NextRequest) {
         const body = await req.json()
 
         // --- PATCH WORKAROUND FOR sendBeacon ---
-        // navigator.sendBeacon ALWAYS sends a POST request.
-        // If the payload contains 'duration', it's actually an update ping, not a new view.
         if (body.duration && body.sessionId && body.rifaId) {
             const view = await (prisma as any).linkView.findFirst({
                 where: { sessionId: body.sessionId, rifaId: body.rifaId },
@@ -28,9 +40,8 @@ export async function POST(req: NextRequest) {
                 })
             }
 
-            // Ping Redis for Online Users tracking
-            await redis.zadd("online_users", Date.now(), body.sessionId).catch(() => { })
-
+            // Ping Redis for Online Users tracking (Non-blocking)
+            redis.zadd("online_users", Date.now(), body.sessionId).catch(() => { })
             return NextResponse.json({ success: true, action: "updated" })
         }
         // ---------------------------------------
@@ -43,16 +54,12 @@ export async function POST(req: NextRequest) {
 
         const forwardedIp = req.headers.get("x-forwarded-for")?.split(",")[0] || "Unknown"
 
-        // SECURITY: Validate that the rifa exists before recording a view
-        // to prevent spoofing/injecting views for non-existent or malicious IDs.
         const rifaExists = await prisma.rifa.findUnique({
             where: { id: rifaId },
-            select: { id: true, title: true } // Need title for Redis cache
+            select: { id: true, title: true }
         })
 
-        if (!rifaExists) {
-            return NextResponse.json({ error: "Invalid rifaId" }, { status: 404 })
-        }
+        if (!rifaExists) return NextResponse.json({ error: "Invalid rifaId" }, { status: 404 })
 
         const viewData = {
             rifaId,
@@ -68,32 +75,34 @@ export async function POST(req: NextRequest) {
             ip: forwardedIp,
         }
 
-        await (prisma as any).linkView.create({
-            data: viewData
-        })
+        console.log(`[ANALYTICS] Recording view for Rifa ${rifaId}, Session ${sessionId}`)
+        await (prisma as any).linkView.create({ data: viewData })
+        console.log(`[ANALYTICS] View saved to Prisma.`)
 
-        // --- REDIS HOT-PATH CACHE (LIST for UI Activity Ticker) ---
+        // 1. REDIS HOT-PATH CACHE (Activity Ticker)
         try {
             const cacheItem = JSON.stringify({
                 ...viewData,
                 createdAt: new Date().toISOString(),
                 rifa: { title: rifaExists.title }
             })
-            // Atomic push and trim to keeping list light (last 20 items)
-            await redis.pipeline()
+            const redisPromise = redis.pipeline()
                 .lpush("recent_views", cacheItem)
                 .ltrim("recent_views", 0, 19)
-                .exec()
+                .exec();
+
+            await withTimeout(redisPromise, 2000, null);
         } catch (e) {
             console.error("[REDIS] Cache Push Error:", e)
         }
-        // ---------------------------------------------------------
 
-        // --- WHATSAPP ADMIN ALERT (Throttled via Redis) ---
+        // 2. WHATSAPP ADMIN ALERT (Throttled via Redis)
         (async () => {
             try {
                 const cooldownKey = "wa_alert_cooldown"
-                const hasCooldown = await redis.get(cooldownKey)
+
+                // Be very resilient here: if Redis is down, we still want the alert!
+                const hasCooldown = await withTimeout(redis.get(cooldownKey), 1500, null);
 
                 if (!hasCooldown) {
                     const adminPhone = process.env.ADMIN_ALERT_PHONE
@@ -104,39 +113,35 @@ export async function POST(req: NextRequest) {
                             adminPhone,
                             `🔔 *MyRifa: Novo Movimento!* 🚀\n\nHá novos visitantes ativos no seu site agora!\n\nConfira o painel:\n🔗 ${appUrl}/sistema-x7k2/analytics`
                         )
-                        // Cooldown logic: Notify only once every 30 minutes (1800s)
-                        await redis.set(cooldownKey, "active", "EX", 1800)
+                        await withTimeout(redis.set(cooldownKey, "active", "EX", 1800), 1000, null);
                     }
                 }
             } catch (e) {
-                console.error("[REDIS] WhatsApp Alert Async Error:", e)
+                console.error("[ALERT] Async Alert Error:", e)
             }
         })()
-        // --------------------------------------------------
 
-        // Ping Redis for Online Users tracking
-        await redis.zadd("online_users", Date.now(), sessionId).catch(() => { })
+        // 3. Online Users Ping (Non-blocking)
+        redis.zadd("online_users", Date.now(), sessionId).catch(() => { });
 
         return NextResponse.json({ success: true, action: "created" })
     } catch (error) {
+        console.error("[ANALYTICS] View Error:", error)
         return NextResponse.json({ error: "Failed to record view" }, { status: 500 })
     }
 }
 
 export async function PATCH(req: NextRequest) {
-    // Rate limit: max 10 PATCH per IP per minute
     const ip = getIP(req)
     const rl = rateLimit(ip + ":analytics_patch", { limit: 10, windowMs: 60_000 })
     if (!rl.success) return rateLimitResponse(rl.resetIn)
 
     try {
         const { sessionId, rifaId, duration } = await req.json()
-
         if (!sessionId || !rifaId || !duration) {
             return NextResponse.json({ error: "Missing fields" }, { status: 400 })
         }
 
-        // Update the most recent view for this session on this rifa
         const view = await (prisma as any).linkView.findFirst({
             where: { sessionId, rifaId },
             orderBy: { createdAt: "desc" }
@@ -149,8 +154,8 @@ export async function PATCH(req: NextRequest) {
             })
         }
 
-        // Keep session alive in Redis
-        await redis.zadd("online_users", Date.now(), sessionId).catch(() => { })
+        // Online Users Ping (Non-blocking)
+        redis.zadd("online_users", Date.now(), sessionId).catch(() => { })
 
         return NextResponse.json({ success: true })
     } catch (error) {

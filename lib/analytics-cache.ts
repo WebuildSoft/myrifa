@@ -26,8 +26,12 @@ export async function pushSaleToCache(sale: CachedSale) {
         // 3. Keep only the last 10 sales
         pipeline.ltrim("dashboard:recent_sales", 0, 9);
 
-        await pipeline.exec();
-    } catch (error) {
-        console.error("[REDIS_ANALYTICS_CACHE] Error pushing sale:", error);
+        // Run with a 2s timeout to avoid blocking webhooks if Redis is down
+        await Promise.race([
+            pipeline.exec(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error("Redis Timeout")), 2000))
+        ]);
+    } catch (error: any) {
+        console.warn("[REDIS_ANALYTICS_CACHE] Update skipped/failed:", error.message || error);
     }
 }
