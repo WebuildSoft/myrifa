@@ -111,7 +111,10 @@ export default async function AdminAnalyticsPage() {
             take: 500, // Reduced from 1000 to keep it lightning fast, sufficient for real-time breakdowns
             include: { rifa: { select: { title: true } } }
         }),
-        redis.zcount("online_users", fiveMinutesAgoTimestamp, "+inf").catch((e) => {
+        redis.zcount("online_users", fiveMinutesAgoTimestamp, "+inf").then(res => {
+            console.log(`[REDIS] ZCOUNT Result (since ${fiveMinutesAgoTimestamp}): ${res}`)
+            return res
+        }).catch((e) => {
             console.error("Redis Connection Failed (ZCOUNT). Fallback to 0.", e)
             return 0
         })

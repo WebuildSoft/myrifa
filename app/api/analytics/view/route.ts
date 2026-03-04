@@ -28,7 +28,11 @@ export async function POST(req: NextRequest) {
             }
 
             // Ping Redis for Online Users tracking
-            await redis.zadd("online_users", Date.now(), body.sessionId).catch(() => { })
+            const zaddRes = await redis.zadd("online_users", Date.now(), body.sessionId).catch((e) => {
+                console.error("[REDIS] ZADD Error (Update):", e)
+                return "ERROR"
+            })
+            console.log(`[REDIS] ZADD (Update) for ${body.sessionId}: ${zaddRes}`)
 
             return NextResponse.json({ success: true, action: "updated" })
         }
@@ -70,7 +74,11 @@ export async function POST(req: NextRequest) {
         })
 
         // Ping Redis for Online Users tracking
-        await redis.zadd("online_users", Date.now(), sessionId).catch(() => { })
+        const zaddRes = await redis.zadd("online_users", Date.now(), sessionId).catch((e) => {
+            console.error("[REDIS] ZADD Error (Create):", e)
+            return "ERROR"
+        })
+        console.log(`[REDIS] ZADD (Create) for ${sessionId}: ${zaddRes}`)
 
         return NextResponse.json({ success: true, action: "created" })
     } catch (error) {
