@@ -27,6 +27,8 @@ interface RifaInfo {
     category: string
     theme: string
     balloonShape: BalloonShape
+    notifyOrganizer: boolean
+    organizerWhatsapp: string
 }
 
 interface NovaRifaPageProps {
@@ -46,7 +48,9 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
         drawDate: "",
         category: "SORTEIO",
         theme: "DEFAULT",
-        balloonShape: "ROUNDED"
+        balloonShape: "ROUNDED",
+        notifyOrganizer: false,
+        organizerWhatsapp: ""
     })
     const [coverImage, setCoverImage] = useState("")
     const [galleryImages, setGalleryImages] = useState<string[]>([])
@@ -75,6 +79,8 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
         formData.append("category", rifaInfo.category)
         formData.append("theme", rifaInfo.theme)
         formData.append("balloonShape", rifaInfo.balloonShape)
+        formData.append("notifyOrganizer", rifaInfo.notifyOrganizer.toString())
+        formData.append("organizerWhatsapp", rifaInfo.organizerWhatsapp)
         formData.append("coverImage", coverImage)
         formData.append("images", galleryImages.join(","))
         formData.append("prizes", JSON.stringify(prizes.filter(p => p.title.trim() !== "")))
@@ -204,9 +210,11 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
 
                                 {step === 3 && (
                                     <NumbersStep
-                                        totalNumbers={rifaInfo.totalNumbers} setTotalNumbers={(val) => setRifaInfo(p => ({ ...p, totalNumbers: val }))}
-                                        numberPrice={rifaInfo.numberPrice} setNumberPrice={(val) => setRifaInfo(p => ({ ...p, numberPrice: val }))}
-                                        drawDate={rifaInfo.drawDate} setDrawDate={(val) => setRifaInfo(p => ({ ...p, drawDate: val }))}
+                                        totalNumbers={rifaInfo.totalNumbers} setTotalNumbers={(val: number) => setRifaInfo(p => ({ ...p, totalNumbers: val }))}
+                                        numberPrice={rifaInfo.numberPrice} setNumberPrice={(val: number) => setRifaInfo(p => ({ ...p, numberPrice: val }))}
+                                        drawDate={rifaInfo.drawDate} setDrawDate={(val: string) => setRifaInfo(p => ({ ...p, drawDate: val }))}
+                                        notifyOrganizer={rifaInfo.notifyOrganizer} setNotifyOrganizer={(val: boolean) => setRifaInfo(p => ({ ...p, notifyOrganizer: val }))}
+                                        organizerWhatsapp={rifaInfo.organizerWhatsapp} setOrganizerWhatsapp={(val: string) => setRifaInfo(p => ({ ...p, organizerWhatsapp: val }))}
                                         loading={loading}
                                         onBack={() => setStep(2)}
                                     />

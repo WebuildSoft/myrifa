@@ -20,6 +20,8 @@ export const createRifaSchema = z.object({
     })).optional(),
     theme: z.enum(['DEFAULT', 'OCEAN', 'SUNSET', 'MIDNIGHT', 'ROYAL', 'NEON', 'GALAXY', 'LUXURY', 'FLOWER']).default('DEFAULT'),
     balloonShape: z.enum(['SQUARE', 'ROUNDED', 'CIRCLE', 'HEART', 'STAR', 'HEXAGON', 'DIAMOND', 'SHIELD', 'FLOWER']).default('ROUNDED'),
+    notifyOrganizer: z.boolean().default(false),
+    organizerWhatsapp: z.string().optional().or(z.literal("")),
 })
 
 export type CreateRifaInput = z.infer<typeof createRifaSchema>

@@ -7,7 +7,7 @@ import { createRifaSchema } from "./schema"
 import { validateRifaImages, validateThemeAccess } from "./utils"
 import { validateShapeAccess } from "@/lib/shapes"
 
-export async function updateRifaConfigAction(rifaId: string, data: { isPrivate?: boolean, drawDate?: string, minPercentToRaffle?: number }) {
+export async function updateRifaConfigAction(rifaId: string, data: { isPrivate?: boolean, drawDate?: string, minPercentToRaffle?: number, notifyOrganizer?: boolean, organizerWhatsapp?: string }) {
     const session = await auth()
     if (!session?.user?.id) return { error: "Não autorizado" }
 
@@ -17,8 +17,10 @@ export async function updateRifaConfigAction(rifaId: string, data: { isPrivate?:
             data: {
                 isPrivate: data.isPrivate,
                 drawDate: data.drawDate ? new Date(data.drawDate) : undefined,
-                minPercentToRaffle: data.minPercentToRaffle
-            }
+                minPercentToRaffle: data.minPercentToRaffle,
+                notifyOrganizer: data.notifyOrganizer,
+                organizerWhatsapp: data.organizerWhatsapp
+            } as any
         })
         revalidatePath(`/dashboard/rifas/${rifaId}`)
         revalidatePath(`/dashboard/rifas/${rifaId}/configuracoes`)
@@ -71,7 +73,9 @@ export async function updateRifaAction(rifaId: string, formData: FormData) {
                     images: images.length > 0 ? images : undefined,
                     theme: validatedTheme,
                     balloonShape: validatedShape,
-                }
+                    notifyOrganizer: formData.get("notifyOrganizer") === "true",
+                    organizerWhatsapp: formData.get("organizerWhatsapp") as string || undefined,
+                } as any
             })
 
             const prizeIdsToKeep = prizes.map((p: any) => p.id).filter(Boolean)

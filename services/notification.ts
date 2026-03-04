@@ -33,4 +33,44 @@ export class NotificationService {
 
         return sendWhatsAppMessage(whatsapp, message)
     }
+
+    static async sendOrganizerAlert({
+        whatsapp,
+        buyerName,
+        rifaTitle,
+        numbers,
+        amount,
+        type
+    }: {
+        whatsapp: string
+        buyerName: string
+        rifaTitle: string
+        numbers: number[]
+        amount: number
+        type: 'RESERVATION' | 'PAYMENT'
+    }) {
+        const formattedAmount = new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        }).format(amount)
+
+        let message = ""
+        if (type === 'RESERVATION') {
+            message = `🚨 *Nova Reserva!*\n\n` +
+                `📌 Campanha: ${rifaTitle}\n` +
+                `👤 Cliente: ${buyerName}\n` +
+                `🔢 Cotas: ${numbers.join(', ')}\n` +
+                `💰 Valor: ${formattedAmount}\n\n` +
+                `Aguardando pagamento...`
+        } else {
+            message = `✅ *Pagamento Confirmado!*\n\n` +
+                `📌 Campanha: ${rifaTitle}\n` +
+                `👤 Cliente: ${buyerName}\n` +
+                `🔢 Cotas: ${numbers.join(', ')}\n` +
+                `💰 Valor: ${formattedAmount}\n\n` +
+                `Venda concluída com sucesso!`
+        }
+
+        return sendWhatsAppMessage(whatsapp, message)
+    }
 }

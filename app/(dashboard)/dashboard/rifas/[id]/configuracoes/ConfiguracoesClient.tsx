@@ -36,14 +36,18 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
     const [isPrivate, setIsPrivate] = useState(rifa.isPrivate)
     const [drawDate, setDrawDate] = useState(rifa.drawDate ? new Date(rifa.drawDate).toISOString().split('T')[0] : "")
     const [minPercent, setMinPercent] = useState(rifa.minPercentToRaffle)
+    const [notifyOrganizer, setNotifyOrganizer] = useState(rifa.notifyOrganizer || false)
+    const [organizerWhatsapp, setOrganizerWhatsapp] = useState(rifa.organizerWhatsapp || "")
 
     async function handleSaveBasicConfigs() {
         setIsLoading(true)
         const res = await updateRifaConfigAction(rifa.id, {
             isPrivate,
             drawDate,
-            minPercentToRaffle: Number(minPercent)
-        })
+            minPercentToRaffle: Number(minPercent),
+            notifyOrganizer,
+            organizerWhatsapp
+        } as any)
 
         setIsLoading(false)
         if (res.error) {
@@ -114,6 +118,65 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
                         disabled={isLoading}
                     >
                         {isLoading ? "Salvando..." : "Salvar Alterações"}
+                    </Button>
+                </CardFooter>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /><path d="M8 12h.01" /><path d="M12 12h.01" /><path d="M16 12h.01" /></svg>
+                        </div>
+                        <CardTitle>Alertas para Organizador</CardTitle>
+                    </div>
+                    <CardDescription>
+                        Receba notificações automáticas no WhatsApp para cada nova reserva ou pagamento confirmado.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="flex items-center justify-between space-x-2">
+                        <div className="flex flex-col space-y-1">
+                            <Label htmlFor="notifyOrganizer">Ativar Notificações</Label>
+                            <p className="text-sm text-muted-foreground">
+                                Você receberá um alerta imediato quando um cliente reservar ou pagar.
+                            </p>
+                        </div>
+                        <Switch
+                            id="notifyOrganizer"
+                            checked={notifyOrganizer}
+                            onCheckedChange={setNotifyOrganizer}
+                        />
+                    </div>
+
+                    {notifyOrganizer && (
+                        <div className="space-y-4 pt-4 border-t animate-in fade-in slide-in-from-top-2 duration-300">
+                            <div className="space-y-2">
+                                <Label htmlFor="organizerWhatsapp">WhatsApp para Alertas</Label>
+                                <div className="relative group">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors font-bold">+55</span>
+                                    <Input
+                                        id="organizerWhatsapp"
+                                        placeholder="(00) 00000-0000"
+                                        className="pl-12"
+                                        value={organizerWhatsapp}
+                                        onChange={(e) => setOrganizerWhatsapp(e.target.value)}
+                                    />
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    Informe o número com DDD. Ex: (11) 99999-9999
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                </CardContent>
+                <CardFooter className="bg-muted/50 border-t px-6 py-4">
+                    <Button
+                        className="ml-auto"
+                        onClick={handleSaveBasicConfigs}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Salvando..." : "Salvar Configurações de Alerta"}
                     </Button>
                 </CardFooter>
             </Card>

@@ -192,7 +192,6 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
             // 3. Send WhatsApp notification via NotificationService
             const appUrl = process.env.NEXT_PUBLIC_APP_URL || ''
             const checkoutUrl = `${appUrl}/checkout/pedido/${checkoutResult.transactionRecord.id}`
-
             await NotificationService.sendReservationConfirm({
                 whatsapp: validated.whatsapp,
                 buyerName: validated.name,
@@ -201,6 +200,18 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 amount: checkoutResult.amount,
                 checkoutUrl
             })
+
+            // 4. Optionally notify organizer
+            if ((rifa as any).notifyOrganizer && (rifa as any).organizerWhatsapp) {
+                NotificationService.sendOrganizerAlert({
+                    whatsapp: (rifa as any).organizerWhatsapp,
+                    buyerName: validated.name,
+                    rifaTitle: rifa.title,
+                    numbers: validated.numbers,
+                    amount: checkoutResult.amount,
+                    type: 'RESERVATION'
+                }).catch(err => console.error("[Organizer-Alert] Error:", err))
+            }
 
             console.log(`[Checkout] Success! QR Code exists: ${!!paymentResult.qrCode}, Copy text exists: ${!!paymentResult.qrCodeCopy}`)
 

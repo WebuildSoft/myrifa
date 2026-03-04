@@ -12,6 +12,10 @@ interface NumbersStepProps {
     setNumberPrice: (val: number) => void
     drawDate: string
     setDrawDate: (val: string) => void
+    notifyOrganizer: boolean
+    setNotifyOrganizer: (val: boolean) => void
+    organizerWhatsapp: string
+    setOrganizerWhatsapp: (val: string) => void
     loading: boolean
     onBack: () => void
 }
@@ -20,6 +24,8 @@ export function NumbersStep({
     totalNumbers, setTotalNumbers,
     numberPrice, setNumberPrice,
     drawDate, setDrawDate,
+    notifyOrganizer, setNotifyOrganizer,
+    organizerWhatsapp, setOrganizerWhatsapp,
     loading,
     onBack
 }: NumbersStepProps) {
@@ -93,20 +99,57 @@ export function NumbersStep({
                 </div>
             </section>
 
-            <section className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                            <Bolt className="h-6 w-6" />
+            <section className="space-y-6">
+                <div className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center justify-between transition-all duration-300">
+                        <div className="flex items-center gap-4">
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${notifyOrganizer ? 'bg-green-100 text-green-600' : 'bg-slate-200 text-slate-400'}`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /><path d="M8 12h.01" /><path d="M12 12h.01" /><path d="M16 12h.01" /></svg>
+                            </div>
+                            <div>
+                                <p className="font-bold text-slate-900 dark:text-white">Alertas para o Organizador</p>
+                                <p className="text-xs text-slate-500">Receba avisos no WhatsApp a cada reserva ou pagamento.</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="font-bold text-slate-900 dark:text-white">Premiação Automática</p>
-                            <p className="text-xs text-slate-500">O sistema libera o resultado assim que a meta for atingida.</p>
+                        <div className="relative inline-flex items-center cursor-pointer" onClick={() => setNotifyOrganizer(!notifyOrganizer)}>
+                            <div className={`w-11 h-6 rounded-full transition-colors ${notifyOrganizer ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}>
+                                <div className={`absolute top-[2px] left-[2px] bg-white rounded-full h-5 w-5 transition-transform ${notifyOrganizer ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                            </div>
                         </div>
                     </div>
-                    <div className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="autoDraw" className="sr-only peer" defaultChecked />
-                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+
+                    {notifyOrganizer && (
+                        <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <Label htmlFor="organizerWhatsapp" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">WhatsApp para Alertas</Label>
+                            <div className="relative group mt-2">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors font-bold">+55</span>
+                                <Input
+                                    id="organizerWhatsapp"
+                                    placeholder="(00) 00000-0000"
+                                    className="h-14 pl-14 rounded-2xl border-slate-200 dark:border-slate-800"
+                                    value={organizerWhatsapp}
+                                    onChange={(e) => setOrganizerWhatsapp(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                <div className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                                <Bolt className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <p className="font-bold text-slate-900 dark:text-white">Premiação Automática</p>
+                                <p className="text-xs text-slate-500">O sistema libera o resultado assim que a meta for atingida.</p>
+                            </div>
+                        </div>
+                        <div className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="autoDraw" className="sr-only peer" defaultChecked />
+                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </div>
                     </div>
                 </div>
             </section>

@@ -138,6 +138,8 @@ model Rifa {
   linkViews               LinkView[]
   dailyAnalytics          DailyAnalytics[]
   prizes                  Prize[]
+  notifyOrganizer         Boolean       @default(false)
+  organizerWhatsapp       String?
   user                    User          @relation(fields: [userId], references: [id])
   numbers                 RifaNumber[]
   transactions            Transaction[]
