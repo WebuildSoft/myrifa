@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { QrCode, Copy, Loader2, CheckCircle2, Upload, X } from "lucide-react"
+import { QrCode, Copy, Loader2, CheckCircle2, Upload, X, ShieldCheck, Info } from "lucide-react"
 import { saveManualPixSettings } from "@/actions/user/settings"
 import { uploadImageAction } from "@/actions/upload"
 import { toast } from "sonner"
@@ -79,6 +79,24 @@ export function ManualPixSettings({ initialPixKey, initialPixQrCodeImage }: Manu
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+                {/* Aviso de Transparência */}
+                <div className="p-4 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-emerald-100 dark:border-emerald-800/30 space-y-3">
+                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-500">
+                        <ShieldCheck className="w-4 h-4" />
+                        <span className="text-xs font-black uppercase tracking-wider">Transparência nas Taxas</span>
+                    </div>
+                    <div className="space-y-2">
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                            Ao usar o PIX Manual, a comissão de <strong>5% da plataforma</strong> (destinada à infraestrutura e WhatsApp) é coletada através do <strong>Split Inteligente</strong>.
+                        </p>
+                        <div className="flex items-start gap-2 bg-emerald-50 dark:bg-emerald-900/10 p-2.5 rounded-xl border border-emerald-100/50 dark:border-emerald-800/20">
+                            <Info className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                            <p className="text-[10px] text-emerald-700 dark:text-emerald-400 leading-tight">
+                                O sistema alternará automaticamente algumas vendas para o checkout oficial da plataforma até que o valor da manutenção seja quitado. Após isso, <strong>100% das vendas restantes</strong> cairão direto na sua conta.
+                            </p>
+                        </div>
+                    </div>
+                </div>
                 <div className="space-y-2">
                     <Label htmlFor="pixKey">Sua Chave PIX</Label>
                     <div className="relative">
