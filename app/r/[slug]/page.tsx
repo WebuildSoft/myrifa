@@ -193,9 +193,9 @@ export default async function PublicRifaPage({ params }: { params: Promise<{ slu
                                         pixKey={(rifa.user as any)?.pixKey ?? null}
                                         pixQrCodeImage={(rifa.user as any)?.pixQrCodeImage ?? null}
                                         hasMercadoPago={!!((rifa.user as any)?.mercadoPagoAccessToken)}
-                                        enableManualPix={rifa.enableManualPix}
-                                        enableMercadoPago={rifa.enableMercadoPago}
-                                        enableStripe={rifa.enableStripe}
+                                        enableManualPix={(rifa as any).enableManualPix}
+                                        enableMercadoPago={(rifa as any).enableMercadoPago}
+                                        enableStripe={(rifa as any).enableStripe}
                                     />
                                 )}
 

@@ -27,6 +27,9 @@ interface NumberGridProps {
     pixKey?: string | null
     pixQrCodeImage?: string | null
     hasMercadoPago?: boolean
+    enableManualPix?: boolean
+    enableMercadoPago?: boolean
+    enableStripe?: boolean
 }
 
 export function NumberGrid({
@@ -43,6 +46,9 @@ export function NumberGrid({
     pixKey,
     pixQrCodeImage,
     hasMercadoPago = false,
+    enableManualPix = true,
+    enableMercadoPago = true,
+    enableStripe = true,
 }: NumberGridProps) {
     const router = useRouter()
     const {
@@ -73,6 +79,9 @@ export function NumberGrid({
                 pixKey: pixKey ?? null,
                 pixQrCodeImage: pixQrCodeImage ?? null,
                 hasMercadoPago,
+                enableManualPix,
+                enableMercadoPago,
+                enableStripe,
             }
             sessionStorage.setItem(`checkout_${rifaId}`, JSON.stringify(data))
             router.push(`/checkout/${rifaId}`)

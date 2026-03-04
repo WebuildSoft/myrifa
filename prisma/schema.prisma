@@ -131,6 +131,9 @@ model Rifa {
   updatedAt               DateTime      @updatedAt
   rules                   String?
   theme                   RifaTheme     @default(DEFAULT)
+  enableManualPix         Boolean       @default(true)
+  enableMercadoPago       Boolean       @default(true)
+  enableStripe           Boolean       @default(true)
   quotaCommissionGoal     Decimal?      @db.Decimal(10, 2)
   quotaCommissionPaid     Decimal?      @default(0) @db.Decimal(10, 2)
   quotaCommissionPercent  Float?
