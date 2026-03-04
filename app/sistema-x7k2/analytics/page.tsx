@@ -10,6 +10,7 @@ import {
 import { RecentVisitsTable, GroupedVisits, ViewItem } from "@/components/analytics/RecentVisitsTable"
 import { unstable_cache } from "next/cache"
 import { redis } from "@/lib/redis"
+import { RealtimePulse, LiveOnlineUsers, LiveRevenue } from "@/components/analytics/RealtimePulse"
 
 export const dynamic = 'force-dynamic'
 
@@ -104,21 +105,21 @@ export default async function AdminAnalyticsPage() {
     const fiveMinutesAgoTimestamp = Date.now() - 5 * 60 * 1000
 
     // Fetch data in parallel leveraging caching for massive global count tables
-    const [stats, views, onlineUsersRes] = await Promise.all([
+    const [stats, views, onlineUsersRes, revenueRes] = await Promise.all([
         getStatsCounts(),
         (prisma as any).linkView.findMany({
             orderBy: { createdAt: "desc" },
             take: 500, // Reduced from 1000 to keep it lightning fast, sufficient for real-time breakdowns
             include: { rifa: { select: { title: true } } }
         }),
-        redis.zcount("online_users", fiveMinutesAgoTimestamp, "+inf").then(res => {
-            console.log(`[REDIS] ZCOUNT Result (since ${fiveMinutesAgoTimestamp}): ${res}`)
-            return res
-        }).catch((e) => {
-            console.error("Redis Connection Failed (ZCOUNT). Fallback to 0.", e)
-            return 0
+        redis.zcount("online_users", fiveMinutesAgoTimestamp, "+inf").catch(() => 0),
+        prisma.transaction.aggregate({
+            where: { status: "PAID" },
+            _sum: { amount: true }
         })
     ])
+
+    const totalRevenue = Number(revenueRes._sum.amount || 0)
 
     const { totalViewsCount, rifasTotalCount, allBuyersCount } = stats
     const onlineUsersCount = onlineUsersRes
@@ -192,16 +193,23 @@ export default async function AdminAnalyticsPage() {
                         Desempenho da Plataforma em Tempo Real
                     </p>
                 </div>
+
+                <RealtimePulse initialData={{
+                    onlineUsers: onlineUsersCount,
+                    totalRevenue: totalRevenue,
+                    recentSales: [],
+                    recentViews: views.slice(0, 10)
+                }} />
             </div>
 
             {/* Global Summary Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
                 {[
-                    { icon: <Users className="h-5 w-5 text-pink-400 animate-pulse" />, label: "Usuários Online", value: onlineUsersCount.toString(), bg: "bg-pink-500/10 border-pink-500/30 ring-1 ring-pink-500/20" },
-                    { icon: <Globe className="h-5 w-5 text-blue-400" />, label: "Total Platform Views", value: totalViewsCount.toLocaleString("pt-BR"), bg: "bg-blue-500/10 border-blue-500/20" },
-                    { icon: <TrendingUp className="h-5 w-5 text-indigo-400" />, label: "Taxa de Conversão Global", value: `${conversionRate}%`, bg: "bg-indigo-500/10 border-indigo-500/20" },
-                    { icon: <Clock className="h-5 w-5 text-violet-400" />, label: "Tempo Médio (Amostra)", value: formatDuration(avgDuration), bg: "bg-violet-500/10 border-violet-500/20" },
-                    { icon: <Search className="h-5 w-5 text-emerald-400" />, label: "Campanhas Ativas", value: rifasTotalCount.toLocaleString("pt-BR"), bg: "bg-emerald-500/10 border-emerald-500/20" },
+                    { icon: <Users className="h-5 w-5 text-pink-400 animate-pulse" />, label: "Usuários Online", value: <LiveOnlineUsers fallback={onlineUsersCount} />, bg: "bg-pink-500/10 border-pink-500/30 ring-1 ring-pink-500/20" },
+                    { icon: <TrendingUp className="h-5 w-5 text-emerald-400" />, label: "Faturamento Total", value: <LiveRevenue fallback={totalRevenue} />, bg: "bg-emerald-500/10 border-emerald-500/20" },
+                    { icon: <Globe className="h-5 w-5 text-blue-400" />, label: "Platform Views", value: totalViewsCount.toLocaleString("pt-BR"), bg: "bg-blue-500/10 border-blue-500/20" },
+                    { icon: <Search className="h-5 w-5 text-indigo-400" />, label: "Campanhas Ativas", value: rifasTotalCount.toLocaleString("pt-BR"), bg: "bg-indigo-500/10 border-indigo-500/20" },
+                    { icon: <Clock className="h-5 w-5 text-violet-400" />, label: "Conversão Global", value: `${conversionRate}%`, bg: "bg-violet-500/10 border-violet-500/20" },
                 ].map(({ icon, label, value, bg }) => (
                     <Card key={label} className={`border ${bg} bg-[#020617]/50 backdrop-blur-md hover:bg-white/[0.02] transition-colors relative overflow-hidden group`}>
                         <div className="absolute top-0 right-0 w-32 h-32 bg-white/[0.02] rounded-full blur-3xl -mr-16 -mt-16 transition-opacity group-hover:bg-white/[0.05]" />
