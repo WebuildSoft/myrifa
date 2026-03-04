@@ -5,6 +5,20 @@ import { redis } from "@/lib/redis"
 
 export const dynamic = 'force-dynamic'
 
+/**
+ * Helper to race a promise against a timeout
+ */
+async function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+    try {
+        return await Promise.race([
+            promise,
+            new Promise<T>((_, reject) => setTimeout(() => reject(new Error("Timeout")), ms))
+        ]);
+    } catch (e) {
+        return fallback;
+    }
+}
+
 export async function GET(req: NextRequest) {
     const session = await auth()
 
@@ -16,11 +30,19 @@ export async function GET(req: NextRequest) {
     try {
         const fiveMinutesAgoTimestamp = Date.now() - 5 * 60 * 1000
 
-        // 1. ONLINE USERS (Redis Only)
-        const onlineUsers = await redis.zcount("online_users", fiveMinutesAgoTimestamp, "+inf").catch(() => 0)
+        // 1. ONLINE USERS (Redis Only) - 1s timeout
+        const onlineUsers = await withTimeout(
+            redis.zcount("online_users", fiveMinutesAgoTimestamp, "+inf"),
+            1000,
+            0
+        );
 
-        // 2. RECENT VIEWS (Redis-first with Warmup)
-        const recentViews = await redis.lrange("recent_views", 0, 9).then(async (cached) => {
+        // 2. RECENT VIEWS (Redis-first with Warmup) - 1.5s timeout
+        const recentViews = await withTimeout(
+            redis.lrange("recent_views", 0, 9),
+            1500,
+            []
+        ).then(async (cached) => {
             if (cached && cached.length > 0) return cached.map(item => JSON.parse(item))
             const fresh = await (prisma as any).linkView.findMany({
                 orderBy: { createdAt: "desc" },
@@ -36,20 +58,29 @@ export async function GET(req: NextRequest) {
             return fresh
         }).catch(() => [])
 
-        // 3. REVENUE (Redis-first with Warmup)
-        let totalRevenue: number | null = await redis.get("dashboard:total_revenue").then(v => v ? parseFloat(v) : null).catch(() => null)
+        // 3. REVENUE (Redis-first with Warmup) - 1s timeout
+        let totalRevenue: number | null = await withTimeout(
+            redis.get("dashboard:total_revenue").then(v => v ? parseFloat(v) : null),
+            1000,
+            null
+        );
+
         if (totalRevenue === null) {
             const revenueAgg = await prisma.transaction.aggregate({
                 where: { status: "PAID" },
                 _sum: { amount: true }
             })
             totalRevenue = Number(revenueAgg._sum.amount || 0)
-            // Warmup revenue in Redis
-            await redis.set("dashboard:total_revenue", totalRevenue.toString()).catch(() => { })
+            // Warmup revenue in Redis (Non-blocking)
+            redis.set("dashboard:total_revenue", totalRevenue.toString()).catch(() => { })
         }
 
-        // 4. RECENT SALES (Redis-first with Warmup)
-        const recentSales = await redis.lrange("dashboard:recent_sales", 0, 4).then(async (cached) => {
+        // 4. RECENT SALES (Redis-first with Warmup) - 1.5s timeout
+        const recentSales = await withTimeout(
+            redis.lrange("dashboard:recent_sales", 0, 4),
+            1500,
+            []
+        ).then(async (cached) => {
             if (cached && cached.length > 0) return cached.map(item => JSON.parse(item))
             const fresh = await prisma.transaction.findMany({
                 where: { status: "PAID" },
