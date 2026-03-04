@@ -5,10 +5,13 @@ const globalForRedis = global as unknown as { redis: Redis }
 const rawUrl = process.env.REDIS_URL || ""
 const isLiteral = rawUrl.startsWith('$') || rawUrl === "undefined" || rawUrl === "null"
 
-// Use fallback if missing or literal string (common in misconfigured CI/CD)
-const redisUrl = (!rawUrl || isLiteral) ? "redis://localhost:6379" : rawUrl
+// Detailed (but safe) diagnostics
+const redisKeys = Object.keys(process.env).filter(k => k.startsWith('REDIS'))
+const envStatus = redisKeys.map(k => `${k}(len:${process.env[k]?.length || 0})`).join(', ')
+console.log(`[REDIS] Environment state: ${envStatus || 'No REDIS_* vars found'}`)
 
-// Diagnostic log with masked credentials
+// Use fallback if missing or literal string
+const redisUrl = (!rawUrl || isLiteral) ? "redis://localhost:6379" : rawUrl
 const maskedUrl = redisUrl.replace(/:[^:@]+@/, ':****@')
 
 if (rawUrl && isLiteral) {
