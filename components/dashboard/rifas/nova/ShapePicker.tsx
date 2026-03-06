@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import { Check, LockKeyhole } from "lucide-react"
+import Link from "next/link"
 import { BalloonShape } from "@prisma/client"
 import { SHAPE_CONFIGS } from "@/lib/shapes"
 
@@ -93,9 +94,9 @@ export function ShapePicker({ value, onChange, userPlan }: ShapePickerProps) {
                     <p className="text-indigo-800 dark:text-indigo-300">
                         Os estilos <span className="font-bold text-amber-600">PRO</span> são exclusivos para assinantes.
                     </p>
-                    <a href="/dashboard/planos" className="text-primary font-bold hover:underline shrink-0">
+                    <Link href="/planos" className="text-primary font-bold hover:underline shrink-0">
                         Fazer Upgrade
-                    </a>
+                    </Link>
                 </div>
             )}
         </div>

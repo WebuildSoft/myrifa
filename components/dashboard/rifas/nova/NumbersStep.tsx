@@ -3,7 +3,8 @@
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Calendar, Bolt } from "lucide-react"
+import { Calendar, Bolt, Info, AlertTriangle } from "lucide-react"
+import Link from "next/link"
 
 interface NumbersStepProps {
     totalNumbers: number
@@ -17,6 +18,7 @@ interface NumbersStepProps {
     organizerWhatsapp: string
     setOrganizerWhatsapp: (val: string) => void
     loading: boolean
+    userPlan: string
     onBack: () => void
 }
 
@@ -27,8 +29,11 @@ export function NumbersStep({
     notifyOrganizer, setNotifyOrganizer,
     organizerWhatsapp, setOrganizerWhatsapp,
     loading,
+    userPlan,
     onBack
 }: NumbersStepProps) {
+    const isFreePlan = userPlan === "FREE"
+    const showLimitWarning = isFreePlan && totalNumbers > 500
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <section className="space-y-4">
@@ -62,6 +67,22 @@ export function NumbersStep({
                         value={totalNumbers || ""}
                         onChange={(e) => setTotalNumbers(Number(e.target.value))}
                     />
+                    {showLimitWarning && (
+                        <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                            <div className="space-y-1">
+                                <p className="text-sm font-bold text-amber-900 dark:text-amber-100">
+                                    Seu plano <span className="underline decoration-amber-500/30">FREE</span> permite no máximo 500 números por rifa.
+                                </p>
+                                <p className="text-[11px] text-amber-700 dark:text-amber-400">
+                                    Para criar rifas com até 10.000 números e remover essa limitação, considere fazer um upgrade.
+                                </p>
+                                <Link href="/planos" className="text-xs font-black text-amber-600 hover:text-amber-700 underline uppercase tracking-wider block mt-2">
+                                    Fazer Upgrade Agora
+                                </Link>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -158,8 +179,8 @@ export function NumbersStep({
                                 <Bolt className="h-6 w-6" />
                             </div>
                             <div>
-                                <p className="font-bold text-slate-900 dark:text-white">Premiação Automática</p>
-                                <p className="text-xs text-slate-500">O sistema libera o resultado assim que a meta for atingida.</p>
+                                <p className="font-bold text-slate-900 dark:text-white">Sorteio Automático</p>
+                                <p className="text-xs text-slate-500">O sistema realiza o sorteio do ganhador automaticamente assim que 100% das cotas forem pagas.</p>
                             </div>
                         </div>
                         <div className="relative inline-flex items-center cursor-pointer">

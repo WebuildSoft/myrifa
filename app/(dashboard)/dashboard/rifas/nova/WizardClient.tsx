@@ -241,6 +241,7 @@ export default function NovaRifaPage({ userPlan, hasPixConfig }: NovaRifaPagePro
                                         notifyOrganizer={rifaInfo.notifyOrganizer} setNotifyOrganizer={(val: boolean) => setRifaInfo(p => ({ ...p, notifyOrganizer: val }))}
                                         organizerWhatsapp={rifaInfo.organizerWhatsapp} setOrganizerWhatsapp={(val: string) => setRifaInfo(p => ({ ...p, organizerWhatsapp: val }))}
                                         loading={loading}
+                                        userPlan={userPlan}
                                         onBack={() => setStep(2)}
                                     />
                                 )}
