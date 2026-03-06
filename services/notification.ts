@@ -16,18 +16,49 @@ export class NotificationService {
         rifaTitle,
         numbers,
         amount,
-        checkoutUrl
-    }: ReservationNotificationParams) {
+        checkoutUrl,
+        isManual = false
+    }: ReservationNotificationParams & { isManual?: boolean }) {
         const formattedAmount = new Intl.NumberFormat("pt-BR", {
             style: "currency",
             currency: "BRL"
         }).format(amount)
 
-        const message = await templates.newReservation(
+        const message = isManual
+            ? await templates.manualReservation(
+                buyerName,
+                rifaTitle,
+                numbers,
+                formattedAmount
+            )
+            : await templates.newReservation(
+                buyerName,
+                rifaTitle,
+                numbers,
+                formattedAmount,
+                checkoutUrl
+            )
+
+        return sendWhatsAppMessage(whatsapp, message)
+    }
+
+    static async sendPaymentReminder({
+        whatsapp,
+        buyerName,
+        rifaTitle,
+        numbers,
+        checkoutUrl
+    }: {
+        whatsapp: string
+        buyerName: string
+        rifaTitle: string
+        numbers: number[]
+        checkoutUrl: string
+    }) {
+        const message = await templates.paymentReminder(
             buyerName,
             rifaTitle,
             numbers,
-            formattedAmount,
             checkoutUrl
         )
 

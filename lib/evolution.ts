@@ -148,10 +148,8 @@ export async function restartEvolutionInstance() {
 }
 
 export const waTemplates = {
-    async get(key: 'newReservation' | 'paymentConfirmed' | 'winner', variables: Record<string, string>) {
+    async get(key: 'newReservation' | 'manualReservation' | 'paymentReminder' | 'paymentConfirmed' | 'winner', variables: Record<string, string>) {
         try {
-            // Use (prisma as any) to bypass lint if generate is lagging, 
-            // but the table 'WhatsappConfig' exists in DB.
             const config = await (prisma as any).whatsappConfig.findUnique({
                 where: { id: "default" }
             })
@@ -187,15 +185,49 @@ export const waTemplates = {
         newReservation: `
 Olá, *{cliente}*! 😊
 
-Recebemos sua reserva na campanha *{rifa}* — que ótima escolha!
+Recebemos sua reserva na campanha *{rifa}*! Agradecemos imensamente por sua colaboração.
 
-🎫 *Suas Cotas Reservadas:* {numeros}
+🎫 *Suas Cotas:* {numeros}
 💰 *Total:* {valor_total}
 
-Agora é só pagar via PIX para confirmar e garantir sua participação:
+Agora é só realizar o pagamento via PIX para confirmar sua participação:
 🔗 {pix_url}
 
-Aguardamos seu pagamento com carinho 💜
+Aguardamos com carinho 💜
+*Que Deus abençoe!* 🙏
+_Equipe MyRifa_
+`.trim(),
+
+        manualReservation: `
+Olá, *{cliente}*! 😊
+
+Recebemos sua reserva na campanha *{rifa}*! Agradecemos imensamente por sua colaboração.
+
+🎫 *Suas Cotas:* {numeros}
+💰 *Total:* {valor_total}
+
+⏳ *Status:* *Aguardando Confirmação*.
+
+Como esta é uma reserva com *Pix Manual*, o administrador da campanha foi notificado e irá conferir o recebimento para validar sua participação.
+
+*Fique tranquilo(a)!* Assim que o administrador confirmar, você receberá um novo aviso por aqui. 💜
+
+*Que Deus abençoe!* 🙏
+_Equipe MyRifa_
+`.trim(),
+
+        paymentReminder: `
+Olá, *{cliente}*! 😊
+
+Passamos apenas para lembrar que sua reserva para a campanha *{rifa}* ainda não foi confirmada.
+
+Para garantir que suas cotas ({numeros}) continuem reservadas, você pode acessar os dados por este link:
+
+🔗 *Acesse aqui:* {pix_url}
+
+Se já realizou o pagamento, basta aguardar a conferência do administrador. Caso precise de alguma ajuda, estamos à disposição! ✨
+
+*Agradecemos sua participação!*
 _Equipe MyRifa_
 `.trim(),
 
@@ -208,22 +240,22 @@ Seu apoio à campanha *{rifa}* foi confirmado com sucesso!
 
 🎫 *Suas cotas:* {numeros}
 
-Você já está participando! Acompanhe tudo por aqui e boa sorte 🍀
+Você já está participando! Acompanhe tudo por aqui e que Deus abençoe 🙏
 
 _Obrigado por apoiar essa causa! — Equipe MyRifa_
 `.trim(),
 
         winner: `
-🎉 *VOCÊ FOI CONTEMPLADO(A)!* 🎉
+🎉 *CONTEEMPLADO(A)!* 🎉
 
-Olá, *{cliente}*, que notícia incrível! 🥳
+Olá, *{cliente}*, que notícia abençoada! 🥳
 
-Você foi o(a) grande contemplado(a) da campanha:
+Você foi o(a) contemplado(a) da campanha:
 🏆 *{rifa}*
 
 🔢 Sua cota premiada: *{numero_vencedor}*
 
-Parabéns de coração! O organizador entrará em contato em breve para combinar a entrega do prêmio. 🎁
+Parabéns! O organizador entrará em contato em breve para combinar a entrega. 🎁
 
 _Com carinho — Equipe MyRifa_ 💜
 `.trim()
@@ -239,6 +271,24 @@ export const templates = {
             rifa: rifaTitle,
             numeros: numbers.join(', '),
             valor_total: total,
+            pix_url: pixUrl
+        })
+    },
+
+    manualReservation: async (name: string, rifaTitle: string, numbers: number[], total: string) => {
+        return waTemplates.get('manualReservation', {
+            cliente: name,
+            rifa: rifaTitle,
+            numeros: numbers.join(', '),
+            valor_total: total
+        })
+    },
+
+    paymentReminder: async (name: string, rifaTitle: string, numbers: number[], pixUrl: string) => {
+        return waTemplates.get('paymentReminder', {
+            cliente: name,
+            rifa: rifaTitle,
+            numeros: numbers.join(', '),
             pix_url: pixUrl
         })
     },

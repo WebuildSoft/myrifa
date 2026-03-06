@@ -216,8 +216,9 @@ model Transaction {
   buyerId       String
   numbers       Int[]
   paidAt        DateTime?
-  expiresAt     DateTime?
-  createdAt     DateTime           @default(now())
+  expiresAt              DateTime?
+  manualPixReminderSent  Boolean            @default(false)
+  createdAt              DateTime           @default(now())
   destination   PaymentDestination @default(ORGANIZER)
   provider      PaymentProvider    @default(MERCADO_PAGO)
   buyer         Buyer              @relation(fields: [buyerId], references: [id])

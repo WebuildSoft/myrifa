@@ -254,7 +254,8 @@ export async function processCheckoutAction(data: z.infer<typeof checkoutSchema>
                 rifaTitle: rifa.title,
                 numbers: validated.numbers,
                 amount: checkoutResult.amount,
-                checkoutUrl
+                checkoutUrl,
+                isManual: true
             }).catch(() => { })
 
             if ((rifa as any).notifyOrganizer && (rifa as any).organizerWhatsapp) {
