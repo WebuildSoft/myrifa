@@ -17,12 +17,18 @@ export default async function NovaRifaPage() {
 
     const user = await prisma.user.findUnique({
         where: { id: session.user.id },
-        select: { plan: true }
+        select: {
+            plan: true,
+            pixKey: true,
+            pixQrCodeImage: true
+        }
     })
 
     if (!user) {
         redirect("/login")
     }
 
-    return <WizardClient userPlan={user.plan} />
+    const hasPixConfig = !!(user.pixKey && user.pixQrCodeImage)
+
+    return <WizardClient userPlan={user.plan} hasPixConfig={hasPixConfig} />
 }

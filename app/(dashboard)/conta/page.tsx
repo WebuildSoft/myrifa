@@ -14,9 +14,12 @@ import { PasswordSettings } from "@/components/dashboard/conta/PasswordSettings"
 import { PersonalDataSettings } from "@/components/dashboard/conta/PersonalDataSettings"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export default async function ContaPage() {
+export default async function ContaPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
     const session = await auth()
     if (!session?.user?.id) redirect("/login")
+
+    const params = await searchParams
+    const defaultTab = params.tab || "geral"
 
     const user = await prisma.user.findUnique({
         where: { id: session.user.id }
@@ -51,7 +54,7 @@ export default async function ContaPage() {
                         <div className="hidden md:flex items-center gap-4 p-2 pl-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 shadow-sm">
                             <div className="flex flex-col items-end">
                                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Status Geral</span>
-                                <span className="text-[11px] font-black text-emerald-500 uppercase tracking-tighter italic">Conta Verificada</span>
+                                <span className="text-11px font-black text-emerald-500 uppercase tracking-tighter italic">Conta Verificada</span>
                             </div>
                             <div className="size-10 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
                                 <ShieldCheck className="size-5 text-emerald-500" />
@@ -60,7 +63,7 @@ export default async function ContaPage() {
                     </div>
                 </div>
 
-                <Tabs defaultValue="geral" className="space-y-8 md:space-y-12">
+                <Tabs defaultValue={defaultTab} className="space-y-8 md:space-y-12">
                     <div className="flex flex-col items-center">
                         <TabsList className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl p-1 md:p-1.5 rounded-2xl md:rounded-[2rem] h-12 md:h-16 border border-slate-200/50 dark:border-slate-800/50 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] dark:shadow-none w-full md:w-auto flex justify-around md:justify-center relative overflow-hidden group/tabs">
                             {/* Brilho interno do TabsList */}

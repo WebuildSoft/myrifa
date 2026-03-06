@@ -86,7 +86,7 @@ export default async function DashboardPage() {
                         </div>
                     </div>
                     <Link
-                        href="/conta"
+                        href="/conta?tab=financeiro#pix-manual"
                         className="shrink-0 flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
                     >
                         Configurar agora

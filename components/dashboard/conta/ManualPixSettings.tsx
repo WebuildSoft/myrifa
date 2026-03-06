@@ -72,7 +72,7 @@ export function ManualPixSettings({ initialPixKey, initialPixQrCodeImage }: Manu
     const hasChanges = pixKey !== (initialPixKey || "") || pixQrCodeImage !== (initialPixQrCodeImage || "")
 
     return (
-        <Card className="border-slate-200/60 dark:border-slate-800/60 bg-white dark:bg-slate-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-2xl md:rounded-[2rem] overflow-hidden">
+        <Card id="pix-manual" className="border-slate-200/60 dark:border-slate-800/60 bg-white dark:bg-slate-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-2xl md:rounded-[2rem] overflow-hidden">
             <CardHeader className="border-b border-slate-100 dark:border-slate-800/50 p-5 md:p-6 pb-4">
                 <div className="flex items-center gap-3">
                     <div className="size-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
@@ -163,22 +163,28 @@ export function ManualPixSettings({ initialPixKey, initialPixQrCodeImage }: Manu
 
                         <div className="flex flex-col sm:flex-row items-center gap-6">
                             {pixQrCodeImage ? (
-                                <div className="relative group/qr p-2 bg-white rounded-2xl shadow-xl border border-slate-200 size-32 shrink-0">
-                                    <div className="relative w-full h-full overflow-hidden rounded-lg">
-                                        <Image
-                                            src={pixQrCodeImage}
-                                            alt="QR Code PIX"
-                                            fill
-                                            className="object-contain"
-                                            unoptimized
-                                        />
+                                <div className="flex flex-col items-center gap-3">
+                                    <div className="relative group/qr p-2 bg-white rounded-2xl shadow-xl border border-slate-200 size-32 shrink-0">
+                                        <div className="relative w-full h-full overflow-hidden rounded-lg">
+                                            <Image
+                                                src={pixQrCodeImage}
+                                                alt="QR Code PIX"
+                                                fill
+                                                className="object-contain"
+                                                unoptimized
+                                            />
+                                        </div>
                                     </div>
-                                    <button
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        className="h-8 px-3 rounded-lg border-red-200 text-red-600 hover:bg-red-50 text-[10px] uppercase font-black tracking-widest gap-2"
                                         onClick={() => setPixQrCodeImage("")}
-                                        className="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-xl opacity-0 group-hover/qr:opacity-100 transition-all shadow-xl hover:scale-110 active:scale-90 z-20"
                                     >
-                                        <X className="size-3.5" />
-                                    </button>
+                                        <X className="size-3" />
+                                        Remover QR
+                                    </Button>
                                 </div>
                             ) : (
                                 <div className="relative size-32 shrink-0">

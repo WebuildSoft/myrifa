@@ -1,7 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, Check, Rocket, CheckCircle, Trophy, Calendar, Palette, TrendingUp } from "lucide-react"
+import { CheckCircle2, Check, Rocket, CheckCircle, Trophy, Calendar, Palette, TrendingUp, AlertTriangle } from "lucide-react"
+import Link from "next/link"
 import { ShareRaffleModal } from "@/components/ui/share-raffle-modal"
 
 interface ReviewStepProps {
@@ -15,6 +16,7 @@ interface ReviewStepProps {
     theme: string
     loading: boolean
     userPlan: string
+    hasPixConfig: boolean
     onPublish: () => void
     onKeepDraft: () => void
 }
@@ -30,6 +32,7 @@ export function ReviewStep({
     theme,
     loading,
     userPlan,
+    hasPixConfig,
     onPublish,
     onKeepDraft
 }: ReviewStepProps) {
@@ -173,13 +176,33 @@ export function ReviewStep({
                 </div>
             </div>
 
+            {!hasPixConfig && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 mb-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-red-100 dark:bg-red-900/40 rounded-xl">
+                            <AlertTriangle className="h-5 w-5 text-red-600" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-black text-red-800 dark:text-red-400">Configuração de Recebimento Obrigatória!</p>
+                            <p className="text-[10px] text-red-700 dark:text-red-500 font-medium leading-tight">Você deve configurar sua Chave PIX e QR Code no perfil antes de ativar as vendas.</p>
+                        </div>
+                    </div>
+                    <Link
+                        href="/conta?tab=financeiro#pix-manual"
+                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-red-600/10 active:scale-95 whitespace-nowrap"
+                    >
+                        Configurar Agora
+                    </Link>
+                </div>
+            )}
+
             <div className="flex flex-col sm:flex-row-reverse gap-4 pt-6 border-t border-slate-100 dark:border-slate-800">
                 <Button
                     type="button"
                     size="lg"
-                    className="flex-[2] h-16 rounded-2xl font-black bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 text-white uppercase text-xs tracking-widest gap-3 transition-all active:scale-95"
+                    className={`flex-[2] h-16 rounded-2xl font-black uppercase text-xs tracking-widest gap-3 transition-all active:scale-95 ${!hasPixConfig ? 'bg-slate-200 text-slate-400 cursor-not-allowed dark:bg-slate-800' : 'bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 text-white'}`}
                     onClick={onPublish}
-                    disabled={loading}
+                    disabled={loading || !hasPixConfig}
                 >
                     <Rocket className={`h-5 w-5 ${loading ? 'animate-bounce' : 'animate-pulse'}`} />
                     {loading ? "Ativando..." : "Lançar Campanha Agora 🚀"}
