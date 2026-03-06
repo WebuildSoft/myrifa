@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { AlertTriangle, ArrowRight } from "lucide-react"
+import { AlertTriangle, ArrowRight, Shield } from "lucide-react"
 
 import { DashboardStats } from "@/components/dashboard/DashboardStats"
 import { DashboardCTA } from "@/components/dashboard/DashboardCTA"
@@ -23,7 +23,8 @@ export default async function DashboardPage() {
             where: { id: userId },
             select: {
                 pixKey: true,
-                pixQrCodeImage: true
+                pixQrCodeImage: true,
+                whatsapp: true
             }
         }),
         prisma.rifa.count({
@@ -72,28 +73,53 @@ export default async function DashboardPage() {
                 </p>
             </div>
 
-            {(!user?.pixKey || !user?.pixQrCodeImage) && (
-                <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                    <div className="flex gap-3 items-start">
-                        <div className="p-2 bg-amber-100 dark:bg-amber-900/40 rounded-lg shrink-0">
-                            <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-500" />
+            <div className="flex flex-col gap-4">
+                {(!user?.pixKey || !user?.pixQrCodeImage) && (
+                    <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div className="flex gap-3 items-start">
+                            <div className="p-2 bg-amber-100 dark:bg-amber-900/40 rounded-lg shrink-0">
+                                <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-500" />
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-amber-800 dark:text-amber-500">Configuração de Recebimento Pendente!</h3>
+                                <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
+                                    Para receber pagamentos via PIX direto, você precisa configurar sua <strong>Chave PIX</strong> e o <strong>QR Code (Imagem)</strong> no seu perfil.
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 className="font-semibold text-amber-800 dark:text-amber-500">Configuração de Recebimento Pendente!</h3>
-                            <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
-                                Para receber pagamentos via PIX direto, você precisa configurar sua <strong>Chave PIX</strong> e o <strong>QR Code (Imagem)</strong> no seu perfil.
-                            </p>
-                        </div>
+                        <Link
+                            href="/conta?tab=financeiro#pix-manual"
+                            className="shrink-0 flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                        >
+                            Configurar agora
+                            <ArrowRight className="w-4 h-4" />
+                        </Link>
                     </div>
-                    <Link
-                        href="/conta?tab=financeiro#pix-manual"
-                        className="shrink-0 flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-                    >
-                        Configurar agora
-                        <ArrowRight className="w-4 h-4" />
-                    </Link>
-                </div>
-            )}
+                )}
+
+                {!user?.whatsapp && (
+                    <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div className="flex gap-3 items-start">
+                            <div className="p-2 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg shrink-0">
+                                <Shield className="w-5 h-5 text-indigo-600 dark:text-indigo-500" />
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-indigo-800 dark:text-indigo-500">Segurança: Configure seu WhatsApp!</h3>
+                                <p className="text-sm text-indigo-700 dark:text-indigo-400 mt-1">
+                                    Cadastre seu WhatsApp para garantir que você possa <strong>recuperar sua conta</strong> e receber notificações importantes de segurança.
+                                </p>
+                            </div>
+                        </div>
+                        <Link
+                            href="/conta?tab=pessoal"
+                            className="shrink-0 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                        >
+                            Cadastrar agora
+                            <ArrowRight className="w-4 h-4" />
+                        </Link>
+                    </div>
+                )}
+            </div>
 
             <DashboardStats
                 totalRaised={totalRaised}
