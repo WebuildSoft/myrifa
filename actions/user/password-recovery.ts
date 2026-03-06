@@ -5,14 +5,32 @@ import { sendWhatsAppMessage } from "@/lib/evolution"
 import bcrypt from "bcrypt"
 import crypto from "crypto"
 
+import { headers } from "next/headers"
+import { rateLimit } from "@/lib/rate-limit"
+
 export async function requestPasswordResetAction(email: string) {
+    // Basic Rate Limiting by IP
+    const headerList = headers()
+    const ip = (await headerList).get("x-forwarded-for") || "unknown"
+    const rl = rateLimit(ip, { limit: 5, windowMs: 60 * 60 * 1000 }) // 5 requests per hour
+
+    if (!rl.success) {
+        return { error: `Muitas solicitações. Tente novamente em ${Math.ceil(rl.resetIn / 60000)} minutos.` }
+    }
+
     try {
         const user = await prisma.user.findUnique({
             where: { email }
         })
 
+        // Security: Even if user doesn't exist, we return a "success" state to prevent email enumeration
+        // but we flag that no actual delivery will happen internally.
         if (!user) {
-            return { error: "E-mail não encontrado." }
+            return {
+                success: true,
+                isSimulated: true,
+                message: "Se o e-mail estiver cadastrado, você receberá instruções de recuperação."
+            }
         }
 
         // Generate secure token

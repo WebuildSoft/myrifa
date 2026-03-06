@@ -6,7 +6,7 @@ export const authConfig = {
     },
     callbacks: {
         authorized({ auth, request: { nextUrl } }) {
-            const isLoggedIn = !!auth?.user
+            const isLoggedIn = !!auth?.user?.id
             const isAdmin = ["SUPER_ADMIN", "ADMIN"].includes((auth?.user as any)?.role)
 
             const isAdminRoute = nextUrl.pathname.startsWith("/sistema-x7k2")
@@ -41,9 +41,10 @@ export const authConfig = {
             // Normal User Logic
             if (isProtected) {
                 if (isLoggedIn) return true
-                return false // Redirect to /login
+                return false // Auth.js automatically handles redirection to signIn page
             } else if (isLoggedIn && (nextUrl.pathname === "/login" || nextUrl.pathname === "/register")) {
-                return Response.redirect(new URL("/dashboard", nextUrl))
+                const dashboardUrl = new URL("/dashboard", nextUrl)
+                return Response.redirect(dashboardUrl)
             }
             return true
         },

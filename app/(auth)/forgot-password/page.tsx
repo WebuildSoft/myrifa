@@ -29,13 +29,23 @@ export default function ForgotPasswordPage() {
             return
         }
 
-        if (res.success && res.resetToken) {
-            setRecoveryInfo({
-                hasWhatsApp: res.hasWhatsApp,
-                whatsappNumber: res.whatsappNumber || null,
-                resetToken: res.resetToken
-            })
-            setStep(2)
+        if (res.success) {
+            if (res.isSimulated) {
+                setStep(3)
+                // We keep recoveryInfo null so nothing happens on step 3 for simulated success
+                setError("")
+                setLoading(false)
+                return
+            }
+
+            if (res.resetToken) {
+                setRecoveryInfo({
+                    hasWhatsApp: res.hasWhatsApp,
+                    whatsappNumber: res.whatsappNumber || null,
+                    resetToken: res.resetToken
+                })
+                setStep(2)
+            }
         }
         setLoading(false)
     }
