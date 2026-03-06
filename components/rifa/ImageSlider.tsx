@@ -65,6 +65,33 @@ export function ImageSlider({ images, title }: ImageSliderProps) {
                 />
             </div>
 
+            {/* Thumbnail Gallery - Elite Mobile Experience */}
+            <div className="absolute bottom-4 left-0 right-0 z-30 px-4 md:hidden">
+                <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar snap-x snap-mandatory justify-center">
+                    {images.map((img, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => setCurrentIndex(idx)}
+                            className={cn(
+                                "relative size-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 snap-center",
+                                currentIndex === idx
+                                    ? "border-white shadow-lg scale-110 z-10"
+                                    : "border-white/20 opacity-60 grayscale-[0.5]"
+                            )}
+                        >
+                            <Image
+                                src={img}
+                                alt={`Miniatura ${idx + 1}`}
+                                fill
+                                className="object-cover"
+                                sizes="48px"
+                                unoptimized
+                            />
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             {/* Left Arrow */}
             <button
                 onClick={handlePrev}
@@ -83,8 +110,8 @@ export function ImageSlider({ images, title }: ImageSliderProps) {
                 <ChevronRight size={22} />
             </button>
 
-            {/* Dots Navigation */}
-            <div className="absolute bottom-3 md:bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
+            {/* Dots Navigation - Desktop View */}
+            <div className="absolute bottom-3 md:bottom-4 left-0 right-0 hidden md:flex justify-center gap-2 z-20">
                 {images.map((_, idx) => (
                     <button
                         key={idx}

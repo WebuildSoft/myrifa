@@ -1,11 +1,18 @@
 import { auth } from "@/auth"
-import { Search } from "lucide-react"
+import { Search, User as UserIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { NotificationBell } from "./NotificationBell"
+import { prisma } from "@/lib/prisma"
+import Image from "next/image"
 
 export async function Header() {
     const session = await auth()
-    const user = session?.user
+    if (!session?.user?.id) return null
+
+    const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { name: true, image: true }
+    })
 
     return (
         <header className="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-30 px-8 hidden md:flex items-center justify-between border-b border-primary/5">
@@ -29,8 +36,18 @@ export async function Header() {
                             Organizador
                         </p>
                     </div>
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/5 text-primary font-bold shadow-sm">
-                        {user?.name?.charAt(0).toUpperCase() || "U"}
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/5 text-primary font-bold shadow-sm overflow-hidden relative">
+                        {user?.image ? (
+                            <Image
+                                src={user.image}
+                                alt={user.name || "User"}
+                                fill
+                                className="object-cover"
+                                unoptimized
+                            />
+                        ) : (
+                            <UserIcon className="size-5" />
+                        )}
                     </div>
                 </div>
             </div>

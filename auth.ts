@@ -21,6 +21,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             // No login inicial, o "user" virá preenchido.
             if (user) {
                 token.role = (user as any).role
+                token.plan = (user as any).plan
                 token.id = user.id
 
                 // Registra/Renova a autorização da Sessão no Redis
@@ -54,6 +55,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             if (session.user) {
                 session.user.id = (token.id || token.sub) as string
                 session.user.role = token.role as string
+                session.user.plan = token.plan as string
             }
             return session
         }

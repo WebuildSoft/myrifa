@@ -50,20 +50,20 @@ export function DashboardStats({ totalRaised, activeRifasCount, ticketsSold }: D
     ]
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 font-sans">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 font-sans">
             {stats.map((stat, i) => (
-                <Card key={i} className="bg-white dark:bg-slate-900 border-primary/5 shadow-sm rounded-2xl overflow-hidden group hover:shadow-md transition-all">
-                    <CardContent className="p-6">
-                        <div className="flex justify-between items-start mb-4">
-                            <div className={`p-2.5 rounded-xl ${stat.iconBg}`}>
-                                <stat.icon className="h-5 w-5" />
+                <Card key={i} className="bg-white dark:bg-slate-900 border-primary/5 shadow-sm rounded-xl md:rounded-2xl overflow-hidden group hover:shadow-md transition-all">
+                    <CardContent className="p-4 md:p-6 flex flex-col items-center text-center">
+                        <div className="w-full flex justify-between items-start mb-3 md:mb-4">
+                            <div className={`p-2 md:p-2.5 rounded-lg md:rounded-xl ${stat.iconBg}`}>
+                                <stat.icon className="size-4 md:size-5" />
                             </div>
                             <Badge className={`${stat.trendColor} border-none font-bold text-[10px] hover:opacity-80`}>
                                 {stat.trend}
                             </Badge>
                         </div>
-                        <p className="text-slate-500 text-sm font-semibold tracking-tight uppercase">{stat.label}</p>
-                        <h3 className="text-2xl font-bold mt-1 tracking-tight text-foreground">{stat.value}</h3>
+                        <p className="text-slate-500 text-[10px] md:text-sm font-semibold tracking-tight uppercase">{stat.label}</p>
+                        <h3 className="text-lg md:text-2xl font-bold mt-1 tracking-tight text-foreground">{stat.value}</h3>
                     </CardContent>
                 </Card>
             ))}

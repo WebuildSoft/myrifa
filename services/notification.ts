@@ -80,6 +80,14 @@ export class NotificationService {
                 `Venda concluída com sucesso!`
         }
 
-        return sendWhatsAppMessage(whatsapp, message)
+        try {
+            console.log(`[Organizer-Alert] Sending ${type} alert to ${whatsapp}...`)
+            const result = await sendWhatsAppMessage(whatsapp, message)
+            console.log(`[Organizer-Alert] Result:`, result)
+            return result
+        } catch (error) {
+            console.error(`[Organizer-Alert] Error sending ${type} alert:`, error)
+            return null
+        }
     }
 }

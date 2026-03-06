@@ -12,6 +12,7 @@ interface Transaction {
     numbers: number[]
     amount: any
     status: string
+    destination: 'PLATFORM' | 'ORGANIZER'
     createdAt: Date
 }
 
@@ -43,6 +44,7 @@ export function TransactionTable({ transactions, rifaId }: TransactionTableProps
                             <th className="px-8 py-5">Comprador</th>
                             <th className="px-8 py-5">Números</th>
                             <th className="px-8 py-5">Valor</th>
+                            <th className="px-8 py-5">Destino</th>
                             <th className="px-8 py-5">Data/Hora</th>
                             <th className="px-8 py-5">Status</th>
                             <th className="px-8 py-5 text-right">Ações</th>
@@ -72,6 +74,17 @@ export function TransactionTable({ transactions, rifaId }: TransactionTableProps
                                     </td>
                                     <td className="px-8 py-5 font-black text-primary">
                                         {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(tx.amount))}
+                                    </td>
+                                    <td className="px-8 py-5">
+                                        {tx.destination === 'PLATFORM' ? (
+                                            <Badge variant="outline" className="border-primary/30 text-primary text-[8px] font-black uppercase tracking-tighter bg-primary/5">
+                                                Manutenção/Comissão
+                                            </Badge>
+                                        ) : (
+                                            <Badge variant="outline" className="border-emerald-500/30 text-emerald-600 text-[8px] font-black uppercase tracking-tighter bg-emerald-500/5">
+                                                Seu Recebimento
+                                            </Badge>
+                                        )}
                                     </td>
                                     <td className="px-8 py-5 text-slate-400 font-bold">
                                         {new Date(tx.createdAt).toLocaleString("pt-BR", { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}

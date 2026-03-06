@@ -83,7 +83,10 @@ export default function NovaRifaPage({ userPlan }: NovaRifaPageProps) {
         formData.append("organizerWhatsapp", rifaInfo.organizerWhatsapp)
         formData.append("coverImage", coverImage)
         formData.append("images", galleryImages.join(","))
-        formData.append("prizes", JSON.stringify(prizes.filter(p => p.title.trim() !== "")))
+
+        // Filter out empty prizes explicitly
+        const validPrizes = prizes.filter(p => p.title.trim() !== "")
+        formData.append("prizes", JSON.stringify(validPrizes))
 
         const res = await createRifaAction(formData)
 

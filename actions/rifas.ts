@@ -36,3 +36,7 @@ export async function cancelarRifaAction(rifaId: string) {
 export async function deleteRifaAction(rifaId: string) {
     return Status.deleteRifaAction(rifaId)
 }
+
+export async function testNotificationAction(whatsapp: string) {
+    return Update.testNotificationAction(whatsapp)
+}

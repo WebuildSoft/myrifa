@@ -113,16 +113,16 @@ export function ReviewStep({
 
                 {/* Financial Summary & Marketing */}
                 <div className="space-y-6">
-                    <div className="p-8 rounded-[2.5rem] bg-slate-900 text-white shadow-2xl relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-8 opacity-10">
+                    <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white shadow-2xl relative overflow-hidden group border border-white/5">
+                        <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
                             <TrendingUp className="h-20 w-20" />
                         </div>
                         <div className="relative z-10 space-y-6">
                             <div className="space-y-1">
-                                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Resumo Financeiro</p>
+                                <p className="text-slate-300 text-[10px] font-bold uppercase tracking-widest opacity-80">Resumo Financeiro</p>
                                 <div className="flex items-baseline gap-2">
-                                    <h3 className="text-3xl font-black tracking-tight">{formatCurrency(totalRevenue)}</h3>
-                                    <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Arrecadação Total</span>
+                                    <h3 className="text-4xl font-black tracking-tight text-white">{formatCurrency(totalRevenue)}</h3>
+                                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Arrecadação Total</span>
                                 </div>
                             </div>
 
@@ -130,24 +130,24 @@ export function ReviewStep({
 
                             <div className="grid grid-cols-2 gap-8">
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cotas</p>
-                                    <p className="text-xl font-black">{totalNumbers}</p>
-                                    <p className="text-[10px] text-slate-500 font-bold italic">{formatCurrency(numberPrice)} /cada</p>
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider italic">Total de Cotas</p>
+                                    <p className="text-2xl font-black text-white">{totalNumbers}</p>
+                                    <p className="text-[10px] text-slate-400 font-bold italic">{formatCurrency(numberPrice)} /cada</p>
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-bold text-primary uppercase tracking-wider">Lucro Estimado do Organizador</p>
-                                    <p className="text-xl font-black text-primary">{formatCurrency(estimatedProfit)}</p>
-                                    <p className="text-[10px] text-slate-500 font-bold italic">Livre de Taxas</p>
+                                    <p className="text-[10px] font-bold text-primary uppercase tracking-wider">Lucro Estimado</p>
+                                    <p className="text-2xl font-black text-primary drop-shadow-[0_0_10px_rgba(var(--primary),0.2)]">{formatCurrency(estimatedProfit)}</p>
+                                    <p className="text-[10px] text-slate-400 font-bold italic">Livre de Taxas</p>
                                 </div>
                             </div>
 
-                            <div className="mt-6 p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
-                                <div className="flex items-center gap-2">
+                            <div className="mt-6 p-5 rounded-3xl bg-white/5 border border-white/10 space-y-3">
+                                <div className="flex items-center justify-between">
                                     <span className="text-[10px] font-black uppercase text-slate-400">Manutenção da Plataforma ({feePercentage * 100}%)</span>
-                                    <span className="text-[10px] font-black text-red-400">-{formatCurrency(platformFee)}</span>
+                                    <span className="text-xs font-black text-red-400">-{formatCurrency(platformFee)}</span>
                                 </div>
-                                <p className="text-[9px] text-slate-500 leading-tight font-medium italic">
-                                    Este valor é destinado ao custeio de infraestrutura, gateways de pagamento PIX e segurança da sua campanha.
+                                <p className="text-[10px] text-slate-400 leading-tight font-medium italic opacity-70">
+                                    Este valor é destinado ao custeio de infraestrutura, gateways de pagamento e segurança da sua campanha.
                                 </p>
                             </div>
                         </div>
@@ -173,16 +173,33 @@ export function ReviewStep({
                 </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-slate-100 dark:border-slate-800">
-                <Button type="button" variant="outline" size="lg" className="flex-1 h-14 rounded-2xl font-bold uppercase text-xs tracking-widest" onClick={onKeepDraft}>
-                    Manter como Rascunho
+            <div className="flex flex-col sm:flex-row-reverse gap-4 pt-6 border-t border-slate-100 dark:border-slate-800">
+                <Button
+                    type="button"
+                    size="lg"
+                    className="flex-[2] h-16 rounded-2xl font-black bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 text-white uppercase text-xs tracking-widest gap-3 transition-all active:scale-95"
+                    onClick={onPublish}
+                    disabled={loading}
+                >
+                    <Rocket className={`h-5 w-5 ${loading ? 'animate-bounce' : 'animate-pulse'}`} />
+                    {loading ? "Ativando..." : "Lançar Campanha Agora 🚀"}
                 </Button>
-                <Button type="button" size="lg" className="flex-1 h-14 rounded-2xl font-bold shadow-lg shadow-primary/20 text-white uppercase text-xs tracking-widest" onClick={onPublish} disabled={loading}>
-                    {loading ? "Ativando..." : "Ativar Campanha Agora 🚀"}
-                </Button>
-                {rifaId && (
-                    <ShareRaffleModal raffleUrl={`${origin}/r/${rifaId}`} raffleTitle={title} />
-                )}
+
+                <div className="flex flex-col sm:flex-row flex-1 gap-4">
+                    {rifaId && (
+                        <ShareRaffleModal raffleUrl={`${origin}/r/${rifaId}`} raffleTitle={title} />
+                    )}
+
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="lg"
+                        className="flex-1 h-16 rounded-2xl font-bold uppercase text-[10px] tracking-widest border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all"
+                        onClick={onKeepDraft}
+                    >
+                        Salvar Rascunho
+                    </Button>
+                </div>
             </div>
         </div>
     )

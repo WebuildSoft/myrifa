@@ -16,6 +16,10 @@ import { updateRifaAction } from "@/actions/rifas"
 import { toast } from "sonner"
 import { ImageUpload } from "@/components/ui/image-upload"
 import Image from "next/image"
+import { ThemePicker } from "@/components/dashboard/rifas/nova/ThemePicker"
+import { ShapePicker } from "@/components/dashboard/rifas/nova/ShapePicker"
+import { RifaTheme } from "@/lib/themes"
+import { BalloonShape } from "@prisma/client"
 
 interface EditRifaFormProps {
     rifa: {
@@ -25,9 +29,12 @@ interface EditRifaFormProps {
         rules: string | null
         coverImage: string | null
         images: string[]
+        theme: RifaTheme
+        balloonShape: BalloonShape
         notifyOrganizer: boolean
         organizerWhatsapp: string | null
     }
+    userPlan: string
     initialPrizes: {
         id?: string
         title: string
@@ -35,19 +42,23 @@ interface EditRifaFormProps {
     }[]
 }
 
-export default function EditRifaForm({ rifa, initialPrizes }: EditRifaFormProps) {
+export default function EditRifaForm({ rifa, initialPrizes, userPlan }: EditRifaFormProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
-    const [coverImage, setCoverImage] = useState(rifa.coverImage || "") // Added state for coverImage
-    const [galleryImages, setGalleryImages] = useState<string[]>(rifa.images || []) // Added state for galleryImages
+    const [coverImage, setCoverImage] = useState(rifa.coverImage || "")
+    const [galleryImages, setGalleryImages] = useState<string[]>(rifa.images || [])
+    const [theme, setTheme] = useState<RifaTheme>(rifa.theme)
+    const [shape, setShape] = useState<BalloonShape>(rifa.balloonShape)
     const [notifyOrganizer, setNotifyOrganizer] = useState(rifa.notifyOrganizer || false)
     const [organizerWhatsapp, setOrganizerWhatsapp] = useState(rifa.organizerWhatsapp || "")
     const [prizes, setPrizes] = useState((initialPrizes && initialPrizes.length > 0) ? initialPrizes : [{ title: "", position: 1 }])
 
     async function handleSubmit(formData: FormData) {
         setLoading(true)
-        formData.set("coverImage", coverImage) // Added coverImage to formData
-        formData.set("images", galleryImages.join(",")) // Added images to formData
+        formData.set("coverImage", coverImage)
+        formData.set("images", galleryImages.join(","))
+        formData.set("theme", theme)
+        formData.set("balloonShape", shape)
         formData.set("notifyOrganizer", notifyOrganizer.toString())
         formData.set("organizerWhatsapp", organizerWhatsapp)
         formData.set("prizes", JSON.stringify(prizes.filter(p => p.title.trim() !== "")))
@@ -207,6 +218,23 @@ export default function EditRifaForm({ rifa, initialPrizes }: EditRifaFormProps)
                                 )}
                             </div>
                             <p className="text-[10px] text-slate-400 font-medium ml-1">Máximo 5 imagens na galeria.</p>
+                        </div>
+                    </div>
+
+                    <div className="grid gap-8 pt-6 border-t border-slate-50 dark:border-slate-800">
+                        <div className="space-y-6">
+                            <ThemePicker
+                                value={theme}
+                                onChange={setTheme}
+                                userPlan={userPlan}
+                            />
+                            <div className="pt-4 border-t border-slate-50 dark:border-slate-800">
+                                <ShapePicker
+                                    value={shape}
+                                    onChange={setShape}
+                                    userPlan={userPlan}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

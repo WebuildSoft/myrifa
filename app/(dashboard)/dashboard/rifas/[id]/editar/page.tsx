@@ -22,6 +22,9 @@ export default async function EditarRifaPage({ params }: { params: Promise<{ id:
             userId: session.user.id
         },
         include: {
+            user: {
+                select: { plan: true }
+            },
             prizes: {
                 orderBy: { position: "asc" }
             }
@@ -78,9 +81,12 @@ export default async function EditarRifaPage({ params }: { params: Promise<{ id:
                         rules: rifa.rules,
                         coverImage: rifa.coverImage,
                         images: rifa.images,
+                        theme: rifa.theme,
+                        balloonShape: rifa.balloonShape,
                         notifyOrganizer: rifa.notifyOrganizer,
                         organizerWhatsapp: rifa.organizerWhatsapp
                     }}
+                    userPlan={rifa.user.plan}
                     initialPrizes={rifa.prizes.map((p) => ({
                         id: p.id,
                         title: p.title,

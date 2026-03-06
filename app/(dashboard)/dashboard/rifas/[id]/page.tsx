@@ -159,6 +159,7 @@ export default async function RifaDetailsPage({ params }: { params: Promise<{ id
                         numbers: tx.numbers,
                         amount: Number(tx.amount),
                         status: tx.status,
+                        destination: tx.destination,
                         createdAt: tx.createdAt
                     }))}
                     rifaId={rifa.id}

@@ -2,17 +2,19 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
-import { Save, Lock, Globe, Palette, Calendar, AlertTriangle } from "lucide-react"
+import { Save, Lock, Globe, Palette, Calendar, AlertTriangle, Sparkles } from "lucide-react"
 import { toast } from "sonner"
 import {
     updateRifaConfigAction,
     encerrarVendasAction,
-    cancelarRifaAction
+    cancelarRifaAction,
+    testNotificationAction
 } from "@/actions/rifas"
 import {
     AlertDialog,
@@ -28,9 +30,11 @@ import {
 
 interface ConfiguracoesClientProps {
     rifa: any
+    userPlan?: string
 }
 
-export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
+export function ConfiguracoesClient({ rifa, userPlan = "FREE" }: ConfiguracoesClientProps) {
+    const isPro = userPlan === "PRO" || userPlan === "INSTITUTIONAL"
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const [isPrivate, setIsPrivate] = useState(rifa.isPrivate)
@@ -170,9 +174,29 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
                         </div>
                     )}
                 </CardContent>
-                <CardFooter className="bg-muted/50 border-t px-6 py-4">
+                <CardFooter className="bg-muted/50 border-t px-6 py-4 flex flex-col md:flex-row gap-4">
+                    {notifyOrganizer && organizerWhatsapp && (
+                        <Button
+                            variant="outline"
+                            className="w-full md:w-auto border-green-200 text-green-600 hover:bg-green-50"
+                            onClick={async () => {
+                                const loadingToast = toast.loading("Enviando teste...")
+                                const res = await testNotificationAction(organizerWhatsapp)
+                                toast.dismiss(loadingToast)
+                                if (res.success) {
+                                    toast.success("Mensagem de teste enviada!")
+                                } else {
+                                    toast.error(res.error || "Erro ao enviar teste")
+                                }
+                            }}
+                            disabled={isLoading}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg>
+                            Enviar Teste
+                        </Button>
+                    )}
                     <Button
-                        className="ml-auto"
+                        className="w-full md:w-auto ml-auto"
                         onClick={handleSaveBasicConfigs}
                         disabled={isLoading}
                     >
@@ -226,27 +250,51 @@ export function ConfiguracoesClient({ rifa }: ConfiguracoesClientProps) {
                 </CardFooter>
             </Card>
 
-            <Card className="border-primary/20 bg-primary/5">
+            <Card className={cn(
+                "border-primary/20",
+                isPro ? "bg-gradient-to-br from-indigo-500/5 via-primary/5 to-purple-500/5" : "bg-primary/5"
+            )}>
                 <CardHeader>
                     <div className="flex items-center gap-2">
                         <Palette className="h-5 w-5 text-primary" />
-                        <CardTitle className="text-primary">Customização Pro</CardTitle>
+                        <CardTitle className="text-primary">Aparência e Temas</CardTitle>
                     </div>
                     <CardDescription>
-                        Destaque sua campanha com ferramentas visuais exclusivas.
+                        {isPro
+                            ? "Personalize as cores e o formato das cotas da sua campanha."
+                            : "Destaque sua campanha com ferramentas visuais exclusivas."
+                        }
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-center py-6 px-4 border-2 border-dashed border-primary/20 rounded-xl bg-background/50">
-                        <Lock className="h-8 w-8 text-primary/40 mx-auto mb-2" />
-                        <h4 className="font-bold text-primary">Funcionalidade Exclusiva PRO</h4>
-                        <p className="text-sm text-muted-foreground max-w-xs mx-auto mt-1 mb-4">
-                            Faça upgrade no seu plano para alterar cores, formas de balões e adicionar imagens na galeria.
-                        </p>
-                        <Button variant="default" onClick={() => router.push("/assinatura")}>
-                            Ver Planos
-                        </Button>
-                    </div>
+                    {isPro ? (
+                        <div className="flex flex-col items-center text-center py-6 px-4 border-2 border-dashed border-primary/20 rounded-xl bg-background/40">
+                            <Sparkles className="h-8 w-8 text-primary/60 mx-auto mb-2 animate-pulse" />
+                            <h4 className="font-bold text-primary">Modo Customização Liberado</h4>
+                            <p className="text-sm text-muted-foreground max-w-sm mx-auto mt-1 mb-4">
+                                Você tem acesso a todos os temas premium e formatos exclusivos. Altere agora na tela de edição.
+                            </p>
+                            <Button
+                                variant="default"
+                                className="font-bold gap-2 shadow-lg shadow-primary/20"
+                                onClick={() => router.push(`/dashboard/rifas/${rifa.id}/editar`)}
+                            >
+                                <Palette className="h-4 w-4" />
+                                Personalizar Visual Agora
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="text-center py-6 px-4 border-2 border-dashed border-primary/20 rounded-xl bg-background/50">
+                            <Lock className="h-8 w-8 text-primary/40 mx-auto mb-2" />
+                            <h4 className="font-bold text-primary">Funcionalidade Exclusiva PRO</h4>
+                            <p className="text-sm text-muted-foreground max-w-xs mx-auto mt-1 mb-4">
+                                Faça upgrade no seu plano para alterar cores, formas de balões e adicionar imagens na galeria.
+                            </p>
+                            <Button variant="default" onClick={() => router.push("/assinatura")}>
+                                Ver Planos
+                            </Button>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 

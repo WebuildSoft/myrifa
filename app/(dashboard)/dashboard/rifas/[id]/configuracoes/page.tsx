@@ -17,6 +17,11 @@ export default async function RifaConfigPage({ params }: { params: Promise<{ id:
         where: {
             id,
             userId: session.user.id
+        },
+        include: {
+            user: {
+                select: { plan: true }
+            }
         }
     })
 
@@ -38,7 +43,7 @@ export default async function RifaConfigPage({ params }: { params: Promise<{ id:
                 </div>
             </div>
 
-            <ConfiguracoesClient rifa={rifa} />
+            <ConfiguracoesClient rifa={rifa} userPlan={rifa.user.plan} />
         </div>
     )
 }

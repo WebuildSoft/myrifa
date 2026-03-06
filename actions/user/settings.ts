@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { revalidatePath } from "next/cache"
+import bcrypt from "bcrypt"
 
 export async function saveMercadoPagoToken(token: string) {
     try {
@@ -65,5 +66,76 @@ export async function saveManualPixSettings({ pixKey, pixQrCodeImage }: { pixKey
     } catch (error) {
         console.error("Error saving Manual PIX settings:", error)
         return { error: "Erro ao salvar configurações de PIX." }
+    }
+}
+
+export async function updateUserImage(imageUrl: string) {
+    try {
+        const session = await auth()
+        if (!session?.user?.id) return { error: "Não autorizado." }
+
+        await prisma.user.update({
+            where: { id: session.user.id },
+            data: { image: imageUrl }
+        })
+
+        revalidatePath('/conta')
+        revalidatePath('/dashboard', 'layout')
+        revalidatePath('/', 'layout')
+        return { success: true }
+    } catch (error) {
+        return { error: "Erro ao atualizar imagem." }
+    }
+}
+
+export async function updateUserPassword(data: { current: string; new: string }) {
+    try {
+        const session = await auth()
+        if (!session?.user?.id) return { error: "Não autorizado." }
+
+        const user = await prisma.user.findUnique({
+            where: { id: session.user.id }
+        })
+
+        if (!user || !user.password) return { error: "Usuário não encontrado ou senha não definida." }
+
+        const isCorrect = await bcrypt.compare(data.current, user.password)
+        if (!isCorrect) return { error: "A senha atual está incorreta." }
+
+        const hashed = await bcrypt.hash(data.new, 10)
+
+        await prisma.user.update({
+            where: { id: session.user.id },
+            data: { password: hashed }
+        })
+
+        revalidatePath('/conta')
+        return { success: true, message: "Senha atualizada com sucesso!" }
+    } catch (error) {
+        console.error("Password update error:", error)
+        return { error: "Erro ao atualizar senha." }
+    }
+}
+
+export async function updatePersonalData(data: { name: string; whatsapp: string }) {
+    try {
+        const session = await auth()
+        if (!session?.user?.id) return { error: "Não autorizado." }
+
+        await prisma.user.update({
+            where: { id: session.user.id },
+            data: {
+                name: data.name,
+                whatsapp: data.whatsapp
+            }
+        })
+
+        revalidatePath('/conta')
+        revalidatePath('/dashboard', 'layout')
+        revalidatePath('/', 'layout')
+        return { success: true, message: "Perfil atualizado com sucesso!" }
+    } catch (error) {
+        console.error("Profile update error:", error)
+        return { error: "Erro ao atualizar perfil." }
     }
 }

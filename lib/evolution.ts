@@ -16,11 +16,19 @@ export async function sendWhatsAppMessage(to: string, message: string) {
         return null
     }
 
-    // Clean number (remove non-digits, ensure country code)
+    // Clean number (remove non-digits)
     let cleanTo = to.replace(/\D/g, '')
-    if (!cleanTo.startsWith('55')) {
+
+    // Auto-fix Brazilian numbers
+    if (cleanTo.length >= 10 && cleanTo.length <= 11 && !cleanTo.startsWith('55')) {
         cleanTo = '55' + cleanTo
     }
+
+    // Evolution API / WhatsApp JID logic for Brazil:
+    // Numbers with 13 digits (55 + DDD + 9 + number) are often normalized 
+    // to 12 digits (55 + DDD + number) by the API/WhatsApp itself.
+    // However, some instances require the 9. We'll keep what's provided 
+    // but ensure the country code is present.
 
     try {
         const url = `${EVOLUTION_API_URL}/message/sendText/${EVOLUTION_INSTANCE}`

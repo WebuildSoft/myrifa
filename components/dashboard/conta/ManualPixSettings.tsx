@@ -10,6 +10,12 @@ import { saveManualPixSettings } from "@/actions/user/settings"
 import { uploadImageAction } from "@/actions/upload"
 import { toast } from "sonner"
 import Image from "next/image"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface ManualPixSettingsProps {
     initialPixKey?: string | null
@@ -66,123 +72,181 @@ export function ManualPixSettings({ initialPixKey, initialPixQrCodeImage }: Manu
     const hasChanges = pixKey !== (initialPixKey || "") || pixQrCodeImage !== (initialPixQrCodeImage || "")
 
     return (
-        <Card className="border-emerald-200 bg-emerald-50/30 dark:bg-emerald-900/5">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <div className="size-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white">
+        <Card className="border-slate-200/60 dark:border-slate-800/60 bg-white dark:bg-slate-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-2xl md:rounded-[2rem] overflow-hidden">
+            <CardHeader className="border-b border-slate-100 dark:border-slate-800/50 p-5 md:p-6 pb-4">
+                <div className="flex items-center gap-3">
+                    <div className="size-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
                         <QrCode className="size-5" />
                     </div>
-                    PIX Manual (Recebimento Direto)
-                </CardTitle>
-                <CardDescription>
-                    Configure sua chave PIX e QR Code para receber pagamentos diretamente, sem depender de plataformas externas. Você precisará confirmar os pagamentos manualmente.
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                {/* Aviso de Transparência */}
-                <div className="p-4 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-emerald-100 dark:border-emerald-800/30 space-y-3">
-                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-500">
-                        <ShieldCheck className="w-4 h-4" />
-                        <span className="text-xs font-black uppercase tracking-wider">Transparência nas Taxas</span>
+                    <div>
+                        <CardTitle className="text-lg font-black tracking-tight italic">PIX Manual (Recebimento Direto)</CardTitle>
+                        <CardDescription className="text-[10px] font-medium text-slate-500 leading-relaxed max-w-md">
+                            Configure sua chave PIX e QR Code para receber pagamentos diretamente, sem depender de plataformas externas. Você precisará confirmar os pagamentos manualmente.
+                        </CardDescription>
                     </div>
-                    <div className="space-y-2">
-                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-                            Ao usar o PIX Manual, a comissão de <strong>5% da plataforma</strong> (destinada à infraestrutura e WhatsApp) é coletada através do <strong>Split Inteligente</strong>.
+                </div>
+            </CardHeader>
+            <CardContent className="p-5 md:p-6 space-y-6">
+                {/* Nota de Transparência de Luxo */}
+                <div className="relative group overflow-hidden rounded-2xl border border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/30 dark:bg-emerald-950/20 p-5">
+                    <div className="absolute -right-4 -top-4 size-24 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-colors" />
+
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className="p-1.5 bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-emerald-100 dark:border-emerald-900/20">
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                        </div>
+                        <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">Transparência nas Taxas</h4>
+                    </div>
+
+                    <div className="space-y-4 relative z-10">
+                        <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                            Ao usar o PIX Manual, a comissão de <strong className="text-emerald-600 font-black">5% da plataforma</strong> (destinada à infraestrutura e WhatsApp) é coletada através do{" "}
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <strong className="italic text-emerald-600 underline decoration-emerald-500/30 underline-offset-4 cursor-help hover:text-emerald-500 transition-colors">
+                                        Split Inteligente
+                                    </strong>
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-slate-900 border-slate-800 text-white p-3 rounded-xl shadow-2xl max-w-xs">
+                                    <div className="space-y-2">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">O que é Split?</p>
+                                        <p className="text-[11px] leading-relaxed text-slate-300">
+                                            É a <span className="text-emerald-400 font-bold">divisão automática</span> de pagamentos (do inglês <span className="italic text-slate-400">partition</span>).
+                                        </p>
+                                        <p className="text-[11px] leading-relaxed text-slate-400">
+                                            Isso garante que a comissão seja separada para manter sua infraestrutura e WhatsApp ativos, sem que você precise fazer repasses manuais depois.
+                                        </p>
+                                    </div>
+                                </TooltipContent>
+                            </Tooltip>
+                            .
                         </p>
-                        <div className="flex items-start gap-2 bg-emerald-50 dark:bg-emerald-900/10 p-2.5 rounded-xl border border-emerald-100/50 dark:border-emerald-800/20">
-                            <Info className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                            <p className="text-[10px] text-emerald-700 dark:text-emerald-400 leading-tight">
-                                O sistema alternará automaticamente algumas vendas para o checkout oficial da plataforma até que o valor da manutenção seja quitado. Após isso, <strong>100% das vendas restantes</strong> cairão direto na sua conta.
+
+                        <div className="flex gap-3 p-3 rounded-xl bg-white/50 dark:bg-slate-950/40 border border-emerald-100/50 dark:border-emerald-900/20 shadow-sm">
+                            <Info className="size-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                            <p className="text-[10px] text-emerald-800 dark:text-emerald-300/80 leading-relaxed font-bold">
+                                O sistema alternará automaticamente algumas vendas para o checkout oficial da plataforma até que o valor da manutenção seja quitado. Após isso, <span className="text-emerald-600 dark:text-emerald-400">100% das vendas restantes</span> cairão direto na sua conta.
                             </p>
                         </div>
                     </div>
                 </div>
-                <div className="space-y-2">
-                    <Label htmlFor="pixKey">Sua Chave PIX</Label>
-                    <div className="relative">
-                        <Copy className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                            id="pixKey"
-                            value={pixKey}
-                            onChange={(e) => setPixKey(e.target.value)}
-                            className="pl-10"
-                            placeholder="CPF, E-mail, Celular ou Chave Aleatória"
-                        />
+
+                <div className="space-y-6">
+                    <div className="space-y-2">
+                        <Label htmlFor="pixKey" className="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 ml-1">Chave PIX de Recebimento</Label>
+                        <div className="relative group">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <Copy className="h-4 w-4 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                            </div>
+                            <Input
+                                id="pixKey"
+                                value={pixKey}
+                                onChange={(e) => setPixKey(e.target.value)}
+                                className="pl-12 h-12 bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 rounded-xl focus:border-emerald-500 focus-visible:ring-emerald-500/10 transition-all font-bold text-base tracking-tight shadow-sm"
+                                placeholder="CPF, E-mail ou Chave Aleatória"
+                            />
+                            {pixKey && (
+                                <div className="absolute right-3 top-2.5 px-3 py-1 bg-emerald-500/10 text-emerald-600 rounded-lg text-[9px] font-black uppercase tracking-tighter shadow-inner border border-emerald-500/10">
+                                    OK
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    <p className="text-[10px] text-muted-foreground">
-                        Esta chave será exibida para o comprador no momento do checkout.
-                    </p>
-                </div>
 
-                <div className="space-y-3">
-                    <Label>QR Code (Imagem)</Label>
+                    <div className="p-4 rounded-3xl bg-slate-50 dark:bg-slate-950/50 border border-slate-100 dark:border-slate-800 space-y-4">
+                        <div className="flex items-center gap-3">
+                            <div className="p-1.5 bg-emerald-500/10 rounded-lg">
+                                <QrCode className="size-3.5 text-emerald-500" />
+                            </div>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">QR Code Estático</span>
+                        </div>
 
-                    {pixQrCodeImage ? (
-                        <div className="relative w-40 h-40 border-2 border-emerald-200 rounded-2xl overflow-hidden group">
-                            <Image
-                                src={pixQrCodeImage}
-                                alt="QR Code PIX"
-                                fill
-                                className="object-contain p-2"
-                                unoptimized
-                            />
-                            <button
-                                onClick={() => setPixQrCodeImage("")}
-                                className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                            >
-                                <X className="size-4" />
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="relative">
-                            <input
-                                type="file"
-                                id="pixQrUpload"
-                                className="hidden"
-                                accept="image/*"
-                                onChange={handleFileUpload}
-                                disabled={isUploading}
-                            />
-                            <label
-                                htmlFor="pixQrUpload"
-                                className="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed border-emerald-300 dark:border-emerald-800 rounded-2xl cursor-pointer hover:bg-emerald-100/50 dark:hover:bg-emerald-900/20 transition-all gap-2"
-                            >
-                                {isUploading ? (
-                                    <Loader2 className="size-8 text-emerald-500 animate-spin" />
-                                ) : (
-                                    <>
-                                        <Upload className="size-8 text-emerald-400" />
-                                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">Upload QR Code</span>
-                                    </>
-                                )}
-                            </label>
-                        </div>
-                    )}
-                    <p className="text-[10px] text-muted-foreground">
-                        Dica: Gere um QR Code estático no app do seu banco e faça o upload aqui.
-                    </p>
-                </div>
+                        <div className="flex flex-col sm:flex-row items-center gap-6">
+                            {pixQrCodeImage ? (
+                                <div className="relative group/qr p-2 bg-white rounded-2xl shadow-xl border border-slate-200 size-32 shrink-0">
+                                    <div className="relative w-full h-full overflow-hidden rounded-lg">
+                                        <Image
+                                            src={pixQrCodeImage}
+                                            alt="QR Code PIX"
+                                            fill
+                                            className="object-contain"
+                                            unoptimized
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={() => setPixQrCodeImage("")}
+                                        className="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-xl opacity-0 group-hover/qr:opacity-100 transition-all shadow-xl hover:scale-110 active:scale-90 z-20"
+                                    >
+                                        <X className="size-3.5" />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="relative size-32 shrink-0">
+                                    <input
+                                        type="file"
+                                        id="pixQrUpload"
+                                        className="hidden"
+                                        accept="image/*"
+                                        onChange={handleFileUpload}
+                                        disabled={isUploading}
+                                    />
+                                    <label
+                                        htmlFor="pixQrUpload"
+                                        className="flex flex-col items-center justify-center aspect-square w-full border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl cursor-pointer hover:bg-emerald-50/50 dark:hover:bg-emerald-500/5 hover:border-emerald-300 dark:hover:border-emerald-800 transition-all gap-2 group/upload"
+                                    >
+                                        {isUploading ? (
+                                            <Loader2 className="size-6 text-emerald-500 animate-spin" />
+                                        ) : (
+                                            <>
+                                                <div className="size-8 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center group-hover/upload:scale-110 group-hover/upload:bg-emerald-100 dark:group-hover/upload:bg-emerald-900/30 transition-all shadow-sm">
+                                                    <Upload className="size-4 text-slate-400 group-hover/upload:text-emerald-500" />
+                                                </div>
+                                                <span className="text-[8px] font-black text-slate-400 group-hover/upload:text-emerald-600 uppercase tracking-tight text-center px-2">Upload QR</span>
+                                            </>
+                                        )}
+                                    </label>
+                                </div>
+                            )}
 
-                <div className="pt-4 flex items-center justify-between border-t border-emerald-100 dark:border-emerald-800 border-dashed">
-                    {(initialPixKey || initialPixQrCodeImage) ? (
-                        <div className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-500 font-medium">
-                            <CheckCircle2 className="h-4 w-4" />
-                            Ativo no Checkout
+                            <div className="space-y-2 flex-1 text-center sm:text-left">
+                                <h5 className="text-xs font-bold text-slate-900 dark:text-white italic">Ativação Visual</h5>
+                                <p className="text-[11px] text-slate-500 leading-tight">
+                                    Otimize o checkout com o QR gerado pelo seu banco.
+                                </p>
+                                <div className="inline-flex items-center gap-2 px-2 py-0.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full">
+                                    <div className={`size-1 rounded-full ${pixQrCodeImage ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                                    <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">
+                                        {pixQrCodeImage ? "Configurado" : "Pendente"}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    ) : (
-                        <div className="text-sm text-yellow-600 dark:text-yellow-500 font-medium">
-                            Não configurado
-                        </div>
-                    )}
+                    </div>
 
-                    <Button
-                        onClick={handleSave}
-                        disabled={isLoading || isUploading || !hasChanges}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                    >
-                        {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                        Salvar Configurações
-                    </Button>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-slate-50 dark:border-slate-800/50">
+                        <div className="flex items-center gap-3">
+                            {initialPixKey || initialPixQrCodeImage ? (
+                                <div className="flex items-center gap-2 group/status">
+                                    <div className="size-2 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Ativo</span>
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2 grayscale brightness-125">
+                                    <div className="size-2 bg-slate-300 rounded-full" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Pendente</span>
+                                </div>
+                            )}
+                        </div>
+
+                        <Button
+                            onClick={handleSave}
+                            disabled={isLoading || isUploading || !hasChanges}
+                            className="h-11 px-6 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 active:scale-95 transition-all w-full sm:w-auto"
+                        >
+                            {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                            Salvar Alterações
+                        </Button>
+                    </div>
                 </div>
             </CardContent>
         </Card>

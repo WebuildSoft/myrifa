@@ -1,9 +1,15 @@
+"use client"
+
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Edit3, Trophy } from "lucide-react"
+import { ArrowRight, Edit3, Trophy, Rocket, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useState } from "react"
+import { publishRifaAction } from "@/actions/rifas"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 interface RifaCardAdminProps {
     rifa: {
@@ -18,6 +24,47 @@ interface RifaCardAdminProps {
         }
         prizes: { title: string; position: number }[]
     }
+}
+
+function PublishButton({ rifaId }: { rifaId: string }) {
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
+
+    const handlePublish = async () => {
+        setLoading(true)
+        const promise = publishRifaAction(rifaId)
+
+        toast.promise(promise, {
+            loading: 'Ativando campanha...',
+            success: (res) => {
+                if (res.success) {
+                    router.refresh()
+                    return 'Sua campanha está no ar! 🚀'
+                }
+                throw new Error(res.error || 'Erro ao publicar')
+            },
+            error: (err) => err.message || 'Erro ao publicar campanha',
+        })
+
+        try {
+            await promise
+        } catch (e) {
+            // Error handled by toast.promise
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return (
+        <Button
+            onClick={handlePublish}
+            disabled={loading}
+            className="h-10 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg shadow-emerald-500/20 px-4 transition-all active:scale-95"
+        >
+            {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Rocket className="h-3 w-3" />}
+            Publicar
+        </Button>
+    )
 }
 
 export function RifaCardAdmin({ rifa }: RifaCardAdminProps) {
@@ -105,7 +152,10 @@ export function RifaCardAdmin({ rifa }: RifaCardAdminProps) {
                                 }).format(Number(rifa.totalRaised))}
                             </p>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 items-center">
+                            {rifa.status === "DRAFT" && (
+                                <PublishButton rifaId={rifa.id} />
+                            )}
                             <Button size="icon" variant="outline" asChild className="w-10 h-10 rounded-xl bg-primary/5 border-none text-primary hover:bg-primary hover:text-white transition-all shadow-none">
                                 <Link href={`/dashboard/rifas/${rifa.id}/configuracoes`}>
                                     <Edit3 className="h-4 w-4" />

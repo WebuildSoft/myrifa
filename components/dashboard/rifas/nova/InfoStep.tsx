@@ -6,8 +6,42 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/ui/image-upload"
-import { FileText, X, ChevronRight } from "lucide-react"
+import { FileText, X, ChevronRight, Sparkles } from "lucide-react"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import Image from "next/image"
+
+const RULE_TEMPLATES = [
+    {
+        label: "Sorteio no Site (Digital)",
+        text: "- Sorteio processado por software auditável diretamente na plataforma.\n- O resultado é aleatório, transparente e divulgado instantaneamente após a venda de todas as cotas.\n- A tecnologia MyRifa garante a idoneidade do sorteio, sem intervenção humana no resultado."
+    },
+    {
+        label: "Pela Loteria Federal",
+        text: "- Sorteio baseado na extração da Loteria Federal.\n- A data será definida assim que 100% das cotas forem vendidas.\n- Utilizaremos os últimos dígitos do 1º prêmio para definir o ganhador.\n- Caso a extração seja adiada, prevalece a próxima data oficial da CEF."
+    },
+    {
+        label: "Regras de Pagamento & Reserva",
+        text: "- Reservas não pagas em até 30 minutos (ou prazo definido pelo sistema) são canceladas automaticamente.\n- O pagamento via PIX é identificado de imediato, sem necessidade de envio de comprovante.\n- Certifique-se de que os dados de contato (WhatsApp/E-mail) estão corretos para o recebimento de notificações."
+    },
+    {
+        label: "Segurança e Responsabilidade",
+        text: "- Esta plataforma é um serviço de licenciamento de software (SaaS).\n- O Organizador é o único responsável pela entrega do prêmio e pela legalidade da campanha.\n- Ao participar, o apoiador reconhece que sua relação jurídica é direta com o Organizador, conforme os Termos de Uso."
+    },
+    {
+        label: "Entrega e Premiação",
+        text: "- A entrega ou retirada do prêmio deve ser combinada diretamente com o Organizador.\n- O frete/envio do prêmio é por conta do ganhador, salvo se houver acordo contrário.\n- O ganhador tem o prazo de 30 dias para reivindicar seu brinde após a realização do sorteio."
+    },
+    {
+        label: "Arrecadação Solidária",
+        text: "- 100% dos valores arrecadados (subtraindo taxas bancárias) serão destinados à causa descrita.\n- O Organizador compromete-se a realizar a prestação de contas de forma transparente.\n- Esta ação não possui fins lucrativos para o organizador."
+    }
+]
 
 interface Prize {
     title: string
@@ -52,11 +86,16 @@ export function InfoStep({
             topRef.current?.scrollIntoView({ behavior: 'smooth' })
             return
         }
-        if (prizes.some(p => p.title.trim().length < 3)) {
-            setError("Todos os prêmios devem ter nomes válidos (mín. 3 caracteres).")
+
+        // Remove empty prizes before validation or just ignore them
+        const activePrizes = prizes.filter(p => p.title.trim().length > 0)
+
+        if (activePrizes.some(p => p.title.trim().length < 3)) {
+            setError("Os prêmios preenchidos devem ter no mínimo 3 caracteres.")
             topRef.current?.scrollIntoView({ behavior: 'smooth' })
             return
         }
+
         setError("")
         onNext()
     }
@@ -101,16 +140,35 @@ export function InfoStep({
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <Label htmlFor="rules" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
-                        Regras e Condições
-                        <span className="ml-2 text-[10px] text-slate-400 font-normal normal-case">(opcional)</span>
-                    </Label>
+                <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <Label htmlFor="rules" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
+                            Regras e Condições
+                            <span className="ml-2 text-[10px] text-slate-400 font-normal normal-case">(opcional)</span>
+                        </Label>
+
+                        <div className="flex items-center gap-2">
+                            <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
+                            <Select onValueChange={(val) => setRules(val)}>
+                                <SelectTrigger className="h-9 w-full sm:w-[220px] rounded-xl text-[10px] font-black uppercase tracking-wider bg-primary/5 border-primary/20 text-primary">
+                                    <SelectValue placeholder="USAR MODELO PRONTO" />
+                                </SelectTrigger>
+                                <SelectContent className="rounded-xl border-slate-200">
+                                    {RULE_TEMPLATES.map((template, idx) => (
+                                        <SelectItem key={idx} value={template.text} className="text-xs font-bold">
+                                            {template.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+
                     <textarea
                         id="rules"
                         name="rules"
-                        className="flex min-h-[100px] w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                        placeholder={`Ex:\n- Entrega garantida pela Instituição\n- Divulgação do resultado via redes sociais\n- Pagamento via PIX com confirmação automática`}
+                        className="flex min-h-[120px] w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                        placeholder="Escolha um modelo acima ou escreva as suas próprias regras..."
                         maxLength={2000}
                         value={rules}
                         onChange={(e) => setRules(e.target.value)}
@@ -121,7 +179,10 @@ export function InfoStep({
                 {/* Premiação Section */}
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <Label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Premiação da Campanha</Label>
+                        <Label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
+                            Premiação da Campanha
+                            <span className="ml-2 text-[10px] text-slate-400 font-normal normal-case">(opcional)</span>
+                        </Label>
                         <Button
                             type="button"
                             variant="outline"
@@ -142,7 +203,7 @@ export function InfoStep({
                                         <div className="h-4 w-px bg-slate-200"></div>
                                     </div>
                                     <Input
-                                        placeholder="Ex: iPhone 15 Pro Max"
+                                        placeholder="Ex: iPhone 15 Pro Max (opcional)"
                                         className="h-12 pl-16 rounded-xl border-slate-200 dark:border-slate-800"
                                         value={prize.title}
                                         onChange={(e) => {
@@ -189,42 +250,59 @@ export function InfoStep({
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-2">
-                    <ImageUpload
-                        label="Imagem de Capa"
-                        value={coverImage}
-                        onChange={setCoverImage}
-                        helperText="Foto principal do prêmio."
-                    />
-
                     <div className="space-y-3">
+                        <Label htmlFor="coverImage" className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1 flex items-center gap-2">
+                            Imagem de Capa
+                            <span className="text-[10px] text-slate-400 font-normal">(Principal)</span>
+                        </Label>
+                        <ImageUpload
+                            label=""
+                            value={coverImage}
+                            onChange={setCoverImage}
+                            helperText="Esta será a primeira imagem que seus clientes verão."
+                        />
+                    </div>
+
+                    <div className="space-y-3 overflow-hidden">
                         <Label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1 flex items-center gap-2">
                             Galeria de Fotos (até 5)
                             <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest">PRO</span>
                         </Label>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="flex md:grid md:grid-cols-2 gap-3 overflow-x-auto pb-4 md:pb-0 no-scrollbar snap-x snap-mandatory">
                             {galleryImages.map((img, i) => (
-                                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
-                                    <Image src={img} alt={`Gallery ${i}`} fill className="object-cover" />
+                                <div key={i} className="relative aspect-square w-[140px] h-[140px] md:w-auto md:h-auto rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex-shrink-0 snap-center shadow-sm">
+                                    <Image src={img} alt={`Gallery ${i}`} fill className="object-cover" unoptimized />
                                     <button
                                         type="button"
                                         onClick={() => setGalleryImages(galleryImages.filter((_, idx) => idx !== i))}
-                                        className="absolute top-1.5 right-1.5 p-1 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+                                        className="absolute top-2 right-2 p-1.5 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors backdrop-blur-sm"
                                         title="Remover imagem"
                                     >
-                                        <X className="h-3 w-3" />
+                                        <X className="h-3.5 w-3.5" />
                                     </button>
                                 </div>
                             ))}
 
                             {galleryImages.length < 5 && (
-                                <ImageUpload
-                                    label=""
-                                    value=""
-                                    onChange={(url) => setGalleryImages([...galleryImages, url])}
-                                />
+                                <div className="w-[140px] h-[140px] md:w-auto md:h-auto flex-shrink-0 snap-center">
+                                    <ImageUpload
+                                        label=""
+                                        value=""
+                                        multiple
+                                        onMultipleChange={(urls) => {
+                                            const remaining = 5 - galleryImages.length;
+                                            const toAdd = urls.slice(0, remaining);
+                                            setGalleryImages([...galleryImages, ...toAdd]);
+                                        }}
+                                        onChange={(url) => setGalleryImages([...galleryImages, url])}
+                                    />
+                                </div>
                             )}
                         </div>
+                        <p className="md:hidden text-[10px] text-slate-400 font-medium ml-1">
+                            {galleryImages.length > 0 ? "← Deslize para ver todas as fotos" : "Adicione até 5 fotos extras do prêmio."}
+                        </p>
                     </div>
                 </div>
             </div>

@@ -23,9 +23,9 @@ interface RecentSalesTableProps {
 export function RecentSalesTable({ transactions }: RecentSalesTableProps) {
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold tracking-tight">Suas Vendas Recentes</h2>
-                <Link href="/relatorios" className="text-primary font-bold text-sm flex items-center gap-1 hover:underline group">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight">Suas Vendas Recentes</h2>
+                <Link href="/relatorios" className="text-primary font-bold text-[11px] md:text-sm flex items-center gap-1 hover:underline group">
                     Ver todos os relatórios
                     <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>

@@ -112,3 +112,33 @@ export async function updateRifaAction(rifaId: string, formData: FormData) {
         return { error: "Não foi possível atualizar a campanha" }
     }
 }
+
+export async function testNotificationAction(whatsapp: string) {
+    const session = await auth()
+    if (!session?.user?.id) return { error: "Não autorizado" }
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: { name: true }
+        })
+
+        if (!user) return { error: "Usuário não encontrado" }
+
+        const message = `🔔 *Teste de Notificação*\n\n` +
+            `Olá, *${user.name}*!\n` +
+            `Esta é uma mensagem de teste do seu sistema de rifas. Seu WhatsApp está configurado corretamente para receber alertas de novas reservas e pagamentos.`
+
+        const { sendWhatsAppMessage } = await import("@/lib/evolution")
+        const response = await sendWhatsAppMessage(whatsapp, message)
+
+        if (response?.status === 'PENDING' || response?.status === 'SENT' || response?.key) {
+            return { success: true }
+        } else {
+            return { error: "Falha ao enviar mensagem. Verifique se o número está correto e se a instância está conectada." }
+        }
+    } catch (error) {
+        console.error("Test notification error:", error)
+        return { error: "Erro ao enviar teste" }
+    }
+}

@@ -10,7 +10,9 @@ import {
     Trash2,
     MoreVertical,
     AlertTriangle,
-    Loader2
+    Loader2,
+    Rocket,
+    CheckCircle2
 } from "lucide-react"
 import {
     DropdownMenu,
@@ -28,7 +30,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { deleteRifaAction } from "@/actions/rifas"
+import { deleteRifaAction, publishRifaAction } from "@/actions/rifas"
 import { toast } from "sonner"
 
 interface RifaActionsClientProps {
@@ -43,7 +45,32 @@ interface RifaActionsClientProps {
 export default function RifaActionsClient({ rifa }: RifaActionsClientProps) {
     const router = useRouter()
     const [isDeleting, setIsDeleting] = useState(false)
+    const [isPublishing, setIsPublishing] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+
+    const handlePublish = async () => {
+        setIsPublishing(true)
+        const promise = publishRifaAction(rifa.id)
+
+        toast.promise(promise, {
+            loading: 'Ativando campanha...',
+            success: (res) => {
+                if (res.success) {
+                    router.refresh()
+                    return 'Campanha ativada com sucesso! 🚀'
+                }
+                throw new Error(res.error || 'Erro ao ativar')
+            },
+            error: (err) => err.message || 'Erro ao ativar campanha',
+        })
+
+        try {
+            await promise
+        } catch (e) {
+        } finally {
+            setIsPublishing(false)
+        }
+    }
 
     const handleDelete = async () => {
         setIsDeleting(true)
@@ -65,6 +92,19 @@ export default function RifaActionsClient({ rifa }: RifaActionsClientProps) {
 
     return (
         <div className="flex items-center gap-2">
+            {rifa.status === "DRAFT" && (
+                <Button
+                    variant="default"
+                    size="sm"
+                    disabled={isPublishing}
+                    onClick={handlePublish}
+                    className="rounded-full gap-2 font-black text-[10px] uppercase tracking-wider bg-emerald-500 hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 text-white"
+                >
+                    {isPublishing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Rocket className="h-3 w-3 text-white" />}
+                    Ativar Campanha
+                </Button>
+            )}
+
             <Button variant="outline" size="sm" className="hidden md:flex rounded-full gap-2 font-black text-[10px] uppercase tracking-wider" asChild>
                 <Link href={`/r/${rifa.slug}`} target="_blank">
                     <ExternalLink className="h-3 w-3" /> Ver Campanha
@@ -88,6 +128,15 @@ export default function RifaActionsClient({ rifa }: RifaActionsClientProps) {
                             <Edit className="h-4 w-4" /> Editar Campanha
                         </Link>
                     </DropdownMenuItem>
+                    {rifa.status === "DRAFT" && (
+                        <DropdownMenuItem
+                            onClick={handlePublish}
+                            disabled={isPublishing}
+                            className="text-emerald-600 focus:text-emerald-700 font-bold flex items-center gap-2 py-2 rounded-xl cursor-pointer"
+                        >
+                            <Rocket className="h-4 w-4" /> Ativar Campanha Now
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem
                         className="text-destructive focus:text-destructive flex items-center gap-2 py-2 rounded-xl cursor-pointer"
                         onSelect={() => setShowDeleteDialog(true)}

@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react";
 import {
     Dialog,
@@ -44,9 +46,9 @@ export function ShareRaffleModal({
             <Button
                 type="button"
                 onClick={() => setOpen(true)}
-                variant="secondary"
+                variant="outline"
                 size="lg"
-                className="flex-1 h-14 rounded-2xl font-bold uppercase text-xs tracking-widest gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border-none"
+                className="flex-1 h-16 rounded-2xl font-bold uppercase text-[10px] tracking-widest gap-2 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all"
             >
                 <Share2 className="h-4 w-4 text-primary" />
                 Compartilhar
