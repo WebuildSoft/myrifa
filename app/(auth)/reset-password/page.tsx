@@ -8,9 +8,10 @@ import Link from "next/link"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { AlertCircle, CheckCircle2, Lock, ArrowRight } from "lucide-react"
+import { Suspense } from "react"
 import { resetPasswordAction } from "@/actions/user/password-recovery"
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [loading, setLoading] = useState(false)
@@ -154,5 +155,36 @@ export default function ResetPasswordPage() {
                 </form>
             </CardContent>
         </Card>
+    )
+}
+
+function ResetPasswordFallback() {
+    return (
+        <Card className="border-0 shadow-lg animate-pulse opacity-50">
+            <CardHeader className="space-y-1">
+                <div className="size-12 bg-slate-200 rounded-xl mb-2" />
+                <div className="h-8 bg-slate-200 rounded w-1/2" />
+                <div className="h-4 bg-slate-200 rounded w-3/4" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <div className="space-y-2">
+                    <div className="h-4 bg-slate-200 rounded w-1/4" />
+                    <div className="h-12 bg-slate-200 rounded-xl" />
+                </div>
+                <div className="space-y-2">
+                    <div className="h-4 bg-slate-200 rounded w-1/4" />
+                    <div className="h-12 bg-slate-200 rounded-xl" />
+                </div>
+                <div className="h-12 bg-slate-200 rounded-xl" />
+            </CardContent>
+        </Card>
+    )
+}
+
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={<ResetPasswordFallback />}>
+            <ResetPasswordContent />
+        </Suspense>
     )
 }
