@@ -1,5 +1,7 @@
+"use client"
+
 import { cn } from "@/lib/utils"
-import { Check, Palette, Waves, Sunrise, Moon, Crown, Zap, Stars, Diamond, Lock } from "lucide-react"
+import { Check, Palette, Waves, Sunrise, Moon, Crown, Zap, Stars, Diamond, Lock, Flower2 } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import { RifaTheme, THEME_CONFIGS } from "@/lib/themes"
 
@@ -68,6 +70,14 @@ const themes = [
         description: 'Sofisticado (Dourado Champagne & White)',
         icon: Diamond,
         colors: ['bg-[#af9164]', 'bg-white'],
+        isPremium: true
+    },
+    {
+        id: 'FLOWER',
+        label: 'Garden Flower',
+        description: 'Delicado (Rosa & Pétalas)',
+        icon: Flower2,
+        colors: ['bg-rose-400', 'bg-[#fffafa]'],
         isPremium: true
     }
 ]

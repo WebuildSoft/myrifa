@@ -17,9 +17,7 @@ export function QuotaCommissionCard({ paid, goal, percent }: QuotaCommissionCard
             <div className="flex flex-col gap-4 relative z-10">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className="p-2 bg-primary/10 rounded-lg">
-                            <ShieldCheck className="w-5 w-5 text-primary" />
-                        </div>
+                        <ShieldCheck className="w-5 h-5 text-primary" />
                         <div>
                             <h3 className="font-black text-sm uppercase tracking-wider">Cotas do Sistema</h3>
                             <p className="text-[10px] text-slate-500 font-bold uppercase">Taxa de Manutenção ({(percent * 100).toFixed(0)}%)</p>
@@ -56,7 +54,7 @@ export function QuotaCommissionCard({ paid, goal, percent }: QuotaCommissionCard
                 </div>
 
                 <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-lg flex gap-3">
-                    <Info className="w-4 w-4 text-slate-400 shrink-0 mt-0.5" />
+                    <Info className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
                     <p className="text-[10px] leading-relaxed text-slate-500 font-medium">
                         {isCompleted
                             ? "A meta de comissão foi atingida! A partir de agora, 100% das vendas serão destinadas diretamente à sua conta."

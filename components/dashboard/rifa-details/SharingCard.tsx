@@ -8,11 +8,12 @@ interface SharingCardProps {
 }
 
 export function SharingCard({ slug }: SharingCardProps) {
+    const appUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://rifa.com.br").replace(/\/$/, "")
     // Short ?u= tracking params — imperceptible, 1-2 chars only
-    const base = `https://rifa.com.br/r/${slug}`
+    const base = `${appUrl}/r/${slug}`
     const u = (src: string) => `${base}?u=${src}`
 
-    const whatsappText = `🚀 Participe desta campanha incrível e garanta sua chance de ganhar!\n\n✅ 100% Seguro · ⚡ Sorteio Automático\n\n👉 Acesse agora: ${u("w")}`
+    const whatsappText = `Participe desta campanha incrível e garanta sua chance de ganhar!\n\n100% Seguro · Sorteio Automático\n\nAcesse agora: ${u("w")}`
 
     return (
         <DashboardCard title="Compartilhamento">
@@ -20,7 +21,9 @@ export function SharingCard({ slug }: SharingCardProps) {
                 <div className="space-y-3">
                     <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Link da sua Campanha</p>
                     <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-primary/10 group overflow-hidden">
-                        <span className="text-xs text-slate-500 flex-1 truncate font-mono">rifa.com.br/r/{slug}</span>
+                        <span className="text-xs text-slate-500 flex-1 truncate font-mono">
+                            {appUrl.replace(/^https?:\/\//, "")}/r/{slug}
+                        </span>
                         <CopyLinkButton url={u("l")} />
                     </div>
                 </div>

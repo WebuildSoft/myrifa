@@ -45,12 +45,12 @@ interface EditRifaFormProps {
 export default function EditRifaForm({ rifa, initialPrizes, userPlan }: EditRifaFormProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
-    const [coverImage, setCoverImage] = useState(rifa.coverImage || "")
-    const [galleryImages, setGalleryImages] = useState<string[]>(rifa.images || [])
-    const [theme, setTheme] = useState<RifaTheme>(rifa.theme)
-    const [shape, setShape] = useState<BalloonShape>(rifa.balloonShape)
-    const [notifyOrganizer, setNotifyOrganizer] = useState(rifa.notifyOrganizer || false)
-    const [organizerWhatsapp, setOrganizerWhatsapp] = useState(rifa.organizerWhatsapp || "")
+    const [coverImage, setCoverImage] = useState(rifa?.coverImage || "")
+    const [galleryImages, setGalleryImages] = useState<string[]>(rifa?.images || [])
+    const [theme, setTheme] = useState<RifaTheme>(rifa?.theme || 'DEFAULT')
+    const [shape, setShape] = useState<BalloonShape>(rifa?.balloonShape || 'ROUNDED')
+    const [notifyOrganizer, setNotifyOrganizer] = useState(rifa?.notifyOrganizer || false)
+    const [organizerWhatsapp, setOrganizerWhatsapp] = useState(rifa?.organizerWhatsapp || "")
     const [prizes, setPrizes] = useState((initialPrizes && initialPrizes.length > 0) ? initialPrizes : [{ title: "", position: 1 }])
 
     async function handleSubmit(formData: FormData) {
@@ -61,7 +61,7 @@ export default function EditRifaForm({ rifa, initialPrizes, userPlan }: EditRifa
         formData.set("balloonShape", shape)
         formData.set("notifyOrganizer", notifyOrganizer.toString())
         formData.set("organizerWhatsapp", organizerWhatsapp)
-        formData.set("prizes", JSON.stringify(prizes.filter(p => p.title.trim() !== "")))
+        formData.append("prizes", JSON.stringify(prizes.filter(p => p.title.trim() !== "")))
 
         try {
             const res = await updateRifaAction(rifa.id, formData)
@@ -72,7 +72,8 @@ export default function EditRifaForm({ rifa, initialPrizes, userPlan }: EditRifa
             } else {
                 toast.error(res.error || "Erro ao atualizar rifa")
             }
-        } catch {
+        } catch (error) {
+            console.error("DEBUG: Error in EditRifaForm.handleSubmit:", error)
             toast.error("Erro inesperado ao atualizar campanha")
         } finally {
             setLoading(false)

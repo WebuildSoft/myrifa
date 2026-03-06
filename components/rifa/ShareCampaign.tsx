@@ -45,26 +45,27 @@ const SOCIAL_ICONS = {
 }
 
 export function ShareCampaign({ slug, title }: ShareCampaignProps) {
-    // Short ?u= param for invisible tracking — 1-2 chars only
-    const base = typeof window !== "undefined" ? `${window.location.origin}/r/${slug}` : `/r/${slug}`
+    // Base URL for sharing - prioritize NEXT_PUBLIC_APP_URL, fallback to location.origin
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "")
+    const base = `${appUrl}/r/${slug}`
     const u = (src: string) => `${base}?u=${src}`
 
     const { copied, copyToClipboard, nativeShare } = useShare({
         url: u("l"),
         title: `Campanha Oficial MyRifa: ${title}`,
-        text: `🚀 Participe da campanha oficial "${title}" e garanta sua chance de ganhar! É rápido, 100% seguro e as cotas estão acabando. Acesse o link oficial:`,
+        text: `Participe da campanha oficial "${title}" e garanta sua chance de ganhar! É rápido, seguro e as cotas estão acabando. Acesse o link oficial:`,
     })
 
     const socialPlatforms = [
         {
             label: "WhatsApp",
-            href: `https://wa.me/?text=${encodeURIComponent(`🚀 Participe da campanha oficial *${title}* e garanta sua chance de ganhar!\n\n🔒 100% Seguro\n🎯 Sorteio Automático\n\n📲 Acesse o link oficial e garanta seus números antes que acabem: ${u("w")}`)}`,
+            href: `https://wa.me/?text=${encodeURIComponent(`Participe da campanha oficial *${title}* e garanta sua chance de ganhar!\n\nSeguro · Sorteio Automático\n\nAcesse o link oficial e garanta seus números antes que acabem: ${u("w")}`)}`,
             bg: "bg-[#25D366] hover:bg-[#1db954]",
             icon: SOCIAL_ICONS.WHATSAPP,
         },
         {
             label: "Twitter / X",
-            href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Garanta agora sua chance na campanha oficial "${title}"! 🚀 Cotas limitadas. Participe com segurança pelo link:`)}&url=${encodeURIComponent(u("x"))}`,
+            href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Garanta agora sua chance na campanha oficial "${title}"! Cotas limitadas. Participe com segurança pelo link:`)}&url=${encodeURIComponent(u("x"))}`,
             bg: "bg-black hover:bg-slate-800",
             icon: SOCIAL_ICONS.TWITTER,
         },
@@ -76,7 +77,7 @@ export function ShareCampaign({ slug, title }: ShareCampaignProps) {
         },
         {
             label: "Telegram",
-            href: `https://t.me/share/url?url=${encodeURIComponent(u("t"))}&text=${encodeURIComponent(`🚀 Participe da campanha oficial *${title}*! Garanta seus números agora com total segurança. 🏆`)}`,
+            href: `https://t.me/share/url?url=${encodeURIComponent(u("t"))}&text=${encodeURIComponent(`Participe da campanha oficial *${title}*! Garanta seus números agora com total segurança. 🏆`)}`,
             bg: "bg-[#0088cc] hover:bg-[#006fa3]",
             icon: SOCIAL_ICONS.TELEGRAM,
         },
