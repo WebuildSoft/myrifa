@@ -36,7 +36,16 @@ export default function PrivacidadePage() {
                                 1. Coleta de Informações
                             </h2>
                             <p>
-                                Como plataforma de SaaS (Software as a Service) para arrecadação digital, coletamos apenas os dados essenciais para a operacionalização de campanhas, como nome, e-mail e telefone, visando garantir a autenticidade dos apoios e a comunicação entre organizadores e apoiadores.
+                                Como plataforma de SaaS (Software as a Service) para arrecadação digital, coletamos apenas os dados essenciais para a operacionalização de campanhas.
+                            </p>
+                            <div className="pl-6 border-l-2 border-emerald-500/30 space-y-3">
+                                <p className="text-sm font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">Dados Coletados via Google</p>
+                                <p className="text-sm">
+                                    Ao utilizar o login social (Google OAuth), solicitamos acesso ao seu: **Nome, E-mail e Foto de Perfil**. Estes dados são usados exclusivamente para identificar sua conta e personalizar sua experiência no painel de controle. Não solicitamos acesso a outros arquivos, contatos ou dados privados da sua conta Google.
+                                </p>
+                            </div>
+                            <p>
+                                Também coletamos informações básicas como nome, e-mail e telefone visando garantir a autenticidade dos apoios e a comunicação entre organizadores e apoiadores.
                             </p>
                         </section>
 

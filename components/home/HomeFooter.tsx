@@ -40,6 +40,7 @@ export function HomeFooter() {
                         <li><Link href="/ajuda" className="hover:text-primary transition-colors">Central de Ajuda</Link></li>
                         <li><Link href="/contato" className="hover:text-primary transition-colors">Atendimento</Link></li>
                         <li><Link href="/termos" className="hover:text-primary transition-colors">Termos de Uso</Link></li>
+                        <li><Link href="/privacidade" className="hover:text-primary transition-colors">Política de Privacidade</Link></li>
                         <li className="flex items-center gap-2 text-primary font-black pt-2">
                             <HelpingHand className="h-4 w-4" />
                             <span>Suporte em 1º Nível</span>
