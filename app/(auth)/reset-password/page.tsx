@@ -1,59 +1,156 @@
+"use client"
+
+import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { SubmitButton } from "@/components/ui/submit-button"
+import { Button } from "@/components/ui/button"
+import { AlertCircle, CheckCircle2, Lock, ArrowRight } from "lucide-react"
+import { resetPasswordAction } from "@/actions/user/password-recovery"
 
-export default function ResetPasswordPage({
-    searchParams
-}: {
-    searchParams: { token?: string }
-}) {
-    async function resetPasswordAction(formData: FormData) {
-        "use server"
-        // TODO: Implement DB update
-        console.log("Password reset for token:", searchParams.token)
+export default function ResetPasswordPage() {
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
+    const [success, setSuccess] = useState(false)
+
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const token = searchParams.get("token")
+
+    const handleReset = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!token) {
+            setError("Token de recuperação ausente.")
+            return
+        }
+
+        setLoading(true)
+        setError("")
+
+        const formData = new FormData()
+        formData.append("password", password)
+        formData.append("confirmPassword", confirmPassword)
+
+        const res = await resetPasswordAction(token, formData)
+
+        if (res.error) {
+            setError(res.error)
+            setLoading(false)
+        } else {
+            setSuccess(true)
+            setLoading(false)
+            // Redirect after a short delay
+            setTimeout(() => {
+                router.push("/login")
+            }, 3000)
+        }
     }
 
-    if (!searchParams.token) {
+    if (!token) {
         return (
-            <Card className="border-0 shadow-lg">
+            <Card className="border-0 shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold tracking-tight text-red-500">Token Inválido</CardTitle>
-                    <CardDescription>O link de recuperação parece estar quebrado ou expirado.</CardDescription>
+                    <div className="size-12 bg-red-100 dark:bg-red-900/40 text-red-600 rounded-xl flex items-center justify-center mb-2">
+                        <AlertCircle className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="text-2xl font-bold tracking-tight">Vínculo Inválido</CardTitle>
+                    <CardDescription>O link de recuperação parece estar incompleto ou expirado.</CardDescription>
                 </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                        Links de recuperação de senha têm validade curta por motivos de segurança.
+                        Por favor, solicite um novo link.
+                    </p>
+                </CardContent>
                 <CardFooter>
-                    <Link href="/forgot-password" className="font-semibold text-primary hover:underline">
-                        Solicitar novo link
-                    </Link>
+                    <Button asChild variant="outline" className="w-full h-12 rounded-xl border-slate-200 dark:border-slate-800">
+                        <Link href="/forgot-password">Solicitar novo link</Link>
+                    </Button>
                 </CardFooter>
             </Card>
         )
     }
 
+    if (success) {
+        return (
+            <Card className="border-0 shadow-lg animate-in zoom-in-95 duration-500">
+                <CardContent className="pt-10 pb-10 text-center space-y-4">
+                    <div className="size-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto">
+                        <CheckCircle2 className="h-10 w-10" />
+                    </div>
+                    <div className="space-y-2">
+                        <h3 className="text-2xl font-bold">Senha Alterada!</h3>
+                        <p className="text-sm text-slate-500">
+                            Sua nova senha foi definida com sucesso. <br />
+                            Você será redirecionado para o login em instantes...
+                        </p>
+                    </div>
+                    <Button asChild className="w-full h-12 rounded-xl font-bold bg-emerald-600 hover:bg-emerald-700">
+                        <Link href="/login">Entrar Agora</Link>
+                    </Button>
+                </CardContent>
+            </Card>
+        )
+    }
+
     return (
-        <Card className="border-0 shadow-lg">
+        <Card className="border-0 shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-500">
             <CardHeader className="space-y-1">
+                <div className="size-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-2">
+                    <Lock className="h-6 w-6" />
+                </div>
                 <CardTitle className="text-2xl font-bold tracking-tight">Nova Senha</CardTitle>
                 <CardDescription>
-                    Digite sua nova senha abaixo
+                    Crie uma senha forte para proteger sua conta
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <form action={resetPasswordAction} className="space-y-4">
-                    <input type="hidden" name="token" value={searchParams.token} />
+                <form onSubmit={handleReset} className="space-y-4">
+                    {error && (
+                        <div className="p-3 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-center gap-2 text-sm font-medium animate-in shake duration-300">
+                            <AlertCircle className="h-4 w-4" />
+                            {error}
+                        </div>
+                    )}
 
                     <div className="space-y-2">
                         <Label htmlFor="password">Nova Senha</Label>
-                        <Input id="password" name="password" type="password" required minLength={8} />
+                        <Input
+                            id="password"
+                            name="password"
+                            type="password"
+                            placeholder="••••••••"
+                            required
+                            minLength={8}
+                            className="h-12 rounded-xl"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
 
                     <div className="space-y-2">
                         <Label htmlFor="confirmPassword">Confirmar Nova Senha</Label>
-                        <Input id="confirmPassword" name="confirmPassword" type="password" required minLength={8} />
+                        <Input
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            type="password"
+                            placeholder="••••••••"
+                            required
+                            minLength={8}
+                            className="h-12 rounded-xl"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
                     </div>
 
-                    <SubmitButton className="w-full">Redefinir Senha</SubmitButton>
+                    <Button type="submit" className="w-full h-12 rounded-xl font-bold gap-2" disabled={loading}>
+                        {loading ? "Redefinindo..." : "Redefinir Senha"}
+                        {!loading && <ArrowRight className="h-4 w-4" />}
+                    </Button>
                 </form>
             </CardContent>
         </Card>
