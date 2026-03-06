@@ -10,7 +10,15 @@ export default async function LoginPage({
 }: {
     searchParams: Promise<{ error?: string }>
 }) {
-    const { error } = await searchParams
+    const { error: errorType } = await searchParams
+
+    const errorMessages: Record<string, string> = {
+        OAuthAccountNotLinked: "Este e-mail já está cadastrado com uma senha. Por favor, entre com seu e-mail e senha abaixo para acessar sua conta.",
+        CredentialsSignin: "E-mail ou senha incorretos.",
+        Default: "Algo deu errado ao tentar entrar. Tente novamente.",
+    }
+
+    const error = errorType ? (errorMessages[errorType] || errorType) : null
 
     return (
         <div className="space-y-6">
@@ -62,9 +70,9 @@ export default async function LoginPage({
                     </div>
 
                     {error && (
-                        <div className="flex items-center gap-2 text-sm text-red-500 font-bold bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/20 animate-in fade-in slide-in-from-top-1">
-                            <AlertCircle className="h-4 w-4" />
-                            {error}
+                        <div className="flex items-start gap-3 text-sm text-red-600 dark:text-red-400 font-semibold bg-red-50 dark:bg-red-950/30 p-4 rounded-2xl border border-red-100 dark:border-red-900/30 animate-in fade-in slide-in-from-top-1">
+                            <AlertCircle className="h-5 w-5 mt-0.5 shrink-0" />
+                            <span>{error}</span>
                         </div>
                     )}
 
