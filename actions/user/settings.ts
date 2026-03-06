@@ -139,3 +139,37 @@ export async function updatePersonalData(data: { name: string; whatsapp: string 
         return { error: "Erro ao atualizar perfil." }
     }
 }
+
+export async function disconnectGoogle() {
+    try {
+        const session = await auth()
+        if (!session?.user?.id) return { error: "Não autorizado." }
+
+        const user = await prisma.user.findUnique({
+            where: { id: session.user.id }
+        })
+
+        if (!user) return { error: "Usuário não encontrado." }
+
+        // Security check: Don't allow disconnection if user has no password
+        // This prevents the user from being locked out of their account
+        if (!user.password) {
+            return {
+                error: "Você precisa definir uma senha antes de desvincular sua conta Google para não perder o acesso."
+            }
+        }
+
+        await prisma.account.deleteMany({
+            where: {
+                userId: session.user.id,
+                provider: "google"
+            }
+        })
+
+        revalidatePath('/conta')
+        return { success: true, message: "Conta Google desvinculada com sucesso!" }
+    } catch (error) {
+        console.error("Google disconnect error:", error)
+        return { error: "Erro ao desvincular conta Google." }
+    }
+}

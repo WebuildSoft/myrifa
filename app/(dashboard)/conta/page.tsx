@@ -29,6 +29,7 @@ export default async function ContaPage({ searchParams }: { searchParams: Promis
     if (!user) redirect("/login")
 
     const isGoogleLinked = user.accounts.some(acc => acc.provider === "google")
+    const hasPassword = !!user.password
 
     return (
         <div className="relative max-w-6xl mx-auto pb-20 px-4 sm:px-6 pt-10">
@@ -104,7 +105,7 @@ export default async function ContaPage({ searchParams }: { searchParams: Promis
                     <div className="mt-6 md:mt-8 transition-all duration-500">
                         <TabsContent value="geral" className="space-y-10 outline-none animate-in fade-in slide-in-from-left-4 duration-500">
                             <div className="max-w-4xl mx-auto">
-                                <PersonalDataSettings user={user} isGoogleLinked={isGoogleLinked} />
+                                <PersonalDataSettings user={user} isGoogleLinked={isGoogleLinked} hasPassword={hasPassword} />
                             </div>
                         </TabsContent>
 

@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { User, Mail, Smartphone } from "lucide-react"
-import { updatePersonalData } from "@/actions/user/settings"
+import { User, Mail, Smartphone, AlertTriangle } from "lucide-react"
+import { updatePersonalData, disconnectGoogle } from "@/actions/user/settings"
 import { loginWithGoogle } from "@/actions/auth"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -21,11 +21,13 @@ interface PersonalDataSettingsProps {
         whatsapp?: string | null
     }
     isGoogleLinked?: boolean
+    hasPassword?: boolean
 }
 
-export function PersonalDataSettings({ user, isGoogleLinked = false }: PersonalDataSettingsProps) {
+export function PersonalDataSettings({ user, isGoogleLinked = false, hasPassword = false }: PersonalDataSettingsProps) {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
+    const [isDisconnecting, setIsDisconnecting] = useState(false)
     const [formData, setFormData] = useState({
         name: user.name,
         whatsapp: user.whatsapp || ""
@@ -46,6 +48,33 @@ export function PersonalDataSettings({ user, isGoogleLinked = false }: PersonalD
             toast.error("Erro ao atualizar perfil")
         } finally {
             setIsLoading(false)
+        }
+    }
+
+    const handleDisconnect = async () => {
+        if (!hasPassword) {
+            toast.error("Você precisa definir uma senha antes de desvincular o Google.", {
+                description: "Isso garante que você não perca o acesso à sua conta.",
+                icon: <AlertTriangle className="h-5 w-5 text-orange-500" />
+            })
+            return
+        }
+
+        if (!confirm("Tem certeza que deseja desvincular sua conta Google?")) return
+
+        setIsDisconnecting(true)
+        try {
+            const res = await disconnectGoogle()
+            if (res.success) {
+                router.refresh()
+                toast.success(res.message)
+            } else {
+                toast.error(res.error)
+            }
+        } catch (error) {
+            toast.error("Erro ao desvincular conta")
+        } finally {
+            setIsDisconnecting(false)
         }
     }
 
@@ -132,9 +161,19 @@ export function PersonalDataSettings({ user, isGoogleLinked = false }: PersonalD
                         </div>
 
                         {isGoogleLinked ? (
-                            <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-                                <div className="size-2 bg-emerald-500 rounded-full animate-pulse" />
-                                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Sincronizado</span>
+                            <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                                    <div className="size-2 bg-emerald-500 rounded-full animate-pulse" />
+                                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Sincronizado</span>
+                                </div>
+                                <Button
+                                    onClick={handleDisconnect}
+                                    disabled={isDisconnecting}
+                                    variant="ghost"
+                                    className="h-10 px-4 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 font-black text-[9px] uppercase tracking-widest transition-all"
+                                >
+                                    {isDisconnecting ? "Processando..." : "Desvincular"}
+                                </Button>
                             </div>
                         ) : (
                             <form action={loginWithGoogle}>
