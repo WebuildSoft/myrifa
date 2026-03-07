@@ -218,6 +218,7 @@ model Transaction {
   paidAt        DateTime?
   expiresAt              DateTime?
   manualPixReminderSent  Boolean            @default(false)
+  confirmationToken      String?            @unique
   createdAt              DateTime           @default(now())
   destination   PaymentDestination @default(ORGANIZER)
   provider      PaymentProvider    @default(MERCADO_PAGO)
@@ -227,6 +228,7 @@ model Transaction {
   @@index([rifaId])
   @@index([buyerId])
   @@index([status])
+  @@index([confirmationToken])
 }
 
 model Notification {

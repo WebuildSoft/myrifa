@@ -72,7 +72,8 @@ export class NotificationService {
         numbers,
         amount,
         type,
-        dashUrl
+        dashUrl,
+        confirmUrl
     }: {
         whatsapp: string
         buyerName: string
@@ -81,6 +82,7 @@ export class NotificationService {
         amount: number
         type: 'RESERVATION' | 'PAYMENT' | 'REPORTED'
         dashUrl?: string
+        confirmUrl?: string
     }) {
         const formattedAmount = new Intl.NumberFormat("pt-BR", {
             style: "currency",
@@ -100,8 +102,11 @@ export class NotificationService {
                 `O comprador *${buyerName}* informou que já realizou o pagamento via PIX Manual para a campanha *${rifaTitle}*.\n\n` +
                 `🔢 Cotas: ${numbers.join(', ')}\n` +
                 `💵 Valor: ${formattedAmount}\n\n` +
-                `Valide o recebimento no seu banco e confirme no painel:\n` +
-                `🔗 ${dashUrl || 'Acesse seu dashboard'}`
+                `Valide o recebimento no seu banco e confirme abaixo:\n\n` +
+                `✅ *Confirmar Sem Login*:\n` +
+                `${confirmUrl}\n\n` +
+                `🔗 *Acessar Painel*:\n` +
+                `${dashUrl || 'Acesse seu dashboard'}`
         } else {
             message = `✅ *Pagamento Confirmado!*\n\n` +
                 `📌 Campanha: ${rifaTitle}\n` +
