@@ -21,7 +21,16 @@ interface StepBuyerInfoProps {
  * Supports 10 digits (landline) and 11 digits (mobile with 9th digit)
  */
 function maskPhone(value: string): string {
-    const digits = value.replace(/\D/g, "").slice(0, 11)
+    let digits = value.replace(/\D/g, "")
+
+    // If user includes DDI (55), we strip it to maintain the Brazilian mask
+    // unless they are typing a very short number that could be a DDD
+    if (digits.startsWith("55") && digits.length > 11) {
+        digits = digits.slice(2)
+    }
+
+    digits = digits.slice(0, 11)
+
     if (digits.length <= 2) return digits.length ? `(${digits}` : ""
     if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
     if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`
@@ -33,7 +42,13 @@ function maskPhone(value: string): string {
  * for mobile (11 digits), the 9th digit starts with 9.
  */
 function isValidPhone(value: string): boolean {
-    const digits = value.replace(/\D/g, "")
+    let digits = value.replace(/\D/g, "")
+
+    // Normalize by removing country code if present
+    if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) {
+        digits = digits.slice(2)
+    }
+
     if (digits.length === 10) return true           // landline
     if (digits.length === 11 && digits[2] === "9") return true  // mobile with 9
     return false
