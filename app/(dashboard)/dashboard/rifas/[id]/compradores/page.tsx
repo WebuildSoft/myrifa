@@ -38,6 +38,14 @@ export default async function CompradoresPage({
         rifaId: id,
     }
 
+    // SECURITY: First, verify raffle ownership and existence
+    const rifa = await prisma.rifa.findUnique({
+        where: { id, userId: session.user.id },
+        select: { id: true, title: true, numberPrice: true, status: true }
+    })
+
+    if (!rifa || (rifa.status as string) === "DELETED") notFound()
+
     if (search) {
         whereClause.OR = [
             { name: { contains: search, mode: 'insensitive' } },
@@ -64,11 +72,7 @@ export default async function CompradoresPage({
     }
 
     // Parallelize main data fetching and metric calculations
-    const [rifa, buyers, buyersCount, paidNumbersCount] = await Promise.all([
-        prisma.rifa.findUnique({
-            where: { id, userId: session.user.id },
-            select: { id: true, title: true, numberPrice: true, status: true }
-        }),
+    const [buyers, buyersCount, paidNumbersCount] = await Promise.all([
         prisma.buyer.findMany({
             where: whereClause,
             include: {
@@ -88,8 +92,6 @@ export default async function CompradoresPage({
         prisma.buyer.count({ where: { rifaId: id } }),
         prisma.rifaNumber.count({ where: { rifaId: id, status: "PAID" } })
     ])
-
-    if (!rifa || (rifa.status as string) === "DELETED") notFound()
 
     const totalSoldNumbers = paidNumbersCount
     const totalRevenue = paidNumbersCount * Number(rifa.numberPrice)

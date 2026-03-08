@@ -37,6 +37,29 @@ export default async function Page({
     }
 
     if (!transaction || !transaction.rifa || !transaction.buyer) {
+        if (isSuccess) {
+            return (
+                <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
+                    <Card className="max-w-md w-full border-slate-200 dark:border-slate-800 shadow-2xl">
+                        <CardHeader className="text-center pb-2">
+                            <div className="mx-auto mb-4 bg-emerald-100 dark:bg-emerald-900/30 p-3 rounded-full w-fit">
+                                <CheckCircle2 className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+                            </div>
+                            <CardTitle className="text-2xl font-black text-slate-900 dark:text-white">Pagamento Confirmado!</CardTitle>
+                            <CardDescription>
+                                O recebimento foi validado com sucesso e o comprador já foi notificado.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardFooter className="flex justify-center flex-col gap-4">
+                            <Button asChild className="w-full rounded-xl bg-slate-900 dark:bg-emerald-600 text-white font-black">
+                                <Link href="/dashboard">Ir para o Painel</Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+            )
+        }
+
         console.warn(`[MAGIC_LINK] Transaction check failed for token ${token}:`, {
             found: !!transaction,
             hasRifa: !!transaction?.rifa,

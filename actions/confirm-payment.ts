@@ -151,7 +151,7 @@ export async function confirmPaymentWithTokenAction(token: string) {
                 data: {
                     status: "PAID",
                     paidAt: new Date(),
-                    // confirmationToken: null // REMOVIDO: Permitir redirecionar para a página de sucesso que usa o token
+                    confirmationToken: null // Re-unlocked for security
                 }
             })
 
