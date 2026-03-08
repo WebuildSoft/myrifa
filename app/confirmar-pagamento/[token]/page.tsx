@@ -12,18 +12,36 @@ export const metadata = {
     description: "Confirmação rápida de pagamento via link mágico."
 }
 
-export default async function Page({ params }: { params: { token: string } }) {
-    const { token } = params
+export default async function Page({
+    params,
+    searchParams
+}: {
+    params: Promise<{ token: string }>
+    searchParams: Promise<{ success?: string }>
+}) {
+    const { token } = await params
+    const { success } = await searchParams
+    const isSuccess = success === "true"
 
-    const transaction = await prisma.transaction.findUnique({
-        where: { confirmationToken: token },
-        include: {
-            rifa: true,
-            buyer: true
-        }
-    })
+    let transaction = null;
+    try {
+        transaction = await prisma.transaction.findUnique({
+            where: { confirmationToken: token },
+            include: {
+                rifa: true,
+                buyer: true
+            }
+        })
+    } catch (error: any) {
+        console.error(`[MAGIC_LINK] Error fetching transaction for token ${token}:`, error);
+    }
 
-    if (!transaction) {
+    if (!transaction || !transaction.rifa || !transaction.buyer) {
+        console.warn(`[MAGIC_LINK] Transaction check failed for token ${token}:`, {
+            found: !!transaction,
+            hasRifa: !!transaction?.rifa,
+            hasBuyer: !!transaction?.buyer
+        });
         return (
             <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
                 <Card className="max-w-md w-full border-slate-200 dark:border-slate-800 shadow-2xl">
@@ -31,9 +49,9 @@ export default async function Page({ params }: { params: { token: string } }) {
                         <div className="mx-auto mb-4 bg-red-100 dark:bg-red-900/30 p-3 rounded-full w-fit">
                             <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
                         </div>
-                        <CardTitle className="text-2xl font-black">Link Inválido</CardTitle>
+                        <CardTitle className="text-2xl font-black text-slate-900 dark:text-white">Link Inválido</CardTitle>
                         <CardDescription>
-                            Este link de confirmação expirou ou já foi utilizado.
+                            Este link de confirmação expirou, já foi utilizado ou está incorreto.
                         </CardDescription>
                     </CardHeader>
                     <CardFooter className="flex justify-center">
@@ -98,7 +116,7 @@ export default async function Page({ params }: { params: { token: string } }) {
                                 </div>
                                 <div>
                                     <p className="text-[10px] uppercase font-black text-slate-400 tracking-wider">Comprador</p>
-                                    <p className="font-bold text-slate-900 dark:text-white uppercase">{(transaction.buyer as any).name}</p>
+                                    <p className="font-bold text-slate-900 dark:text-white uppercase">{(transaction.buyer as any)?.name || 'N/A'}</p>
                                 </div>
                             </div>
 
@@ -108,7 +126,7 @@ export default async function Page({ params }: { params: { token: string } }) {
                                 </div>
                                 <div>
                                     <p className="text-[10px] uppercase font-black text-slate-400 tracking-wider">WhatsApp</p>
-                                    <p className="font-bold text-slate-900 dark:text-white">{(transaction.buyer as any).whatsapp}</p>
+                                    <p className="font-bold text-slate-900 dark:text-white">{(transaction.buyer as any)?.whatsapp || 'N/A'}</p>
                                 </div>
                             </div>
                         </div>
@@ -136,23 +154,27 @@ export default async function Page({ params }: { params: { token: string } }) {
                     </CardContent>
 
                     <CardFooter className="bg-slate-50 dark:bg-slate-950/50 p-6">
-                        {!isPaid ? (
-                            <form action={handleConfirm} className="w-full">
-                                <Button className="w-full h-14 rounded-2xl bg-slate-900 border border-slate-800 hover:bg-slate-800 dark:bg-primary dark:border-none dark:hover:bg-primary/90 text-white font-black text-base uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95 group">
-                                    Confirmar Recebimento
-                                </Button>
-                            </form>
-                        ) : (
+                        {isPaid || isSuccess ? (
                             <div className="w-full space-y-4 text-center">
                                 <div className="flex flex-col items-center gap-2">
-                                    <CheckCircle2 className="h-10 w-10 text-emerald-500 animate-bounce" />
-                                    <p className="font-black uppercase text-slate-900 dark:text-white">Pagamento Confirmado!</p>
-                                    <p className="text-xs text-slate-500 font-medium">Os números já foram liberados para o sorteio.</p>
+                                    <div className="bg-emerald-100 dark:bg-emerald-900/30 p-3 rounded-full mb-2">
+                                        <CheckCircle2 className="h-10 w-10 text-emerald-500 animate-in zoom-in duration-500" />
+                                    </div>
+                                    <p className="font-black uppercase text-slate-900 dark:text-white text-lg">Recebimento Confirmado!</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium max-w-[200px] mx-auto">
+                                        O pagamento foi validado e o comprador já foi notificado.
+                                    </p>
                                 </div>
-                                <Button asChild variant="outline" className="w-full h-12 rounded-xl border-slate-200 dark:border-slate-800 uppercase font-black text-[10px] tracking-widest">
-                                    <Link href="/dashboard">Acessar Meu Painel</Link>
+                                <Button asChild className="w-full h-14 rounded-2xl bg-slate-900 border border-slate-800 hover:bg-slate-800 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-black text-base uppercase tracking-widest shadow-xl transition-all">
+                                    <Link href="/dashboard">Ir para o Painel</Link>
                                 </Button>
                             </div>
+                        ) : (
+                            <form action={handleConfirm} className="w-full">
+                                <Button className="w-full h-14 rounded-2xl bg-slate-900 border border-slate-800 hover:bg-slate-800 dark:bg-primary dark:border-none dark:hover:bg-primary/90 text-white font-black text-base uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95 group text-sm">
+                                    Confirmar Recebimento Agora
+                                </Button>
+                            </form>
                         )}
                     </CardFooter>
                 </Card>
