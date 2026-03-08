@@ -1,7 +1,7 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { notFound, redirect } from "next/navigation"
-import { RifaStatus } from "@prisma/client"
+import { RifaStatus, Prisma } from "@prisma/client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -18,12 +18,50 @@ import {
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { TransactionActions } from "../TransactionActions"
+import { BuyerFilters } from "./BuyerFilters"
 
-export default async function CompradoresPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function CompradoresPage({
+    params,
+    searchParams
+}: {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ search?: string, filter?: string }>
+}) {
     const session = await auth()
     if (!session?.user?.id) redirect("/login")
 
     const { id } = await params
+    const { search, filter } = await searchParams
+
+    // Construct the Prisma where clause based on search and filters
+    const whereClause: Prisma.BuyerWhereInput = {
+        rifaId: id,
+    }
+
+    if (search) {
+        whereClause.OR = [
+            { name: { contains: search, mode: 'insensitive' } },
+            { whatsapp: { contains: search.replace(/\D/g, '') } }
+        ]
+    }
+
+    if (filter === 'paid') {
+        whereClause.numbers = {
+            some: { status: 'PAID' },
+            none: { status: 'RESERVED' }
+        }
+    } else if (filter === 'pending') {
+        whereClause.numbers = {
+            some: { status: 'RESERVED' }
+        }
+    } else if (filter === 'expired') {
+        whereClause.transactions = {
+            some: { status: 'EXPIRED' }
+        }
+        whereClause.numbers = {
+            none: { status: { in: ['PAID', 'RESERVED'] } }
+        }
+    }
 
     // Parallelize main data fetching and metric calculations
     const [rifa, buyers, buyersCount, paidNumbersCount] = await Promise.all([
@@ -32,19 +70,20 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
             select: { id: true, title: true, numberPrice: true, status: true }
         }),
         prisma.buyer.findMany({
-            where: { rifaId: id },
+            where: whereClause,
             include: {
                 numbers: {
                     where: { rifaId: id },
                     select: { id: true, number: true, status: true }
                 },
                 transactions: {
-                    where: { rifaId: id, status: "PENDING" },
-                    select: { id: true, status: true, provider: true }
+                    where: { rifaId: id },
+                    select: { id: true, status: true, provider: true },
+                    orderBy: { createdAt: 'desc' }
                 }
             },
             orderBy: { createdAt: 'desc' },
-            take: 100 // Optimized: limit to last 100 buyers for initial load
+            take: 100
         }),
         prisma.buyer.count({ where: { rifaId: id } }),
         prisma.rifaNumber.count({ where: { rifaId: id, status: "PAID" } })
@@ -73,28 +112,9 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
                             </span>
                         </div>
                     </div>
-                    <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10">
-                        <MoreVertical className="h-5 w-5 text-slate-400" />
-                    </Button>
                 </div>
 
-                {/* Search Bar */}
-                <div className="relative mb-6">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" />
-                    <Input
-                        placeholder="Buscar por nome ou telefone..."
-                        className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-2xl py-6 pl-12 pr-4 focus-visible:ring-2 focus-visible:ring-primary/50 text-sm font-medium shadow-sm transition-all"
-                        disabled
-                    />
-                </div>
-
-                {/* Filter Chips */}
-                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none no-scrollbar">
-                    <Button variant="default" className="rounded-full h-9 px-6 text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20">Todos</Button>
-                    <Button variant="outline" className="rounded-full h-9 px-6 text-xs font-black uppercase tracking-widest bg-white dark:bg-slate-800 border-primary/5 hover:bg-primary/5 transition-colors">Pagos</Button>
-                    <Button variant="outline" className="rounded-full h-9 px-6 text-xs font-black uppercase tracking-widest bg-white dark:bg-slate-800 border-primary/5 hover:bg-primary/5 transition-colors">Pendentes</Button>
-                    <Button variant="outline" className="rounded-full h-9 px-6 text-xs font-black uppercase tracking-widest bg-white dark:bg-slate-800 border-primary/5 hover:bg-primary/5 transition-colors">Expirados</Button>
-                </div>
+                <BuyerFilters />
             </header>
 
             <main className="flex-1 p-6 space-y-8 max-w-2xl mx-auto w-full">
@@ -129,39 +149,57 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
                     {buyers.length === 0 ? (
                         <div className="py-20 text-center opacity-40 flex flex-col items-center gap-3">
                             <Users className="h-12 w-12" />
-                            <p className="text-sm font-black uppercase tracking-[0.2em]">Nenhum comprador</p>
+                            <p className="text-sm font-black uppercase tracking-[0.2em]">Nenhum comprador encontrado</p>
                         </div>
                     ) : (
                         buyers.map((buyer) => {
                             const paidNumbers = buyer.numbers.filter(n => n.status === "PAID")
                             const reservedNumbers = buyer.numbers.filter(n => n.status === "RESERVED")
-                            const isFullyPaid = paidNumbers.length === buyer.numbers.length
-                            const hasReservations = reservedNumbers.length > 0
 
-                            const status = isFullyPaid ? "PAGO" : hasReservations ? "PENDENTE" : "INCOMPLETO"
-                            const statusColor = isFullyPaid ? "bg-emerald-500/10 text-emerald-600" : hasReservations ? "bg-amber-500/10 text-amber-600" : "bg-slate-500/10 text-slate-600"
+                            // Define status based on numbers
+                            let status = "INCOMPLETO"
+                            let statusColor = "bg-slate-500/10 text-slate-600"
+
+                            if (buyer.numbers.length > 0) {
+                                if (paidNumbers.length === buyer.numbers.length) {
+                                    status = "PAGO"
+                                    statusColor = "bg-emerald-500/10 text-emerald-600"
+                                } else if (reservedNumbers.length > 0) {
+                                    status = "PENDENTE"
+                                    statusColor = "bg-amber-500/10 text-amber-600"
+                                }
+                            } else {
+                                // check if there are expired transactions
+                                const hasExpired = buyer.transactions.some(t => t.status === "EXPIRED")
+                                if (hasExpired) {
+                                    status = "EXPIRADO"
+                                    statusColor = "bg-red-500/10 text-red-600"
+                                }
+                            }
 
                             return (
                                 <div key={buyer.id} className="bg-white dark:bg-slate-800 border border-primary/5 p-5 rounded-[2rem] shadow-sm hover:shadow-md transition-all group active:scale-[0.98]">
                                     <div className="flex items-start gap-4">
-                                        <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-lg transition-colors group-hover:bg-primary group-hover:text-white">
+                                        <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-lg transition-colors group-hover:bg-primary group-hover:text-white shrink-0">
                                             {buyer.name.substring(0, 2).toUpperCase()}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between items-start mb-1">
                                                 <h3 className="font-black text-slate-900 dark:text-white truncate pr-2 leading-tight">{buyer.name}</h3>
-                                                <Badge className={`${statusColor} border-none font-black text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-full shadow-none`}>
-                                                    {status}
-                                                </Badge>
-                                                {buyer.transactions.length > 0 && (
-                                                    <div className="ml-2 scale-75 origin-right">
-                                                        <TransactionActions
-                                                            transactionId={buyer.transactions[0].id}
-                                                            status={buyer.transactions[0].status}
-                                                            provider={(buyer.transactions[0] as any).provider}
-                                                        />
-                                                    </div>
-                                                )}
+                                                <div className="flex items-center gap-2">
+                                                    <Badge className={`${statusColor} border-none font-black text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-full shadow-none`}>
+                                                        {status}
+                                                    </Badge>
+                                                    {buyer.transactions.length > 0 && (
+                                                        <div className="scale-75 origin-right">
+                                                            <TransactionActions
+                                                                transactionId={buyer.transactions[0].id}
+                                                                status={buyer.transactions[0].status}
+                                                                provider={(buyer.transactions[0] as any).provider}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
                                             <Link
                                                 href={`https://wa.me/${buyer.whatsapp.replace(/\D/g, '')}`}
@@ -181,10 +219,13 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
                                                         {n.number.toString().padStart(2, '0')}
                                                     </span>
                                                 ))}
+                                                {buyer.numbers.length === 0 && (
+                                                    <span className="text-[10px] italic text-slate-400">Nenhuma cota ativa</span>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="text-right flex flex-col items-end">
-                                            <p className={`font-black text-sm mb-1 ${isFullyPaid ? 'text-emerald-500' : 'text-slate-400'}`}>
+                                            <p className={`font-black text-sm mb-1 ${paidNumbers.length > 0 ? 'text-emerald-500' : 'text-slate-400'}`}>
                                                 {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(buyer.numbers.length * Number(rifa.numberPrice))}
                                             </p>
                                             <span className="text-[9px] text-slate-400 font-black uppercase tracking-widest">
@@ -199,9 +240,11 @@ export default async function CompradoresPage({ params }: { params: Promise<{ id
                 </div>
 
                 {/* Loading State Mock */}
-                <div className="py-10 text-center">
-                    <p className="text-slate-400 text-xs font-black uppercase tracking-widest animate-pulse">Carregando mais...</p>
-                </div>
+                {buyers.length > 0 && buyers.length >= 100 && (
+                    <div className="py-10 text-center">
+                        <p className="text-slate-400 text-xs font-black uppercase tracking-widest animate-pulse">Carregando mais...</p>
+                    </div>
+                )}
             </main>
 
             {/* Floating Action Button: Export CSV */}
