@@ -1,4 +1,4 @@
-"use strict";
+"use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
@@ -75,8 +75,8 @@ export function BuyerFilters() {
                         variant={currentFilter === f.value ? "default" : "outline"}
                         onClick={() => handleFilterChange(f.value)}
                         className={`rounded-full h-9 px-6 text-xs font-black uppercase tracking-widest transition-all ${currentFilter === f.value
-                                ? "shadow-lg shadow-primary/20"
-                                : "bg-white dark:bg-slate-800 border-primary/5 hover:bg-primary/5"
+                            ? "shadow-lg shadow-primary/20"
+                            : "bg-white dark:bg-slate-800 border-primary/5 hover:bg-primary/5"
                             }`}
                     >
                         {f.label}
